@@ -1,0 +1,132 @@
+version: '3'
+services:
+  
+  #PHP Service
+  pa-app:
+    image: pa-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    user: www-pa
+    container_name: pa-app
+    tty: true
+    environment:
+      SERVICE_NAME: pa-app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+       - ./:/var/www
+       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - pa-network
+  
+  pa-app1:
+    image: pa-app
+    user: www-pa
+    container_name: pa-app1
+    tty: true
+    environment:
+      SERVICE_NAME: pa-app1
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+       - ./:/var/www
+       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - pa-network
+
+  #Nginx Service
+  pa-webserver:
+    image: nginx:alpine
+    container_name: pa-webserver
+    tty: true
+    ports:
+      - "8002:8002"
+      - "4445:443"
+    volumes:
+      - ./:/var/www
+      - ./nginx/conf/nginx.conf:/etc/nginx/conf/nginx.conf:ro
+      - ./nginx/conf.d/:/etc/nginx/conf.d/:ro
+    networks:
+      - pa-network
+
+  #PostgreSQL Service
+  pa-db:
+    container_name: pa-db
+    hostname: pa-db
+    build:
+      context: ./debezium-postgres
+      dockerfile: Dockerfile
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: pa
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      SERVICE_TAGS: dev
+      SERVICE_NAME: postgresql
+    volumes:
+      - padata:/var/lib/postgresql/data
+    networks:
+      - pa-network
+  # Redis
+  pa-redis:
+    image: redis:alpine
+    container_name: pa-redis
+    ports:
+      - "6381:6379"
+    volumes:
+      - pa-redis-data:/data
+    networks:
+      - pa-network
+  
+  # Kafka Worker Service
+  pa-kafka-worker:
+    image: pa-app  # Reference the existing image built for pa-app
+    user: www-pa
+    container_name: pa-kafka-worker
+    tty: true
+    environment:
+      SERVICE_NAME: pa-kafka-worker
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - pa-network
+      - kafka-network
+    command: php artisan consume
+    restart: always # Add this line to specify the restart policy
+  # Queue Worker Service
+  pa-queue-worker:
+    image: pa-app  # Reference the existing image built for pa-app
+    user: www-pa
+    container_name: pa-queue-worker
+    tty: true
+    environment:
+      SERVICE_NAME: pa-queue-worker
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - pa-network
+    command: php artisan queue:work --queue=default --sleep=3 --tries=3 --max-time=3600
+    restart: always # Add this line to specify the restart policy
+
+#Docker Networks
+networks:
+  pa-network:
+    name: pa-network
+    driver: bridge
+  kafka-network:
+      name: kafka-network
+      external: true
+#Volumes
+volumes:
+  padata:
+    driver: local
+  pa-redis-data:
+    driver: local
