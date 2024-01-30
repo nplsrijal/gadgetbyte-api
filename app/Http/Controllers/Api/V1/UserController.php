@@ -75,7 +75,17 @@ class UserController extends Controller
      *     path="/api/v1/users",
      *     summary="Create a new User",
      *     tags={"Users"},
-     *     security={{"bearer_token": {}}},
+     *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
+     *     @OA\Parameter(
+     *         name="X-User-Id",
+     *         in="header",
+     *         description="User ID for authentication",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
      *     @OA\RequestBody(
      *         description="User Types data",
      *         required=true,
@@ -158,13 +168,23 @@ class UserController extends Controller
      *     path="/api/v1/users/{id}",
      *     summary="Update an existing user",
      *     tags={"Users"},
-     *     security={{"bearer_token": {}}},
+     *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         description="The ID of the user to update",
      *         required=true,
      *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="X-User-Id",
+     *         in="header",
+     *         description="User ID for authentication",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
      *     ),
      *     @OA\RequestBody(
      *         description="User data",
@@ -210,13 +230,23 @@ class UserController extends Controller
      *     path="/api/v1/users/{id}",
      *     summary="Delete an User",
      *     tags={"Users"},
-     *     security={{"bearer_token": {}}},
+     *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         description="The ID of the User to delete",
      *         required=true,
      *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="X-User-Id",
+     *         in="header",
+     *         description="User ID for authentication",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
      *     ),
      *     @OA\Response(
      *         response=200,

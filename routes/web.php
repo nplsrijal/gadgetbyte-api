@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    $data=[];
     $mappedData['before'] = null;
         $mappedData['after'] = $data;
         $mappedData['source'] = $data;

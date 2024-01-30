@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('v1/login', [LoginController::class, 'login']);
 
 
-Route::prefix('v1')->middleware('client')->group(function () {
+Route::prefix('v1')->middleware(['client','verify_header'])->group(function () {
     // Route will be here
 
    

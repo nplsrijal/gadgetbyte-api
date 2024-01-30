@@ -70,7 +70,17 @@ class UserTypeController extends Controller
      *     path="/api/v1/usertypes",
      *     summary="Create a new UserType",
      *     tags={"UserTypes"},
-     *     security={{"bearer_token": {}}},
+     *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
+     *     @OA\Parameter(
+     *         name="X-User-Id",
+     *         in="header",
+     *         description="User ID for authentication",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
      *     @OA\RequestBody(
      *         description="User Types data",
      *         required=true,
@@ -152,13 +162,23 @@ class UserTypeController extends Controller
      *     path="/api/v1/usertypes/{id}",
      *     summary="Update an existing usertype",
      *     tags={"UserTypes"},
-     *     security={{"bearer_token": {}}},
+     *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         description="The ID of the usertype to update",
      *         required=true,
      *         @OA\Schema(type="integer")
+     *     ),
+     *       @OA\Parameter(
+     *         name="X-User-Id",
+     *         in="header",
+     *         description="User ID for authentication",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
      *     ),
      *     @OA\RequestBody(
      *         description="UserType data",
@@ -204,13 +224,23 @@ class UserTypeController extends Controller
      *     path="/api/v1/usertypes/{id}",
      *     summary="Delete an UserType",
      *     tags={"UserTypes"},
-     *     security={{"bearer_token": {}}},
+     *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         description="The ID of the UserType to delete",
      *         required=true,
      *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="X-User-Id",
+     *         in="header",
+     *         description="User ID for authentication",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
      *     ),
      *     @OA\Response(
      *         response=200,

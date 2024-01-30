@@ -71,7 +71,7 @@ class StoreUserRequest extends FormRequest
             "username"=>"required|string|max:15",
             "email"=>"required|string|max:50",
             "password"=>"required|string|max:20",
-            "user_type_id"=>"required|integer|max:10",
+            "user_type_id"=>"required|numeric|max:10",
 
         ];
     }
