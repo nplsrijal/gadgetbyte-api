@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\V1\PrintController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    // Redis::connection('default')->publish('pa.public.patients',json_encode(['ping'=>'pong']));
     $mappedData['before'] = null;
         $mappedData['after'] = $data;
         $mappedData['source'] = $data;
@@ -27,16 +24,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('subscribe',function(){
 
-    Redis::subscribe('pa.public.patients',function($message){
-        info($message);
-    });
-
-    return 'ok';
-});
-
-Route::get('generateBill/{billno}', [PrintController::class, 'generateBill']);
 
 Route::get('barcode', function () {
   

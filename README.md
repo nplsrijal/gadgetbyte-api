@@ -1,13 +1,7 @@
-# Patient-Administration Git Flow
+# API Git Flow
 
-This document outlines the recommended Git workflow for working with the `patient-administration` repository. Follow these steps to ensure a structured and organized development process.
+This document outlines the recommended Git workflow for working with the `API-GADGETBYTE NEPAL` repository. Follow these steps to ensure a structured and organized development process.
 
-## Cloning the repository
-
-To clone the repository, execute the following command in your terminal:
-```
-git clone http://192.168.130.127/hmis/patient-administration.git
-```
 
 ## Start from the Default Branch
 
@@ -63,13 +57,6 @@ Delta compression using up to 8 threads
 Compressing objects: 100% (19/19), done.
 Writing objects: 100% (19/19), 2.34 KiB | 800.00 KiB/s, done.
 Total 19 (delta 13), reused 0 (delta 0), pack-reused 0
-remote: 
-remote: To create a merge request for new-feature, visit:
-remote:   http://192.168.130.127/hmis/patient-administration/-/merge_requests/new?merge_request%5Bsource_branch%5D=new-feature
-remote:
-To http://192.168.130.127/hmis/patient-administration.git
- * [new branch]      new-feature -> new-feature
-branch 'new-feature' set up to track 'origin/new-feature'.
 ```
 
 ## Creating a merge request
