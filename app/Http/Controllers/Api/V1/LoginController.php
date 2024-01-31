@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
+
 
 /**
  * @OA\Tag(
@@ -46,11 +48,20 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        $request->validate([
+        
+
+        $validator = Validator::make($request->all(), [
             'username' => 'required|string',
             'password' => 'required|string',
         ]);
+    
+        if ($validator->fails()) {
+            
+            return $this->error('Username or password missing', Response::HTTP_UNPROCESSABLE_ENTITY);
 
+        }
+        
+        
         $loginType = filter_var($request->input('username'), FILTER_VALIDATE_EMAIL)
             ? 'email'
             : 'username';
@@ -61,7 +72,8 @@ class LoginController extends Controller
         ];
 
         if (!Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Invalid username or password'], 401);
+            return $this->error('Invalid username or password', Response::HTTP_UNPROCESSABLE_ENTITY);
+
         }
 
         

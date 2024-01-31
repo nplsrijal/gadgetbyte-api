@@ -13,9 +13,10 @@ class VerifyHeader
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+   public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->hasHeader('X-User-ID')) {
+        // Check if the request method is GET
+        if ($request->method() !== 'GET' && !$request->hasHeader('X-User-ID')) {
             $response = [
                 'status' => 'error',
                 'code' => '401',
