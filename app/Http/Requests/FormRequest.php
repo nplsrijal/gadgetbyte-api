@@ -22,10 +22,10 @@ use Illuminate\Contracts\Validation\Validator;
  *     @OA\Property(
  *         property="errors",
  *         type="object",
- *         description="An object containing field validation error messages",
+ *         description="An object containing field validation error messages. (This may varies from your api endpoints.)",
  *         example={
- *             "email": {
- *                 "The email field is required."
+ *             "postkey": {
+ *                 "The postkey field is required."
  *             }
  *         }
  *     )

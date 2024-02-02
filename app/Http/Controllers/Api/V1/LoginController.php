@@ -95,6 +95,7 @@ class LoginController extends Controller
             'token_type' => 'Bearer',
             'expires_at' => $token->token->expires_at->toDateTimeString(),
             'user' => [
+                'userid'=>$user->id,
                 'firstname' => $user->firstname,
                 'lastname' => $user->lastname,
                 'email' => $user->email,

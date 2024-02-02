@@ -28,6 +28,13 @@ class UserController extends Controller
      *         required=false,
      *         @OA\Schema(type="string")
      *     ),
+     *        @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Number of items per page (optional, default: 20)",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=20)
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -121,7 +128,7 @@ class UserController extends Controller
    /**
      * @OA\Get(
      *     path="/api/v1/users/{id}",
-     *     summary="Get a specific users",
+     *     summary="Get a specific user",
      *     tags={"Users"},
      *     security={{"bearer_token": {}}},
      *     @OA\Parameter(
@@ -220,7 +227,7 @@ class UserController extends Controller
         $validatedData['updated_by'] = $userId;
         $user->update($validatedData);
     
-        return $this->success(new userResource($user), 'User Type updated', Response::HTTP_OK);
+        return $this->success(new UserResource($user), 'User  updated', Response::HTTP_OK);
     }
 
     /**

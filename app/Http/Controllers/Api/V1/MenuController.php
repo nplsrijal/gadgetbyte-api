@@ -2,29 +2,28 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Resources\UserTypeCollection;
-use App\Http\Resources\UserTypeResource;
-use App\Http\Requests\StoreUserTypeRequest;
-use App\Http\Requests\UpdateUserTypeRequest;
+
+use App\Http\Resources\MenuCollection;
+use App\Http\Resources\MenuResource;
+use App\Http\Requests\StoreMenuRequest;
+use App\Http\Requests\UpdateMenuRequest;
 
 
-use App\Models\UserType;
-
-
-class UserTypeController extends Controller
+class MenuController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/v1/usertypes",
-     *     summary="Get a list of UserTypes",
-     *     tags={"UserTypes"},
+     *     path="/api/v1/menus",
+     *     summary="Get a list of Menus",
+     *     tags={"Menus"},
      *     security={{"bearer_token": {}}},
      *     @OA\Parameter(
      *         name="q",
      *         in="query",
-     *         description="Search term for filtering by name or code",
+     *         description="Search term for filtering by name or url ",
      *         required=false,
      *         @OA\Schema(type="string")
      *     ),
@@ -38,7 +37,7 @@ class UserTypeController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/UserTypeResource"))
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/MenuResource"))
      *     ),
      *     @OA\Response(
      *         response=400,
@@ -52,16 +51,19 @@ class UserTypeController extends Controller
         if(empty($perPage)){
             $perPage=20;
         }
-        $query = UserType::query();
+        $query = Menu::query();
         if ($request->has('q')) {
             $searchTerm = strtoupper($request->input('q'));
             $query->where(function ($query) use ($searchTerm) {
-                $query->where('name', 'ilike', '%' . $searchTerm . '%');
+                $query->where('name', 'ilike', '%' . $searchTerm . '%')
+                ->orwhere('url', 'ilike', '%' . $searchTerm . '%');
+
+
             });
         }
 
-        $usertypes = $query->paginate($perPage)->withPath($request->getPathInfo());
-        return $this->success(new UserTypeCollection($usertypes));
+        $data = $query->paginate($perPage)->withPath($request->getPathInfo());
+        return $this->success(new MenuCollection($data));
     }
 
     /**
@@ -74,9 +76,9 @@ class UserTypeController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/v1/usertypes",
-     *     summary="Create a new UserType",
-     *     tags={"UserTypes"},
+     *     path="/api/v1/menus",
+     *     summary="Create a new Menu",
+     *     tags={"Menus"},
      *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
      *     @OA\Parameter(
      *         name="X-User-Id",
@@ -89,14 +91,14 @@ class UserTypeController extends Controller
      *         )
      *     ),
      *     @OA\RequestBody(
-     *         description="User Types data",
+     *         description="Menus data",
      *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/StoreUserTypeRequest")
+     *         @OA\JsonContent(ref="#/components/schemas/StoreMenuRequest")
      *     ),
      *     @OA\Response(
      *         response=201,
-     *         description="Successfully created usertype",
-     *         @OA\JsonContent(ref="#/components/schemas/UserTypeResource")
+     *         description="Successfully created menu",
+     *         @OA\JsonContent(ref="#/components/schemas/MenuResource")
      *     ),
      *     @OA\Response(
      *         response=422,
@@ -109,33 +111,36 @@ class UserTypeController extends Controller
      *     ),
      * )
      */
-    public function store(StoreUserTypeRequest $request)
+    public function store(StoreMenuRequest $request)
     {
         $validated = $request->validated();
         $userId = request()->header('X-User-Id');
         $validated['created_by'] = $userId;
-        $usertype = UserType::create($validated);
+        $validated['parent_id']=((int)$validated['parent_id'] < 1) ? '0' : $validated['parent_id'];
+        
+        $data = Menu::create($validated);
        
-        return $this->success(new UserTypeResource($usertype), 'User Type created', Response::HTTP_CREATED);
+        return $this->success(new MenuResource($data), 'Menu created', Response::HTTP_CREATED);
+   
     }
 
-   /**
+     /**
      * @OA\Get(
-     *     path="/api/v1/usertypes/{id}",
-     *     summary="Get a specific usertype",
-     *     tags={"UserTypes"},
+     *     path="/api/v1/menus/{id}",
+     *     summary="Get a specific menu",
+     *     tags={"Menus"},
      *     security={{"bearer_token": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="The ID of the usertype to retrieve",
+     *         description="The ID of the menu to retrieve",
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/UserTypeResource")
+     *         @OA\JsonContent(ref="#/components/schemas/MenuResource")
      *     ),
      *     @OA\Response(
      *         response=404,
@@ -145,39 +150,39 @@ class UserTypeController extends Controller
      */
     public function show(string $id)
     {
-        $usertype = UserType::find($id);
+        $data = Menu::find($id);
 
-        if ($usertype) {
-            return $this->success(new UserTypeResource($usertype));
+        if ($data) {
+            return $this->success(new MenuResource($data));
         } else {
-            return $this->error('User Type not found', Response::HTTP_NOT_FOUND);
+            return $this->error('Menu not found', Response::HTTP_NOT_FOUND);
         }
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Menu $menu)
     {
         //
     }
 
-     /**
+    /**
      * Update the specified resource in storage.
      *
      * @OA\Put(
-     *     path="/api/v1/usertypes/{id}",
-     *     summary="Update an existing usertype",
-     *     tags={"UserTypes"},
+     *     path="/api/v1/menus/{id}",
+     *     summary="Update an existing menu",
+     *     tags={"Menus"},
      *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="The ID of the usertype to update",
+     *         description="The ID of the menu to update",
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
-     *       @OA\Parameter(
+     *     @OA\Parameter(
      *         name="X-User-Id",
      *         in="header",
      *         description="User ID for authentication",
@@ -188,14 +193,14 @@ class UserTypeController extends Controller
      *         )
      *     ),
      *     @OA\RequestBody(
-     *         description="UserType data",
+     *         description="Menu data",
      *         required=true,
-     *         @OA\JsonContent(ref="#/components/schemas/UpdateUserTypeRequest")
+     *         @OA\JsonContent(ref="#/components/schemas/UpdateMenuRequest")
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Successfully updated usertype",
-     *         @OA\JsonContent(ref="#/components/schemas/UserTypeResource")
+     *         description="Successfully updated menu",
+     *         @OA\JsonContent(ref="#/components/schemas/MenuResource")
      *     ),
      *     @OA\Response(
      *         response=422,
@@ -208,34 +213,34 @@ class UserTypeController extends Controller
      *     ),
      * )
      */
-    public function update(UpdateUserTypeRequest $request, string $id)
+    public function update(UpdateMenuRequest $request, string $id)
     {
-        $usertype = UserType::find($id);
+        $data = Menu::find($id);
 
-        if (!$usertype) {
-            return $this->error('UserType not found', Response::HTTP_NOT_FOUND);
+        if (!$data) {
+            return $this->error('Menu not found', Response::HTTP_NOT_FOUND);
         }
 
         $validatedData = $request->validated();
         $userId = request()->header('X-User-Id');
         $validatedData['updated_by'] = $userId;
-        $usertype->update($validatedData);
+        $data->update($validatedData);
     
-        return $this->success(new usertypeResource($usertype), 'User Type updated', Response::HTTP_OK);
+        return $this->success(new MenuResource($data), 'Menu updated', Response::HTTP_OK);
     }
 
-    /**
+   /**
      * Remove the specified resource from storage.
      *
      * @OA\Delete(
-     *     path="/api/v1/usertypes/{id}",
-     *     summary="Delete an UserType",
-     *     tags={"UserTypes"},
+     *     path="/api/v1/menus/{id}",
+     *     summary="Delete an menu",
+     *     tags={"Menus"},
      *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="The ID of the UserType to delete",
+     *         description="The ID of the menu to delete",
      *         required=true,
      *         @OA\Schema(type="integer")
      *     ),
@@ -251,11 +256,11 @@ class UserTypeController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Successfully deleted UserType",
+     *         description="Successfully deleted menu",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="UserType deleted successfully"),
-     *             @OA\Property(property="data", ref="#/components/schemas/UserTypeResource")
+     *             @OA\Property(property="message", type="string", example="Menu deleted successfully"),
+     *             @OA\Property(property="data", ref="#/components/schemas/MenuResource")
      *         )
      *     ),
      *     @OA\Response(
@@ -266,16 +271,16 @@ class UserTypeController extends Controller
      */
     public function destroy(string $id)
     {
-        $usertype = UserType::find($id);
+        $data = Menu::find($id);
 
-        if (!$usertype) {
-            return $this->error('UserType not found', Response::HTTP_NOT_FOUND);
+        if (!$data) {
+            return $this->error('Menu not found', Response::HTTP_NOT_FOUND);
         }
 
         $userId = request()->header('X-User-Id');
-        $usertype->update(['archived_by' => $userId]);
-        $usertype->delete();
-        return $this->success(new UserTypeResource($usertype), 'UserType deleted successfully', Response::HTTP_OK);
+        $data->update(['archived_by' => $userId]);
+        $data->delete();
+        return $this->success(new MenuResource($data), 'Menu deleted successfully', Response::HTTP_OK);
     
     }
 }
