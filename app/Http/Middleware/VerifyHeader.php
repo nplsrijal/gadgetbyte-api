@@ -24,6 +24,14 @@ class VerifyHeader
             ];
             return response()->json($response, Response::HTTP_UNAUTHORIZED);
         }
+        if (!$request->hasHeader('authorization')) {
+            $response = [
+                'status' => 'error',
+                'code' => '401',
+                'message' => 'Authorization Required',
+            ];
+            return response()->json($response, Response::HTTP_UNAUTHORIZED);
+        }
 
         return $next($request);
     }

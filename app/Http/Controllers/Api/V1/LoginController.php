@@ -86,6 +86,7 @@ class LoginController extends Controller
             $cacheKey = 'user_info_' . $user->id;
             Cache::forget($cacheKey);
             Cache::put($cacheKey, $user, 1295999);
+            info(auth()->check());
         }
 
 

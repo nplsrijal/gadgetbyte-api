@@ -225,6 +225,7 @@ class UserController extends Controller
         $validatedData = $request->validated();
         $userId = request()->header('X-User-Id');
         $validatedData['updated_by'] = $userId;
+        $validatedData['password'] = bcrypt($validatedData['password']);
         $user->update($validatedData);
     
         return $this->success(new UserResource($user), 'User  updated', Response::HTTP_OK);
