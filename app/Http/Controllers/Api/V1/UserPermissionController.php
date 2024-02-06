@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use App\Models\Menu;
 use App\Http\Resources\MenuCollection;
 use App\Http\Resources\MenuResource;
+use DB;
 
 
 
@@ -42,17 +43,34 @@ class UserPermissionController extends Controller
      {
          $usertypeId = $request->user_type_id;
        
-         $query = Menu::select('menus.*')
+         $query = Menu::select('menus.id','menus.name','menus.url','menus.icon')
          ->join('menu_permissions as mp','mp.menu_id','menus.id');
          
-         //optional: if request is made through scheme and test add where condtion on it
+         //optional: if request is made through 
          if ($request->has('user_type_id')) {
              $query->where('user_type_id', $usertypeId);
          }
-         $query->orderBy('menus.id');
-         $query->orderBy('menus.parent_id');
+         $query->where('menus.parent_id',0);
+         $query->orderBy('menus.order_by');
          $data=$query->get();
+         foreach ($data as $key => $menu) {
+            $subQuery = Menu::select('menus.id', 'menus.name', 'menus.url', 'menus.icon')
+                ->join('menu_permissions as mp', 'mp.menu_id', '=', 'menus.id');
         
+            // Optional: if request is made through 
+            if ($request->has('user_type_id')) {
+                $subQuery->where('mp.user_type_id', $usertypeId);
+            }
+        
+            $subQuery->where('menus.parent_id', $menu->id)
+                ->orderBy('menus.order_by');
+        
+            $submenus = $subQuery->get();
+            
+            // Assigning submenus to the current menu item
+            $data[$key]->children = $submenus;
+        }
+
  
          return $this->success(new MenuCollection($data));
      }

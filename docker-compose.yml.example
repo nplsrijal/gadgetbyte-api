@@ -2,43 +2,43 @@ version: '3'
 services:
   
   #PHP Service
-  pa-app:
-    image: pa-app
+  gbn-app:
+    image: gbn-app
     build:
       context: .
       dockerfile: Dockerfile
-    user: www-pa
-    container_name: pa-app
+    user: www-gbn
+    container_name: gbn-app
     tty: true
     environment:
-      SERVICE_NAME: pa-app
+      SERVICE_NAME: gbn-app
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
        - ./:/var/www
        - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
-      - pa-network
+      - gbn-network
   
-  pa-app1:
-    image: pa-app
-    user: www-pa
-    container_name: pa-app1
+  gbn-app1:
+    image: gbn-app
+    user: www-gbn
+    container_name: gbn-app1
     tty: true
     environment:
-      SERVICE_NAME: pa-app1
+      SERVICE_NAME: gbn-app1
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
        - ./:/var/www
        - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
-      - pa-network
+      - gbn-network
 
   #Nginx Service
-  pa-webserver:
+  gbn-webserver:
     image: nginx:alpine
-    container_name: pa-webserver
+    container_name: gbn-webserver
     tty: true
     ports:
       - "8002:8002"
@@ -48,85 +48,85 @@ services:
       - ./nginx/conf/nginx.conf:/etc/nginx/conf/nginx.conf:ro
       - ./nginx/conf.d/:/etc/nginx/conf.d/:ro
     networks:
-      - pa-network
+      - gbn-network
 
   #PostgreSQL Service
-  pa-db:
-    container_name: pa-db
-    hostname: pa-db
+  gbn-db:
+    container_name: gbn-db
+    hostname: gbn-db
     build:
       context: ./debezium-postgres
       dockerfile: Dockerfile
     ports:
       - "5434:5432"
     environment:
-      POSTGRES_DB: pa
+      POSTGRES_DB: gbn
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: gbnssword
       SERVICE_TAGS: dev
       SERVICE_NAME: postgresql
     volumes:
-      - padata:/var/lib/postgresql/data
+      - gbndata:/var/lib/postgresql/data
     networks:
-      - pa-network
+      - gbn-network
   # Redis
-  pa-redis:
+  gbn-redis:
     image: redis:alpine
-    container_name: pa-redis
+    container_name: gbn-redis
     ports:
       - "6381:6379"
     volumes:
-      - pa-redis-data:/data
+      - gbn-redis-data:/data
     networks:
-      - pa-network
+      - gbn-network
   
   # Kafka Worker Service
-  pa-kafka-worker:
-    image: pa-app  # Reference the existing image built for pa-app
-    user: www-pa
-    container_name: pa-kafka-worker
+  gbn-kafka-worker:
+    image: gbn-app  # Reference the existing image built for gbn-app
+    user: www-gbn
+    container_name: gbn-kafka-worker
     tty: true
     environment:
-      SERVICE_NAME: pa-kafka-worker
+      SERVICE_NAME: gbn-kafka-worker
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
       - ./:/var/www
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
-      - pa-network
+      - gbn-network
       - kafka-network
     command: php artisan consume
     restart: always # Add this line to specify the restart policy
   # Queue Worker Service
-  pa-queue-worker:
-    image: pa-app  # Reference the existing image built for pa-app
-    user: www-pa
-    container_name: pa-queue-worker
+  gbn-queue-worker:
+    image: gbn-app  # Reference the existing image built for gbn-app
+    user: www-gbn
+    container_name: gbn-queue-worker
     tty: true
     environment:
-      SERVICE_NAME: pa-queue-worker
+      SERVICE_NAME: gbn-queue-worker
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
       - ./:/var/www
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
-      - pa-network
+      - gbn-network
     command: php artisan queue:work --queue=default --sleep=3 --tries=3 --max-time=3600
     restart: always # Add this line to specify the restart policy
 
 #Docker Networks
 networks:
-  pa-network:
-    name: pa-network
+  gbn-network:
+    name: gbn-network
     driver: bridge
   kafka-network:
       name: kafka-network
       external: true
 #Volumes
 volumes:
-  padata:
+  gbndata:
     driver: local
-  pa-redis-data:
+  gbn-redis-data:
     driver: local
