@@ -13,4 +13,14 @@ class MenuPermission extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
     const DELETED_AT = 'archived_at';
     protected $guarded=[];
+
+    public function menu()
+    {
+        return $this->belongsTo(Menu::class, 'menu_id');
+    }
+
+    public function usertype()
+    {
+        return $this->belongsTo(UserType::class, 'user_type_id');
+    }
 }

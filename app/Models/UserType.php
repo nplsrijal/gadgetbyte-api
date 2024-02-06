@@ -13,4 +13,7 @@ class UserType extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
     const DELETED_AT = 'archived_at';
     protected $guarded=[];
+
+ 
+
 }

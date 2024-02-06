@@ -20,5 +20,9 @@ class User extends Authenticatable implements Auditable
         'remember_token',
     ];
 
+    public function usertype()
+    {
+        return $this->belongsTo(UserType::class, 'user_type_id');
+    }
 
 }
