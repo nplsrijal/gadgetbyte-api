@@ -62,71 +62,21 @@ services:
     environment:
       POSTGRES_DB: gbn
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: gbnssword
+      POSTGRES_PASSWORD: gbn_pass
       SERVICE_TAGS: dev
       SERVICE_NAME: postgresql
     volumes:
       - gbndata:/var/lib/postgresql/data
     networks:
       - gbn-network
-  # Redis
-  gbn-redis:
-    image: redis:alpine
-    container_name: gbn-redis
-    ports:
-      - "6381:6379"
-    volumes:
-      - gbn-redis-data:/data
-    networks:
-      - gbn-network
-  
-  # Kafka Worker Service
-  gbn-kafka-worker:
-    image: gbn-app  # Reference the existing image built for gbn-app
-    user: www-gbn
-    container_name: gbn-kafka-worker
-    tty: true
-    environment:
-      SERVICE_NAME: gbn-kafka-worker
-      SERVICE_TAGS: dev
-    working_dir: /var/www
-    volumes:
-      - ./:/var/www
-      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
-    networks:
-      - gbn-network
-      - kafka-network
-    command: php artisan consume
-    restart: always # Add this line to specify the restart policy
-  # Queue Worker Service
-  gbn-queue-worker:
-    image: gbn-app  # Reference the existing image built for gbn-app
-    user: www-gbn
-    container_name: gbn-queue-worker
-    tty: true
-    environment:
-      SERVICE_NAME: gbn-queue-worker
-      SERVICE_TAGS: dev
-    working_dir: /var/www
-    volumes:
-      - ./:/var/www
-      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
-    networks:
-      - gbn-network
-    command: php artisan queue:work --queue=default --sleep=3 --tries=3 --max-time=3600
-    restart: always # Add this line to specify the restart policy
 
 #Docker Networks
 networks:
   gbn-network:
     name: gbn-network
     driver: bridge
-  kafka-network:
-      name: kafka-network
-      external: true
+
 #Volumes
 volumes:
   gbndata:
-    driver: local
-  gbn-redis-data:
     driver: local
