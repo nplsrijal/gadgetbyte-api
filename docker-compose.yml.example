@@ -1,7 +1,7 @@
 version: '3'
 services:
   
-  #PHP Service
+  # PHP Service
   gbn-app:
     image: gbn-app
     build:
@@ -11,30 +11,14 @@ services:
     container_name: gbn-app
     tty: true
     environment:
-      SERVICE_NAME: gbn-app
+      SERVICE_NAME: app
       SERVICE_TAGS: dev
     working_dir: /var/www
     volumes:
-       - ./:/var/www
-       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./:/var/www
     networks:
-      - gbn-network
-  
-  gbn-app1:
-    image: gbn-app
-    user: www-gbn
-    container_name: gbn-app1
-    tty: true
-    environment:
-      SERVICE_NAME: gbn-app1
-      SERVICE_TAGS: dev
-    working_dir: /var/www
-    volumes:
-       - ./:/var/www
-       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
-    networks:
-      - gbn-network
-
+      - gbn-app-network
+      
   #Nginx Service
   gbn-webserver:
     image: nginx:alpine
@@ -42,23 +26,21 @@ services:
     tty: true
     ports:
       - "8002:8002"
-      - "4445:443"
+      - "4452:443"
     volumes:
       - ./:/var/www
       - ./nginx/conf/nginx.conf:/etc/nginx/conf/nginx.conf:ro
       - ./nginx/conf.d/:/etc/nginx/conf.d/:ro
     networks:
-      - gbn-network
+      - gbn-app-network
 
   #PostgreSQL Service
   gbn-db:
-    container_name: gbn-db
-    hostname: gbn-db
     build:
       context: ./debezium-postgres
       dockerfile: Dockerfile
-    ports:
-      - "5434:5432"
+    container_name: gbn-db
+    tty: true
     environment:
       POSTGRES_DB: gbn
       POSTGRES_USER: postgres
@@ -66,17 +48,18 @@ services:
       SERVICE_TAGS: dev
       SERVICE_NAME: postgresql
     volumes:
-      - gbndata:/var/lib/postgresql/data
+      - gbn-dbdata:/var/lib/postgresql/data
     networks:
-      - gbn-network
+      - gbn-app-network
 
 #Docker Networks
 networks:
-  gbn-network:
-    name: gbn-network
+  gbn-app-network:
+    name: gbn-app-network
     driver: bridge
-
 #Volumes
 volumes:
-  gbndata:
+  gbn-dbdata:
+    driver: local
+  pulse-data:
     driver: local
