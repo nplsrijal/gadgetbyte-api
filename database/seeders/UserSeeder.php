@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             'email' => 'srijal@gmail.com',
             'username' => 'srijal',
             'user_type_id' => '1',
-            'isactive' => '1',
+            'is_active' => '1',
             'password'=>bcrypt('12345678')           
         ]);
     }
