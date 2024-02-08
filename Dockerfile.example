@@ -56,4 +56,6 @@ RUN chmod -R 775 /var/www/storage
 # Change current user to www
 USER www-gbn
 
-CMD ["php", "artisan", "octane:start", "--workers=8", "--task-workers=16", "--host=0.0.0.0", "--max-requests=500","--port=9000"]
+EXPOSE 9000
+
+CMD ["php-fpm"]

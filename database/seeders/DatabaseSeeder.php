@@ -19,11 +19,12 @@ class DatabaseSeeder extends Seeder
     {
         
         $this->call(PassportClientsTableSeeder::class);
+        $this->call(UserTypeSeeder::class);
+        $this->call(UserSeeder::class);
        
         if (config('app.env') == 'local') {
            
         }
-        DB::unprepared('SELECT update_sequences();');
 
     }
 }

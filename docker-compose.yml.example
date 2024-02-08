@@ -1,6 +1,6 @@
 version: '3'
 services:
-  
+
   # PHP Service
   gbn-app:
     image: gbn-app
@@ -18,7 +18,7 @@ services:
       - ./:/var/www
     networks:
       - gbn-app-network
-      
+
   #Nginx Service
   gbn-webserver:
     image: nginx:alpine
@@ -26,7 +26,6 @@ services:
     tty: true
     ports:
       - "8002:8002"
-      - "4452:443"
     volumes:
       - ./:/var/www
       - ./nginx/conf/nginx.conf:/etc/nginx/conf/nginx.conf:ro
