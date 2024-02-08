@@ -15,22 +15,22 @@ class UserTypeSeeder extends Seeder
     public function run()
     {
         //
-        DB::table('usertype')->insert(
+        DB::table('user_types')->insert(
             [
-            'typename' => 'SuperAdmin',
+            'name' => 'SuperAdmin',
             ]
         );
 
-        DB::table('usertype')->insert(
+        DB::table('user_types')->insert(
             [
-            'typename' => 'Admin',
+            'name' => 'Admin',
             ]
         );
 
        
-        DB::table('usertype')->insert(
+        DB::table('user_types')->insert(
             [
-            'typename' => 'Data Entry Officer',
+            'name' => 'Data Entry Officer',
             ]
         );
 
