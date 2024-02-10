@@ -1,0 +1,2444 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "GadgetByteNepal",
+        "description": "GadgetByte Nepal Rest Apis Documentation",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User login",
+                "operationId": "bb4831f9057e08ec9937e75b14314fd4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "username": {
+                                        "description": "The email or username of the user",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "description": "The access token",
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "Bearer"
+                                        },
+                                        "expires_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-05-14 10:00:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Invalid username or password",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User logout",
+                "operationId": "b020be50e34b05500ffd81729fbc10fa",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Successfully logged out",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/menus": {
+            "get": {
+                "tags": [
+                    "Menus"
+                ],
+                "summary": "Get a list of Menus",
+                "operationId": "4512a8cf3e47b6bbb48efa21ad1005e0",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name or url ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/MenuResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Menus"
+                ],
+                "summary": "Create a new Menu",
+                "operationId": "70898b64abbfbbd24bb791f350e431f1",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Menus data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreMenuRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created menu",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MenuResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/menus/{id}": {
+            "get": {
+                "tags": [
+                    "Menus"
+                ],
+                "summary": "Get a specific menu",
+                "operationId": "8c0d54161361f4fe73878816aaf255fa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the menu to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MenuResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Menus"
+                ],
+                "summary": "Update an existing menu",
+                "description": "Update the specified resource in storage.",
+                "operationId": "3a1b7614952313c2aef652efdd8e835a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the menu to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Menu data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateMenuRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated menu",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MenuResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Menus"
+                ],
+                "summary": "Delete an menu",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "91da1c47c2a883eae55fb1fbb7b19c63",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the menu to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted menu",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Menu deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/MenuResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/menu-permissions": {
+            "get": {
+                "tags": [
+                    "Menu Permissions"
+                ],
+                "summary": "Get a list of Menu Permissions",
+                "operationId": "3ca0af3f8b7e95681c3746dbae404cc7",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PermissionResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Menu Permissions"
+                ],
+                "summary": "Create a new Menu Permission",
+                "operationId": "2f4b6b469f88ad4ce23e083f0560a782",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Menu Permissions data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorePermissionRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created menu permission",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PermissionResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/menu-permissions/{id}": {
+            "delete": {
+                "tags": [
+                    "Menu Permissions"
+                ],
+                "summary": "Delete an menu permission",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "b09618229008a26dea5022fa9bbb9898",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the menu permisison to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted menu permission",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Menu Permission deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/PermissionResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/post-categories": {
+            "get": {
+                "tags": [
+                    "Post Categories"
+                ],
+                "summary": "Get a list of Post Categories",
+                "operationId": "6aa85d53c26966cbbbe91a15fb6f3b51",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name or slug ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PostCategoryResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Post Categories"
+                ],
+                "summary": "Create a new Post Category",
+                "operationId": "721580de736279c0e41638d7dc510364",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Post Categories data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorePostCategoryRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created post category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostCategoryResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/post-categories/{id}": {
+            "get": {
+                "tags": [
+                    "Post Categories"
+                ],
+                "summary": "Get a specific post category",
+                "operationId": "d1861b535175cd5f468543ac82cdc2e9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post category to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostCategoryResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Post Categories"
+                ],
+                "summary": "Update an existing post category",
+                "description": "Update the specified resource in storage.",
+                "operationId": "d815d6ac306cb1e38b0c033699f5b4d9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post category to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "PostCategory data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdatePostCategoryRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated post category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostCategoryResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Post Categories"
+                ],
+                "summary": "Delete an post category",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "2b23682b9d14a2de5fbb0fd9b8977b80",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post category to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted post category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "PostCategory deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/PostCategoryResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/tags": {
+            "get": {
+                "tags": [
+                    "Tags"
+                ],
+                "summary": "Get a list of Tags",
+                "operationId": "e320cb59dba3e323dacbbc502509717c",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TagResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Tags"
+                ],
+                "summary": "Create a new Tag",
+                "operationId": "d5b48558ae6b21f20e758584734e2cd7",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Tags data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreTagRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created tag",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TagResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/tags/{id}": {
+            "get": {
+                "tags": [
+                    "Tags"
+                ],
+                "summary": "Get a specific tag",
+                "operationId": "a3d7580f0301bd6fff879d635b82a2fb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the tag to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TagResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Tags"
+                ],
+                "summary": "Update an existing tag",
+                "description": "Update the specified resource in storage.",
+                "operationId": "ab9fc572397025dcf3a29db57acdebdd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the tag to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Tag data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateTagRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated tag",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TagResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Tags"
+                ],
+                "summary": "Delete an tag",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "fab7e3dec2348caad78c23998aa54ba3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the tag to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted tag",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Tag deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/TagResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get a list of Users",
+                "operationId": "12e989554c281d650dff75443acabf54",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by firstname or lastname or email or username",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create a new User",
+                "operationId": "64da9b5a20fa4f20e947ed61b2bbb6da",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "User Types data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get a specific user",
+                "operationId": "a9d321d5dc6bc2613c6cf5ba92b76c89",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the user to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update an existing user",
+                "description": "Update the specified resource in storage.",
+                "operationId": "5bcda8371b3cb9f863a47620e636be9b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the user to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "User data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete an User",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "0446b3779430bbd9ca0f106d9fd0a2ed",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the User to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted User",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user-menus": {
+            "get": {
+                "tags": [
+                    "User Type Wise Menu"
+                ],
+                "summary": "Get a list of user wise menu ",
+                "operationId": "f50bbca76c6797c4e4a7c7aef7a279ec",
+                "parameters": [
+                    {
+                        "name": "user_type_id",
+                        "in": "query",
+                        "description": "Filter by user_type_id (optional)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/MenuResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/usertypes": {
+            "get": {
+                "tags": [
+                    "UserTypes"
+                ],
+                "summary": "Get a list of UserTypes",
+                "operationId": "b73dce56a0c6315a7fc2924fb13bdf20",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name or code",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserTypeResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "UserTypes"
+                ],
+                "summary": "Create a new UserType",
+                "operationId": "eaaaf6610d97c15050f39a86613e4f0b",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "User Types data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreUserTypeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created usertype",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserTypeResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/usertypes/{id}": {
+            "get": {
+                "tags": [
+                    "UserTypes"
+                ],
+                "summary": "Get a specific usertype",
+                "operationId": "d4a4911d48e8c6528722d6ad16df8d39",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the usertype to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserTypeResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "UserTypes"
+                ],
+                "summary": "Update an existing usertype",
+                "description": "Update the specified resource in storage.",
+                "operationId": "9435d1ec6f0664dcfec5d4b2ab924a43",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the usertype to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "UserType data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateUserTypeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated usertype",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserTypeResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "UserTypes"
+                ],
+                "summary": "Delete an UserType",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "59273d02230db4c787feba539ff52ebe",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the UserType to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted UserType",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "UserType deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserTypeResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ValidationErrorResponse": {
+                "title": "Validation Error Response",
+                "description": "An object representing a validation error response",
+                "properties": {
+                    "message": {
+                        "description": "The error message",
+                        "type": "string",
+                        "example": "The given data was invalid."
+                    },
+                    "errors": {
+                        "description": "An object containing field validation error messages. (This may varies from your api endpoints.)",
+                        "type": "object",
+                        "example": {
+                            "postkey": [
+                                "The postkey field is required."
+                            ]
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "StoreMenuRequest": {
+                "title": "Menu  Store Request",
+                "description": "Menu  store request data",
+                "required": [
+                    "name",
+                    "url",
+                    "icon",
+                    "order_by",
+                    "parent_id"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The menu display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "url": {
+                                "description": "The Endpoint  of the Menu.",
+                                "type": "string",
+                                "example": "/dashboard"
+                            },
+                            "icon": {
+                                "description": "The menu's icon ",
+                                "type": "string",
+                                "example": "fa fa-cogs"
+                            },
+                            "order_by": {
+                                "description": "The Priority of menu",
+                                "type": "integer",
+                                "example": "1"
+                            },
+                            "parent_id": {
+                                "description": "If Sub menu, Send Menu Id else 0",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "StorePermissionRequest": {
+                "title": "Menu Permission  Store Request",
+                "description": "Menu Permission store request data",
+                "required": [
+                    "menu_id",
+                    "user_type_id"
+                ],
+                "properties": {
+                    "menu_id": {
+                        "description": "The menu Id",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "user_type_id": {
+                        "description": "The User Type's Id",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "StorePostCategoryRequest": {
+                "title": "Post Category  Store Request",
+                "description": "Post Category  store request data",
+                "required": [
+                    "name",
+                    "slug",
+                    "description",
+                    "order_by",
+                    "parent_id"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The Post Category display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "slug": {
+                                "description": "The Endpoint  of the PostCategory.",
+                                "type": "string",
+                                "example": "apple"
+                            },
+                            "description": {
+                                "description": "The Post Category's description ",
+                                "type": "string",
+                                "example": "this is the description of it."
+                            },
+                            "order_by": {
+                                "description": "The Priority of Post Category",
+                                "type": "integer",
+                                "example": "1"
+                            },
+                            "parent_id": {
+                                "description": "If Sub  Category, Send Post Category Id else 0",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "StoreTagRequest": {
+                "title": "Tag  Store Request",
+                "description": "Tag  store request data",
+                "required": [
+                    "name",
+                    "description"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The tag display name",
+                                "type": "string",
+                                "example": "Lenevo"
+                            },
+                            "description": {
+                                "description": "The Description  of the Tag.",
+                                "type": "string",
+                                "example": "Lenevo laptops in nepal"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "StoreUserRequest": {
+                "title": "User  Store Request",
+                "description": "User  store request data",
+                "required": [
+                    "firstname",
+                    "lastname",
+                    "email",
+                    "username",
+                    "password"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "firstname": {
+                                "description": "The user's first name",
+                                "type": "string",
+                                "example": "Admin"
+                            },
+                            "lastname": {
+                                "description": "The user's last name",
+                                "type": "string",
+                                "example": "Admin"
+                            },
+                            "username": {
+                                "description": "The user's username",
+                                "type": "string",
+                                "example": "admin1"
+                            },
+                            "email": {
+                                "description": "The user's email address",
+                                "type": "email",
+                                "example": "admin@gbn.com"
+                            },
+                            "password": {
+                                "description": "The user's password",
+                                "type": "string",
+                                "example": "admin@123"
+                            },
+                            "user_type_id": {
+                                "description": "The user's usertype id",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "StoreUserTypeRequest": {
+                "title": "User Type Store Request",
+                "description": "User Type store request data",
+                "required": [
+                    "name"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The usertype's name",
+                                "type": "string",
+                                "example": "Admin"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "UpdateMenuRequest": {
+                "title": "Menu  Update Request",
+                "description": "Menu  update request data",
+                "required": [
+                    "name",
+                    "url",
+                    "icon",
+                    "order_by",
+                    "parent_id"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The menu display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "url": {
+                                "description": "The Endpoint  of the Menu.",
+                                "type": "string",
+                                "example": "/dashboard"
+                            },
+                            "icon": {
+                                "description": "The menu's icon ",
+                                "type": "string",
+                                "example": "fa fa-cogs"
+                            },
+                            "order_by": {
+                                "description": "The Priority of menu",
+                                "type": "integer",
+                                "example": "1"
+                            },
+                            "parent_id": {
+                                "description": "If Sub menu, Send Menu Id else 0",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "UpdatePostCategoryRequest": {
+                "title": "Post Category  Update Request",
+                "description": "Post Category  update request data",
+                "required": [
+                    "name",
+                    "slug",
+                    "description",
+                    "order_by",
+                    "parent_id"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The Post Category display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "slug": {
+                                "description": "The Endpoint  of the PostCategory.",
+                                "type": "string",
+                                "example": "apple"
+                            },
+                            "description": {
+                                "description": "The Post Category's description ",
+                                "type": "string",
+                                "example": "this is the description of it."
+                            },
+                            "order_by": {
+                                "description": "The Priority of Post Category",
+                                "type": "integer",
+                                "example": "1"
+                            },
+                            "parent_id": {
+                                "description": "If Sub  Category, Send Post Category Id else 0",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "UpdateTagRequest": {
+                "title": "Tag  Update Request",
+                "description": "Tag  update request data",
+                "required": [
+                    "name",
+                    "description"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The tag display name",
+                                "type": "string",
+                                "example": "Lenevo"
+                            },
+                            "description": {
+                                "description": "The Description  of the Tag.",
+                                "type": "string",
+                                "example": "Lenevo laptops in nepal"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "UpdateUserRequest": {
+                "title": "User  Update Request",
+                "description": "User  update request data",
+                "required": [
+                    "firstname",
+                    "lastname",
+                    "email",
+                    "username",
+                    "password"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "firstname": {
+                                "description": "The user's first name",
+                                "type": "string",
+                                "example": "Admin"
+                            },
+                            "lastname": {
+                                "description": "The user's last name",
+                                "type": "string",
+                                "example": "Admin"
+                            },
+                            "username": {
+                                "description": "The user's username",
+                                "type": "string",
+                                "example": "admin1"
+                            },
+                            "email": {
+                                "description": "The user's email address",
+                                "type": "email",
+                                "example": "admin@gbn.com"
+                            },
+                            "password": {
+                                "description": "The user's password",
+                                "type": "string",
+                                "example": "admin@123"
+                            },
+                            "user_type_id": {
+                                "description": "The user's usertype id",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "UpdateUserTypeRequest": {
+                "title": "User Type Update Request",
+                "description": "User Type update request data",
+                "required": [
+                    "name"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The name of the bank",
+                                "type": "string",
+                                "example": "Admin"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "MenuResource": {
+                "title": "Menu Resource",
+                "description": "Menu resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the menu",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "The display name of the menu",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "url": {
+                        "description": "The Endpoint of the menu",
+                        "type": "string",
+                        "example": "/dashboard"
+                    },
+                    "icon": {
+                        "description": "The icon of the menu",
+                        "type": "string",
+                        "example": "fa fa-cogs"
+                    },
+                    "order_by": {
+                        "description": "The Priority of menu",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "parent_id": {
+                        "description": "If Sub menu, Send Menu Id else 0",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "PermissionResource": {
+                "title": "Menu Permission Resource",
+                "description": "Menu Permission resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the menupermission",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "menu_id": {
+                        "description": "The menu's id",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "user_type_id": {
+                        "description": "The User type's id",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "PostCategoryResource": {
+                "title": "Post Category Resource",
+                "description": "Post Category resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the post category",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "The Post Category display name",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "slug": {
+                        "description": "The Endpoint  of the PostCategory.",
+                        "type": "string",
+                        "example": "apple"
+                    },
+                    "description": {
+                        "description": "The Post Category's description ",
+                        "type": "string",
+                        "example": "this is the description of it."
+                    },
+                    "order_by": {
+                        "description": "The Priority of Post Category",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "parent_id": {
+                        "description": "If Sub  Category, Send Post Category Id else 0",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "TagResource": {
+                "title": "Tag Resource",
+                "description": "Tag resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the tag",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "The display name of the tag",
+                        "type": "string",
+                        "example": "Lenevo"
+                    },
+                    "description": {
+                        "description": "The Description of the tag",
+                        "type": "string",
+                        "example": "This is the description to lenevo best laptop in nepal"
+                    }
+                },
+                "type": "object"
+            },
+            "UserResource": {
+                "title": "User Resource",
+                "description": "User resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the user",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "firstname": {
+                        "description": "The first name of the user",
+                        "type": "string",
+                        "example": "Admin"
+                    },
+                    "lastname": {
+                        "description": "The last name of the user",
+                        "type": "string",
+                        "example": "Admin"
+                    },
+                    "email": {
+                        "description": "The email of the user",
+                        "type": "email",
+                        "example": "admin@gbn.com"
+                    },
+                    "username": {
+                        "description": "The username of the user",
+                        "type": "string",
+                        "example": "admin1"
+                    },
+                    "password": {
+                        "description": "The password of the user",
+                        "type": "string",
+                        "example": "admin@1"
+                    },
+                    "user_type_id": {
+                        "description": "The User Type of the user",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "created_by": {
+                        "description": "user created by",
+                        "type": "integer",
+                        "example": "7"
+                    },
+                    "created_at": {
+                        "description": "user created at ",
+                        "type": "string",
+                        "example": "2023-06-21 08:25:18.000"
+                    }
+                },
+                "type": "object"
+            },
+            "UserTypeResource": {
+                "title": "UserType Resource",
+                "description": "UserType resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the usertype",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "The name of the User Type",
+                        "type": "string",
+                        "example": "Admin"
+                    },
+                    "created_by": {
+                        "description": "User Type created by",
+                        "type": "integer",
+                        "example": "7"
+                    },
+                    "created_at": {
+                        "description": "User Type created at ",
+                        "type": "string",
+                        "example": "2023-06-21 08:25:18.000"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearer_token": {
+                "type": "http",
+                "description": "Bearer Token Authentication",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "API endpoints related to user authentication"
+        }
+    ]
+}
