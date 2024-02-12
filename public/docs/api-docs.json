@@ -112,6 +112,227 @@
                 ]
             }
         },
+        "/api/v1/medias": {
+            "get": {
+                "tags": [
+                    "Medias"
+                ],
+                "summary": "Get a list of Medias",
+                "operationId": "15bf98ef3081af654b0a40149dc57d52",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/MediaResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Medias"
+                ],
+                "summary": "Create a new Media",
+                "operationId": "59861c47dc33ffbb65b880caa3a2a877",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Medias data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreMediaRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created media",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MediaResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/medias/{id}": {
+            "get": {
+                "tags": [
+                    "Medias"
+                ],
+                "summary": "Get a specific media",
+                "operationId": "d778464cde3cf932228a8d23b0c0b644",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the media to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MediaResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Medias"
+                ],
+                "summary": "Delete an media",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "698933008258ec9a602223d0578eb993",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the media to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted media",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Media deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/MediaResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
         "/api/v1/menus": {
             "get": {
                 "tags": [
@@ -1811,6 +2032,48 @@
                 },
                 "type": "object"
             },
+            "StoreMediaRequest": {
+                "title": "Media  Store Request",
+                "description": "Media  store request data",
+                "required": [
+                    "image",
+                    "name",
+                    "caption",
+                    "description"
+                ],
+                "properties": {
+                    "image": {
+                        "description": "Array of the image",
+                        "type": "array",
+                        "items": {
+                            "type": "file",
+                            "format": "binary"
+                        }
+                    },
+                    "name": {
+                        "description": "Name of the image",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "caption": {
+                        "description": "Caption of the image",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "description": {
+                        "description": "Description of the image",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "StoreMenuRequest": {
                 "title": "Menu  Store Request",
                 "description": "Menu  store request data",
@@ -2227,6 +2490,38 @@
                         "type": "object"
                     }
                 ]
+            },
+            "MediaResource": {
+                "title": "Media Resource",
+                "description": "Media resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the media",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "image": {
+                        "description": "The image name of the media",
+                        "type": "string",
+                        "example": "image.png"
+                    },
+                    "name": {
+                        "description": "The display name of the media",
+                        "type": "string",
+                        "example": "Lenevo"
+                    },
+                    "caption": {
+                        "description": "The caption of the media",
+                        "type": "string",
+                        "example": "Lenevo"
+                    },
+                    "description": {
+                        "description": "The Description of the media",
+                        "type": "string",
+                        "example": "This is the description to lenevo best laptop in nepal"
+                    }
+                },
+                "type": "object"
             },
             "MenuResource": {
                 "title": "Menu Resource",
