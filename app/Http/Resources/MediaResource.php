@@ -54,7 +54,8 @@ class MediaResource extends JsonResource
     public function toArray(Request $request): array
     {
         $ResourceData = $this->resource;
-        $data= $ResourceData;
+        
+        $data= (is_array($ResourceData))?$ResourceData:$ResourceData->toArray();
 
         // remove not to be sent data;
         // unset($data['updated_by']);
