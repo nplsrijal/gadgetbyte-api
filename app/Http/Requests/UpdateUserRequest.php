@@ -66,12 +66,12 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "firstname"=>"required|string|max:30",
-            "lastname"=>"required|string|max:30",
-            "username"=>"required|string|max:15",
-            "email"=>"required|string|max:50",
-            "password"=>"required|string|max:20",
-            "user_type_id"=>"required|numeric|max:10",
+            "firstname"=>"required|string|max:255",
+            "lastname"=>"required|string|max:255",
+            "username"=>"required|string|max:255",
+            "email"=>"required|string|max:255",
+            "password"=>"required|string|max:255",
+            "user_type_id"=>"required|numeric|max:255",
 
         ];
     }

@@ -60,11 +60,11 @@ class UpdateMenuRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name"=>"required|string|max:30",
-            "url"=>"required|string|max:30",
-            "icon"=>"required|string|max:30",
-            "order_by"=>"required|integer|max:10",
-            "parent_id"=>"required|integer|max:10",
+            "name"=>"required|string|max:255",
+            "url"=>"required|string|max:255",
+            "icon"=>"required|string|max:255",
+            "order_by"=>"required|integer|max:255",
+            "parent_id"=>"required|integer|max:255",
 
         ];
     }

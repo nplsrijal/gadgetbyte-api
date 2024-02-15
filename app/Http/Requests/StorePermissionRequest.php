@@ -44,8 +44,8 @@ class StorePermissionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "menu_id"=>"required|integer|max:30",
-            "user_type_id"=>"required|integer|max:30",
+            "menu_id"=>"required|integer|max:255",
+            "user_type_id"=>"required|integer|max:255",
         ];
     }
 }

@@ -43,7 +43,7 @@ class UserPermissionController extends Controller
      {
          $usertypeId = $request->user_type_id;
        
-         $query = Menu::select('menus.id','menus.name','menus.url','menus.icon')
+         $query = Menu::select('menus.id','menus.name','menus.url','menus.icon')->distinct()
          ->join('menu_permissions as mp','mp.menu_id','menus.id');
          
          //optional: if request is made through 

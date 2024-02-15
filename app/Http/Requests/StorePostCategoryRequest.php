@@ -59,11 +59,11 @@ class StorePostCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name"=>"required|string|max:30",
-            "slug"=>"required|string|max:30",
-            "description"=>"required|string|max:100",
-            "order_by"=>"required|integer|max:10",
-            "parent_id"=>"required|integer|max:10",
+            "name"=>"required|string|max:255",
+            "slug"=>"required|string|max:255",
+            "description"=>"required|string|max:255",
+            "order_by"=>"required|integer|max:255",
+            "parent_id"=>"required|integer|max:255",
 
         ];
     }
