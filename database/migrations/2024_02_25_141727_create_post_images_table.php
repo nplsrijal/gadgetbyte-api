@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('post_id');
             $table->foreign('post_id')->references('id')->on('posts');
             $table->string('image',100);
+            $table->string('slug',100);
             $table->userinfos();
             $table->archivedInfos();
             $table->timestamps();
