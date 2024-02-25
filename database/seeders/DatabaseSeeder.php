@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PassportClientsTableSeeder::class);
         $this->call(UserTypeSeeder::class);
         $this->call(UserSeeder::class);
+        $this->call(ReviewSeeder::class);
        
         if (config('app.env') == 'local') {
            
