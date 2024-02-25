@@ -7,17 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class UserType extends Model implements Auditable
+class PostPrice extends Model implements Auditable
 {
     use HasFactory,SoftDeletes;
     use \OwenIt\Auditing\Auditable;
     const DELETED_AT = 'archived_at';
     protected $guarded=[];
 
-    public function users()
+    
+    public function post()
     {
-        return $this->hasMany(User::class, 'id');
+        return $this->belongsTo(Post::class);
     }
- 
-
 }
