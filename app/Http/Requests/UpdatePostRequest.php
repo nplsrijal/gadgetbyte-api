@@ -8,7 +8,7 @@ class UpdatePostRequest extends FormRequest
 {
     /**
  * @OA\Schema(
- *     schema="StoreUpdateRequest",
+ *     schema="UpdatePostRequest",
  *     type="object",
  *     title="Post Update Request",
  *     description="Post update request data",
