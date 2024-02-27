@@ -30,4 +30,6 @@ resources/.DS_Store
 storage/.DS_Store
 tests/.DS_Store
 storage/api-docs/api-docs.json
-padata/*
+gbndata/*
+/public/uploads/*
+/public/docs/*
