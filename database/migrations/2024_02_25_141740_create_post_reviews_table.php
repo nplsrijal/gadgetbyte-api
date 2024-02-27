@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('post_id')->references('id')->on('posts');
             $table->unsignedBigInteger('review_id');
             $table->foreign('review_id')->references('id')->on('reviews');
+            $table->string('title',100);
             $table->string('review',100);
             $table->userinfos();
             $table->archivedInfos();

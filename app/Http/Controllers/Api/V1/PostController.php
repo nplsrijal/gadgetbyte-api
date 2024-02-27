@@ -10,6 +10,8 @@ use App\Http\Resources\PostResource;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
+use App\Models\PostTag;
+use DB;
 
 class PostController extends Controller
 {
@@ -114,10 +116,48 @@ class PostController extends Controller
         $validated = $request->validated();
         $userId = request()->header('X-User-Id');
         $validated['created_by'] = $userId;
+
+        if(isset($validated['tags']))
+        {
+            $tags=$validated['tags'];
+            unset($validated['tags']);
+
+        }
+        else
+        {
+            $tags=[];
+        }
+
         
+         // Begin database transaction
+         DB::beginTransaction();
+
         $data = Post::create($validated);
+
+        if(count($tags)> 0)
+        {
+            $insert_tags=[];
+            foreach($tags as $tag)
+            {
+                $insert_tags[]=array('post_id'=>$data->id,'tag_id'=>$tag);
+            }
+
+            PostTag::insert($insert_tags);
+        }
+
+         // Check database transaction
+         $transactionStatus = DB::transactionLevel();
+
+         if ($transactionStatus > 0) {
+             // Database transaction success
+             DB::commit();
+             return $this->success(new PostResource($data), 'Post created', Response::HTTP_CREATED);
+            } else {
+             // Throw error
+             throw new Exception('Could not save Post.', 1);
+         }
+
        
-        return $this->success(new PostResource($data), 'Post created', Response::HTTP_CREATED);
    
     }
 
@@ -148,8 +188,9 @@ class PostController extends Controller
     public function show(string $id)
     {
         $data = Post::find($id);
-
-        if ($data) {
+        // $data->prices=$data->prices;
+        // $data->tags=$data->tags;
+         if ($data) {
             return $this->success(new PostResource($data));
         } else {
             return $this->error('Post not found', Response::HTTP_NOT_FOUND);
@@ -221,9 +262,52 @@ class PostController extends Controller
         $validatedData = $request->validated();
         $userId = request()->header('X-User-Id');
         $validatedData['updated_by'] = $userId;
+
+        if(isset($validatedData['tags']))
+        {
+            $tags=$validatedData['tags'];
+            unset($validatedData['tags']);
+
+        }
+        else
+        {
+            $tags=[];
+        }
+        
+
+         // Begin database transaction
+         DB::beginTransaction();
         $data->update($validatedData);
+
+        if(count($tags) > 0)
+        {
+            $posttag_data=PostTag::where('post_id', $data->id);
+            $posttag_data->update(['archived_by' => $userId]);
+            $posttag_data->delete();
+
+            $insert_tags=[];
+
+            
+            foreach($tags as $tag)
+            {
+                $insert_tags[]=array('post_id'=>$data->id,'tag_id'=>$tag);
+            }
+
+            PostTag::insert($insert_tags);
+        }
+
+         // Check database transaction
+         $transactionStatus = DB::transactionLevel();
+
+         if ($transactionStatus > 0) {
+             // Database transaction success
+             DB::commit();
+             return $this->success(new PostResource($data), 'Post updated', Response::HTTP_OK);
+            } else {
+             // Throw error
+             throw new Exception('Could not save Post.', 1);
+         }
     
-        return $this->success(new PostResource($data), 'Post updated', Response::HTTP_OK);
     }
 
    /**

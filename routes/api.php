@@ -12,6 +12,9 @@ use App\Http\Controllers\Api\V1\TagController;
 use App\Http\Controllers\Api\V1\MediaController;
 use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\PostController;
+use App\Http\Controllers\Api\V1\PostPriceController;
+use App\Http\Controllers\Api\V1\PostImageController;
+use App\Http\Controllers\Api\V1\PostReviewController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +48,9 @@ Route::prefix('v1')->middleware(['apiMiddleware','verify_header'])->group(functi
     Route::apiResource('medias', MediaController::class);
     Route::apiResource('reviews', ReviewController::class);
     Route::apiResource('posts', PostController::class);
+    Route::apiResource('post-price', PostPriceController::class);
+    Route::apiResource('post-image', PostImageController::class);
+    Route::apiResource('post-review', PostReviewController::class);
     Route::post('logout', [LoginController::class, 'logout']);
 
 

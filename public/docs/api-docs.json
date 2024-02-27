@@ -1083,6 +1083,954 @@
                 ]
             }
         },
+        "/api/v1/posts": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Get a list of Posts",
+                "operationId": "7b253f6aade6833019f938c1f2ef08ed",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PostResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Create a new Post",
+                "operationId": "b996500c6caf55100cd024d3e3b49dd5",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Posts data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorePostRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created post",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/posts/{id}": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Get a specific post",
+                "operationId": "db686e4ed73ae7ca2424e0a4f740c8b2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Update an existing post",
+                "description": "Update the specified resource in storage.",
+                "operationId": "98c3c32a86125c864caa21999f234493",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Post data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdatePostRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated post",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Delete an post",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "82927d2153173c1a7d6ab1e9d52ff56e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted post",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Post deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/PostResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/post-image": {
+            "post": {
+                "tags": [
+                    "Post Image"
+                ],
+                "summary": "Create a new Post Image",
+                "operationId": "f95920a9ce6fe8109312d541ae4ba03e",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Post Image data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorePostImageRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created image",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostImageResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/post-image/{id}": {
+            "delete": {
+                "tags": [
+                    "Post Image"
+                ],
+                "summary": "Delete an post image",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "f6073d4b3fee9f1432ff960e9b8a12c0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post image to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted post image",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Post Image deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/PostImageResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/post-price": {
+            "post": {
+                "tags": [
+                    "Post Price"
+                ],
+                "summary": "Create a new Post Price",
+                "operationId": "ffc5b8610c6845b8389221961f023db2",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Post Price data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorePostPriceRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created post",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostPriceResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/post-price/{id}": {
+            "put": {
+                "tags": [
+                    "Post Price"
+                ],
+                "summary": "Update an existing post price",
+                "description": "Update the specified resource in storage.",
+                "operationId": "3615ff98311dc3b29cf522b01aa7a53a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post price to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Post Price data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdatePostPriceRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated post price",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostPriceResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Post Price"
+                ],
+                "summary": "Delete an post price",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "4f954f87073fc974504075b379c1991d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post price to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted post price",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Post Price deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/PostPriceResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/post-review": {
+            "get": {
+                "tags": [
+                    "Post Review"
+                ],
+                "summary": "Get a list of Post Reviews",
+                "operationId": "1da2c5f13265322183c2aa226cca31a4",
+                "parameters": [
+                    {
+                        "name": "post_id",
+                        "in": "query",
+                        "description": "Post id",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PostReviewResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Post Review"
+                ],
+                "summary": "Create a new Post Review",
+                "operationId": "684f9fe8aa52aec6d0d64c51b79f5baf",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Post Review data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorePostReviewRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created post",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostReviewResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/post-review/{id}": {
+            "put": {
+                "tags": [
+                    "Post Review"
+                ],
+                "summary": "Update an existing post review",
+                "description": "Update the specified resource in storage.",
+                "operationId": "87fc339da83c7e2d14925773ec1d8ebe",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post review to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Post Review data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdatePostReviewRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated post review",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostReviewResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Post Review"
+                ],
+                "summary": "Delete an post review",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "c23a2086c2d116f72c91fb0038fc3967",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post review to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted post review",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Post Review deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/PostReviewResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/reviews": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get a list of Reviews",
+                "operationId": "8d140f36ef5ac7526b66ff6292638d97",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ReviewResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/api/v1/tags": {
             "get": {
                 "tags": [
@@ -2046,7 +2994,7 @@
                         "description": "Array of the image",
                         "type": "array",
                         "items": {
-                            "type": "file",
+                            "type": "string",
                             "format": "binary"
                         }
                     },
@@ -2188,6 +3136,197 @@
                         "type": "object"
                     }
                 ]
+            },
+            "StorePostImageRequest": {
+                "title": "Store Post Image Request",
+                "description": "Request data for storing post images",
+                "required": [
+                    "post_id",
+                    "slug",
+                    "images"
+                ],
+                "properties": {
+                    "post_id": {
+                        "description": "The ID of the post",
+                        "type": "integer"
+                    },
+                    "slug": {
+                        "description": "The unique images slug for post image",
+                        "type": "string"
+                    },
+                    "images": {
+                        "description": "Array of post image details",
+                        "type": "array",
+                        "items": {
+                            "title": "Post Image",
+                            "description": "Post image details",
+                            "required": [
+                                "title",
+                                "amount"
+                            ],
+                            "properties": {
+                                "title": {
+                                    "description": "The title of the post",
+                                    "type": "string",
+                                    "example": "Samsung Galaxy S21 Pro"
+                                },
+                                "image": {
+                                    "description": "The image path",
+                                    "type": "number",
+                                    "format": "string",
+                                    "example": "/post/post.png"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "StorePostPriceRequest": {
+                "title": "Store Post Price Request",
+                "description": "Request data for storing post prices",
+                "required": [
+                    "post_id",
+                    "price"
+                ],
+                "properties": {
+                    "post_id": {
+                        "description": "The ID of the post",
+                        "type": "integer"
+                    },
+                    "price": {
+                        "description": "Array of post price details",
+                        "type": "array",
+                        "items": {
+                            "title": "Post Price",
+                            "description": "Post price details",
+                            "required": [
+                                "title",
+                                "amount"
+                            ],
+                            "properties": {
+                                "title": {
+                                    "description": "The title of the post",
+                                    "type": "string",
+                                    "example": "Samsung Galaxy S21 Pro"
+                                },
+                                "amount": {
+                                    "description": "The price amount",
+                                    "type": "number",
+                                    "format": "float",
+                                    "example": "10000.00"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "StorePostRequest": {
+                "title": "Post Store Request",
+                "description": "Post store request data",
+                "required": [
+                    "title",
+                    "slug",
+                    "description",
+                    "short_description",
+                    "category_id",
+                    "sub_category_id",
+                    "isprice",
+                    "show_in_pricelist"
+                ],
+                "properties": {
+                    "title": {
+                        "description": "The Post Title",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "slug": {
+                        "description": "The Slug for the post",
+                        "type": "string",
+                        "example": "apple"
+                    },
+                    "short_description": {
+                        "description": "The Post's short description ",
+                        "type": "string",
+                        "example": "this is the short description of it."
+                    },
+                    "description": {
+                        "description": "The Post's description ",
+                        "type": "string",
+                        "example": "this is the description of it."
+                    },
+                    "category_id": {
+                        "description": "The  Post Category",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "sub_category_id": {
+                        "description": "The Post Sub Category",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "isprice": {
+                        "description": "If Price then 'Y' else 'N'",
+                        "type": "string",
+                        "example": "Y"
+                    },
+                    "show_in_pricelist": {
+                        "description": "If Price to be shown for price list  then 'Y' else 'N'",
+                        "type": "string",
+                        "example": "Y"
+                    },
+                    "tags": {
+                        "description": "Ids of the tag",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "StorePostReviewRequest": {
+                "title": "Store Post Review Request",
+                "description": "Request data for storing post reviews",
+                "required": [
+                    "post_id",
+                    "reviews"
+                ],
+                "properties": {
+                    "post_id": {
+                        "description": "The ID of the post",
+                        "type": "integer"
+                    },
+                    "reviews": {
+                        "description": "Array of post review details",
+                        "type": "array",
+                        "items": {
+                            "title": "Post Review",
+                            "description": "Post review details",
+                            "required": [
+                                "title",
+                                "amount"
+                            ],
+                            "properties": {
+                                "review_id": {
+                                    "description": "The id of the review",
+                                    "type": "integer",
+                                    "example": "1"
+                                },
+                                "review": {
+                                    "description": "The review of the post",
+                                    "type": "string",
+                                    "example": "Impressive."
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
             },
             "StoreTagRequest": {
                 "title": "Tag  Store Request",
@@ -2386,6 +3525,107 @@
                         "type": "object"
                     }
                 ]
+            },
+            "UpdatePostPriceRequest": {
+                "title": "Post Price  Update Request",
+                "description": "Post Price  update request data",
+                "required": [
+                    "title",
+                    "price"
+                ],
+                "properties": {
+                    "title": {
+                        "description": "The Post Price display name",
+                        "type": "string",
+                        "example": "Samsung galaxy S23 Ultra"
+                    },
+                    "price": {
+                        "description": "The Amount of the  PostPrice.",
+                        "type": "number",
+                        "format": "float",
+                        "example": "10000"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdatePostRequest": {
+                "title": "Post Update Request",
+                "description": "Post update request data",
+                "required": [
+                    "title",
+                    "slug",
+                    "description",
+                    "short_description",
+                    "category_id",
+                    "sub_category_id",
+                    "isprice",
+                    "show_in_pricelist"
+                ],
+                "properties": {
+                    "title": {
+                        "description": "The Post Title",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "slug": {
+                        "description": "The Slug for the post",
+                        "type": "string",
+                        "example": "apple"
+                    },
+                    "short_description": {
+                        "description": "The Post's short description ",
+                        "type": "string",
+                        "example": "this is the short description of it."
+                    },
+                    "description": {
+                        "description": "The Post's description ",
+                        "type": "string",
+                        "example": "this is the description of it."
+                    },
+                    "category_id": {
+                        "description": "The  Post Category",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "sub_category_id": {
+                        "description": "The Post Sub Category",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "isprice": {
+                        "description": "If Price then 'Y' else 'N'",
+                        "type": "string",
+                        "example": "Y"
+                    },
+                    "show_in_pricelist": {
+                        "description": "If Price to be shown for price list  then 'Y' else 'N'",
+                        "type": "string",
+                        "example": "Y"
+                    },
+                    "tags": {
+                        "description": "Ids of the tag",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "UpdatePostReviewRequest": {
+                "title": "Post Review  Update Request",
+                "description": "Post Review  update request data",
+                "required": [
+                    "review"
+                ],
+                "properties": {
+                    "review": {
+                        "description": "The Review of the  Post.",
+                        "type": "string",
+                        "example": "Very Impressive"
+                    }
+                },
+                "type": "object"
             },
             "UpdateTagRequest": {
                 "title": "Tag  Update Request",
@@ -2615,6 +3855,152 @@
                         "description": "If Sub  Category, Send Post Category Id else 0",
                         "type": "integer",
                         "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "PostImageResource": {
+                "title": "Post Image Resource",
+                "description": "Post Image resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the post image",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "title": {
+                        "description": "The title of the post image",
+                        "type": "string",
+                        "example": "Samsung Galaxy S23"
+                    },
+                    "slug": {
+                        "description": "The slug of the post image",
+                        "type": "string",
+                        "example": "Samsung Galaxy S23"
+                    },
+                    "post_id": {
+                        "description": "The Id of the post ",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "image": {
+                        "description": "The relative path of the post image",
+                        "type": "string",
+                        "example": "/post/post.png"
+                    }
+                },
+                "type": "object"
+            },
+            "PostPriceResource": {
+                "title": "Post Price Resource",
+                "description": "Post Price resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the post price",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "title": {
+                        "description": "The title of the post price",
+                        "type": "string",
+                        "example": "Samsung Galaxy S23"
+                    },
+                    "post_id": {
+                        "description": "The Id of the post ",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "price": {
+                        "description": "The amount of the post price",
+                        "type": "number",
+                        "format": "float",
+                        "example": "10000"
+                    }
+                },
+                "type": "object"
+            },
+            "PostResource": {
+                "title": "Post Resource",
+                "description": "Post resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the post",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "title": {
+                        "description": "The display title of the post",
+                        "type": "string",
+                        "example": "Samsung Phone Nepal"
+                    },
+                    "slug": {
+                        "description": "The Slug of the post",
+                        "type": "string",
+                        "example": "samsung-phones-nepal"
+                    },
+                    "short_description": {
+                        "description": "The Short Description of the post",
+                        "type": "string",
+                        "example": "short description goes here"
+                    },
+                    "description": {
+                        "description": "The Description of the post",
+                        "type": "string",
+                        "example": "Description goes here"
+                    },
+                    "category_id": {
+                        "description": "The Category of the post",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "sub_category_id": {
+                        "description": "The Sub Category of the post",
+                        "type": "integer",
+                        "example": "3"
+                    }
+                },
+                "type": "object"
+            },
+            "PostReviewResource": {
+                "title": "Post Review Resource",
+                "description": "Post Review resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the post review",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "post_id": {
+                        "description": "The Id of the post ",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "review_id": {
+                        "description": "The Id of the Review",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "review": {
+                        "description": "The review of the post",
+                        "type": "string",
+                        "example": "Very Nice."
+                    }
+                },
+                "type": "object"
+            },
+            "ReviewResource": {
+                "title": "Review Resource",
+                "description": "Review resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the tag",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "The display name of the tag",
+                        "type": "string",
+                        "example": "Lenevo"
                     }
                 },
                 "type": "object"

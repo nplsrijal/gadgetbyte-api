@@ -61,6 +61,12 @@ class UpdatePostRequest extends FormRequest
  *         description="If Price to be shown for price list  then 'Y' else 'N'",
  *         example="Y"
  *     ),
+ *     @OA\Property(
+ *         property="tags",
+ *         type="array",
+ *         @OA\Items(type="integer"),
+ *         description="Ids of the tag",
+ *     ),
  * )
  */
     public function authorize(): bool
@@ -84,6 +90,7 @@ class UpdatePostRequest extends FormRequest
             "sub_category_id"=>"required|integer",
             "isprice"=>"required|string",
             "show_in_pricelist"=>"required|string",
+            "tags.*"=>"required|sometimes|integer"
 
         ];
     }
