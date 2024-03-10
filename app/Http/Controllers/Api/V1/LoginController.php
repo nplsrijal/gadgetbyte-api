@@ -101,6 +101,7 @@ class LoginController extends Controller
                 'lastname' => $user->lastname,
                 'email' => $user->email,
                 'username' => $user->username,
+                'user_type_id' => $user->user_type_id,
             ],
         ], Response::HTTP_OK);
     }

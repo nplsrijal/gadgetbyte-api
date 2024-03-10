@@ -33,5 +33,9 @@ class Post extends Model implements Auditable
     {
         return $this->hasMany(PostTag::class);
     }
+    public function reveiws()
+    {
+        return $this->hasMany(PostReview::class);
+    }
 
 }

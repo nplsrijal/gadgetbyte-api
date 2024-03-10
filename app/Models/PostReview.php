@@ -14,5 +14,9 @@ class PostReview extends Model implements Auditable
     const DELETED_AT = 'archived_at';
     protected $guarded=[];
 
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    }
     
 }

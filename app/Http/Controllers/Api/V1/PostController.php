@@ -188,8 +188,9 @@ class PostController extends Controller
     public function show(string $id)
     {
         $data = Post::find($id);
-        // $data->prices=$data->prices;
-        // $data->tags=$data->tags;
+        $data->prices=$data->prices;
+        $data->tags=$data->tags;
+        $data->reveiws=$data->reveiws;
          if ($data) {
             return $this->success(new PostResource($data));
         } else {
