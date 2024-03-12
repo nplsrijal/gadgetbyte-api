@@ -18,4 +18,8 @@ class PostTag extends Model implements Auditable
     {
         return $this->belongsTo(Post::class);
     }
+    public function tag()
+    {
+        return $this->belongsTo(Tag::class, 'tag_id');
+    }
 }

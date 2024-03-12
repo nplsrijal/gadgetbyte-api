@@ -28,14 +28,20 @@ class Post extends Model implements Auditable
     {
         return $this->hasMany(PostPrice::class);
     }
+    public function post_tags()
+    {
+        return $this->belongsToMany(Tag::class, 'post_tags', 'post_id', 'tag_id');
+    }
+
 
     public function tags()
     {
         return $this->hasMany(PostTag::class);
     }
-    public function reveiws()
+    public function reviews()
     {
         return $this->hasMany(PostReview::class);
     }
+  
 
 }

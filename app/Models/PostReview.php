@@ -18,5 +18,10 @@ class PostReview extends Model implements Auditable
     {
         return $this->belongsTo(Post::class);
     }
+
+    public function reviews()
+    {
+        return $this->belongsTo(Review::class, 'review_id');
+    }
     
 }

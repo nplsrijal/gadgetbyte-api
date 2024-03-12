@@ -187,10 +187,10 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $data = Post::find($id);
+        $data = Post::with(['reviews', 'reviews.reviews'])->find($id);
         $data->prices=$data->prices;
-        $data->tags=$data->tags;
-        $data->reveiws=$data->reveiws;
+        $data->post_tags=$data->post_tags;
+        $data->reviews=$data->reviews;
          if ($data) {
             return $this->success(new PostResource($data));
         } else {
