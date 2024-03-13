@@ -19,6 +19,27 @@ class PostCategoryController extends Controller
      *     summary="Get a list of Post Categories",
      *     tags={"Post Categories"},
      *     security={{"bearer_token": {}}},
+     *     @OA\Parameter(
+     *         name="q",
+     *         in="query",
+     *         description="Search term for filtering by name or slug ",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="query",
+     *         description="For dropdown or list:(dropdown/list) ",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Number of items per page (optional, default: 20)",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=20)
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -32,6 +53,50 @@ class PostCategoryController extends Controller
      */
     public function index(Request $request)
     {
+        if($request->type=='list')
+        {
+            $perPage=$request->per_page;
+            if(empty($perPage)){
+                $perPage=20;
+            }
+            $query = PostCategory::query();
+            if ($request->has('q')) {
+                $searchTerm = strtoupper($request->input('q'));
+                $query->where(function ($query) use ($searchTerm) {
+                    $query->where('name', 'ilike', '%' . $searchTerm . '%')
+                    ->orwhere('slug', 'ilike', '%' . $searchTerm . '%');
+
+
+                });
+            }
+
+
+            $data = $query->paginate($perPage)->withPath($request->getPathInfo());
+        }
+        else
+        {
+            $query = PostCategory::query();
+       
+            $query->where('parent_id',0);
+            $query->orderBy('order_by');
+            $data=$query->get();
+            foreach ($data as $key => $menu) {
+                $subQuery = PostCategory::query();
+            
+                $subQuery->where('parent_id', $menu->id)
+                    ->orderBy('order_by');
+            
+                $submenus = $subQuery->get();
+                
+                // Assigning submenus to the current menu item
+                $data[$key]->children = $submenus;
+            }
+        }
+        return $this->success(new PostCategoryCollection($data));
+
+
+        $usertypeId = $request->user_type_id;
+       
          $query = PostCategory::query();
        
          $query->where('parent_id',0);
