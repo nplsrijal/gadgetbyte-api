@@ -132,4 +132,25 @@ class PostImageController extends Controller
         return $this->success(new PostImageResource($data), 'Post Image deleted successfully', Response::HTTP_OK);
     
     }
+
+    public function show(string $id)
+    {
+        $query = PostImage::query();
+            $query->select('slug');
+            $query->where('post_id',$id);
+            $query->groupBy('slug');
+            $data=$query->get();
+            foreach ($data as $key => $menu) {
+                $subQuery = PostImage::query();
+            
+                $subQuery->where('slug', $menu->slug)
+                    ->where('post_id',$id)
+                    ->orderBy('id');
+            
+                $submenus = $subQuery->get();
+                
+                // Assigning images to the current slug
+                $data[$key]->children = $submenus;
+            }
+    }
 }
