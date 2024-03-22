@@ -133,6 +133,23 @@ class PostImageController extends Controller
     
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/v1/post-image/{id}",
+     *     summary="Get a list of Post Images",
+     *     tags={"Post Images"},
+     *     security={{"bearer_token": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/PostImageResource"))
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     ),
+     * )
+     */
     public function show(string $id)
     {
         $query = PostImage::query();
@@ -152,5 +169,7 @@ class PostImageController extends Controller
                 // Assigning images to the current slug
                 $data[$key]->children = $submenus;
             }
+            return $this->success(new PostImageCollection($data));
+
     }
 }
