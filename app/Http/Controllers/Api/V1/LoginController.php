@@ -10,6 +10,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\StoreSocialLoginRequest;
 
 
 /**
@@ -137,4 +138,70 @@ class LoginController extends Controller
             return response()->josn(['message' => 'Something went wrong'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * @OA\Post(
+     *     path="/api/v1/socail-login",
+     *     summary="User login",
+     *     tags={"Social Login"},
+     *     @OA\RequestBody(
+     *         description="Social Login data",
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/StoreSocialLoginRequest")
+     *     ),
+     *     @OA\Response(response="200", description="OK", 
+     *         @OA\JsonContent(
+     *             @OA\Property(property="access_token", type="string", description="The access token"),
+     *             @OA\Property(property="token_type", type="string", example="Bearer"),
+     *             @OA\Property(property="expires_at", type="string", format="date-time", example="2023-05-14 10:00:00"),
+     *         )
+     *     ),
+     *     @OA\Response(response="401", description="Unauthorized", 
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", description="Invalid data")
+     *         )
+     *     ),
+     * )
+     */
+    public function socialLogin(StoreSocialLoginRequest $request)
+    {
+        $validated = $request->validated();
+        unset($validated['type']);
+
+        if ($request->type == 'google') {
+            $check = User::where('google_id', $request->google_id)->first();
+            $username=$request->google_id;
+        } else {
+            $check = User::where('fb_id', $request->fb_id)->first();
+            $username=$request->fb_id;
+        }
+    
+        if ($check) {
+            $user = $check;
+            $user->update($validated);
+        } else {
+            $validated['user_type_id']='3';
+            $validated['username']=$username;
+            $validated['password']=bcrypt("123456");
+            $user = User::create($validated);
+        }
+    
+        $token = $user->createToken('Access Token');
+    
+    
+        return $this->success([
+            'access_token' => $token->accessToken,
+            'token_type' => 'Bearer',
+            'expires_at' => $token->token->expires_at->toDateTimeString(),
+            'user' => [
+                'userid' => $user->id,
+                'firstname' => $user->firstname,
+                'lastname' => $user->lastname,
+                'email' => $user->email,
+                'username' => $user->username,
+                'user_type_id' => $user->user_type_id,
+            ],
+        ], Response::HTTP_OK);
+    }
+    
 }

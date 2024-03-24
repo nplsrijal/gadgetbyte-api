@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('v1/login', [LoginController::class, 'login']);
+Route::post('v1/social-login', [LoginController::class, 'socialLogin']);
 
 
 Route::prefix('v1')->middleware(['apiMiddleware','verify_header'])->group(function () {
