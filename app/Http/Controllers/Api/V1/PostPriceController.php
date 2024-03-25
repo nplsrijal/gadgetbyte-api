@@ -29,7 +29,7 @@ class PostPriceController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
-     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/PostReviewResource"))
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/PostPriceResource"))
      *     ),
      *     @OA\Response(
      *         response=400,
