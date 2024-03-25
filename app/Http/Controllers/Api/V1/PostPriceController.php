@@ -14,6 +14,36 @@ use App\Models\Post;
 
 class PostPriceController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/api/v1/post-price",
+     *     summary="Get a list of Post Price",
+     *     tags={"Post Price"},
+     *     security={{"bearer_token": {}}},
+     *      @OA\Parameter(
+     *         name="post_id",
+     *         in="query",
+     *         description="Post id",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/PostReviewResource"))
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     ),
+     * )
+     */
+    public function index(Request $request)
+    {
+        $perPage=20;
+        $query = PostPrice::query()->where('post_id',$request->post_id);
+        $data = $query->paginate($perPage)->withPath($request->getPathInfo());
+        return $this->success(new PostPriceCollection($data));
+    }
      /**
      * @OA\Post(
      *     path="/api/v1/post-price",
