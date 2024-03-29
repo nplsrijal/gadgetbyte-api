@@ -188,10 +188,11 @@ class PostController extends Controller
     public function show(string $id)
     {
         $data = Post::with(['reviews', 'reviews.reviews'])->find($id);
-        $data->prices=$data->prices;
-        $data->post_tags=$data->post_tags;
-        $data->reviews=$data->reviews;
+        
          if ($data) {
+            $data->prices=$data->prices;
+            $data->post_tags=$data->post_tags;
+            $data->reviews=$data->reviews;
             return $this->success(new PostResource($data));
         } else {
             return $this->error('Post not found', Response::HTTP_NOT_FOUND);

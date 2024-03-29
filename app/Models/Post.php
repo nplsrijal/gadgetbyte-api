@@ -30,7 +30,7 @@ class Post extends Model implements Auditable
     }
     public function post_tags()
     {
-        return $this->belongsToMany(Tag::class, 'post_tags', 'post_id', 'tag_id');
+        return $this->belongsToMany(Tag::class, 'post_tags', 'post_id', 'tag_id')->where('post_tags.archived_at',null);
     }
 
 
