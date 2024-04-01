@@ -11,6 +11,8 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Models\PostTag;
+use App\Models\PostWithCategory;
+
 use DB;
 
 class PostController extends Controller
@@ -117,15 +119,25 @@ class PostController extends Controller
         $userId = request()->header('X-User-Id');
         $validated['created_by'] = $userId;
 
-        if(isset($validated['tags']))
+        // if(isset($validated['tags']))
+        // {
+        //     $tags=$validated['tags'];
+        //     unset($validated['tags']);
+
+        // }
+        // else
+        // {
+        //     $tags=[];
+        // }
+        if(isset($validated['categories']))
         {
-            $tags=$validated['tags'];
-            unset($validated['tags']);
+            $categories=$validated['categories'];
+            unset($validated['categories']);
 
         }
         else
         {
-            $tags=[];
+            $categories=[];
         }
 
         
@@ -134,15 +146,25 @@ class PostController extends Controller
 
         $data = Post::create($validated);
 
-        if(count($tags)> 0)
+        // if(count($tags)> 0)
+        // {
+        //     $insert_tags=[];
+        //     foreach($tags as $tag)
+        //     {
+        //         $insert_tags[]=array('post_id'=>$data->id,'tag_id'=>$tag);
+        //     }
+
+        //     PostTag::insert($insert_tags);
+        // }
+        if(count($categories)> 0)
         {
-            $insert_tags=[];
-            foreach($tags as $tag)
+            $insert_cat=[];
+            foreach($categories as $cat)
             {
-                $insert_tags[]=array('post_id'=>$data->id,'tag_id'=>$tag);
+                $insert_cat[]=array('post_id'=>$data->id,'category_id'=>$cat);
             }
 
-            PostTag::insert($insert_tags);
+            PostWithCategory::insert($insert_cat);
         }
 
          // Check database transaction
@@ -191,7 +213,8 @@ class PostController extends Controller
         
          if ($data) {
             $data->prices=$data->prices;
-            $data->post_tags=$data->post_tags;
+            //$data->post_tags=$data->post_tags;
+            $data->categories=$data->categories;
             $data->reviews=$data->reviews;
             return $this->success(new PostResource($data));
         } else {
@@ -265,15 +288,26 @@ class PostController extends Controller
         $userId = request()->header('X-User-Id');
         $validatedData['updated_by'] = $userId;
 
-        if(isset($validatedData['tags']))
+        // if(isset($validatedData['tags']))
+        // {
+        //     $tags=$validatedData['tags'];
+        //     unset($validatedData['tags']);
+
+        // }
+        // else
+        // {
+        //     $tags=[];
+        // }
+
+        if(isset($validatedData['categories']))
         {
-            $tags=$validatedData['tags'];
-            unset($validatedData['tags']);
+            $categories=$validatedData['categories'];
+            unset($validatedData['categories']);
 
         }
         else
         {
-            $tags=[];
+            $categories=[];
         }
         
 
@@ -281,21 +315,37 @@ class PostController extends Controller
          DB::beginTransaction();
         $data->update($validatedData);
 
-        if(count($tags) > 0)
-        {
-            $posttag_data=PostTag::where('post_id', $data->id);
-            $posttag_data->update(['archived_by' => $userId]);
-            $posttag_data->delete();
+        // if(count($tags) > 0)
+        // {
+        //     $posttag_data=PostTag::where('post_id', $data->id);
+        //     $posttag_data->update(['archived_by' => $userId]);
+        //     $posttag_data->delete();
 
-            $insert_tags=[];
+        //     $insert_tags=[];
 
             
-            foreach($tags as $tag)
+        //     foreach($tags as $tag)
+        //     {
+        //         $insert_tags[]=array('post_id'=>$data->id,'tag_id'=>$tag);
+        //     }
+
+        //     PostTag::insert($insert_tags);
+        // }
+        if(count($categories) > 0)
+        {
+            $postcategory_data=PostWithCategory::where('post_id', $data->id);
+            $postcategory_data->update(['archived_by' => $userId]);
+            $postcategory_data->delete();
+
+            $insert_cat=[];
+
+            
+            foreach($categories as $cat)
             {
-                $insert_tags[]=array('post_id'=>$data->id,'tag_id'=>$tag);
+                $insert_cat[]=array('post_id'=>$data->id,'category_id'=>$cat);
             }
 
-            PostTag::insert($insert_tags);
+            PostWithCategory::insert($insert_cat);
         }
 
          // Check database transaction

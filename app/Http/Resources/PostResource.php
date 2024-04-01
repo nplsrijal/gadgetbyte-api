@@ -41,20 +41,21 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         description="The Description of the post",
  *         example="Description goes here"
  *     ),
- *     @OA\Property(
- *         property="category_id",
- *         type="integer",
- *         description="The Category of the post",
- *         example="1"
- *     ),
- *     @OA\Property(
- *         property="sub_category_id",
- *         type="integer",
- *         description="The Sub Category of the post",
- *         example="3"
- *     ),
  * )
  */
+
+//  *     @OA\Property(
+//  *         property="category_id",
+//  *         type="integer",
+//  *         description="The Category of the post",
+//  *         example="1"
+//  *     ),
+//  *     @OA\Property(
+//  *         property="sub_category_id",
+//  *         type="integer",
+//  *         description="The Sub Category of the post",
+//  *         example="3"
+//  *     ),
 class PostResource extends JsonResource
 {
     /**

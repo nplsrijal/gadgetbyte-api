@@ -42,6 +42,11 @@ class Post extends Model implements Auditable
     {
         return $this->hasMany(PostReview::class);
     }
+
+    public function categories()
+    {
+        return $this->hasMany(PostWithCategory::class);
+    }
   
 
 }
