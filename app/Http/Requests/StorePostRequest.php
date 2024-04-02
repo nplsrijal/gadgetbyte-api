@@ -93,8 +93,8 @@ class StorePostRequest extends FormRequest
             "slug"=>"required|string|max:255",
             "short_description"=>"required|string",
             "description"=>"required|string",
-            "category_id"=>"required|integer",
-            "sub_category_id"=>"required|integer",
+           // "category_id"=>"required|integer",
+            //"sub_category_id"=>"required|integer",
             "isprice"=>"required|string",
             "show_in_pricelist"=>"required|string",
             //"tags.*"=>"required|sometimes|integer"
