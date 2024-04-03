@@ -209,7 +209,7 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $data = Post::with(['reviews', 'reviews.reviews'])->find($id);
+        $data = Post::with(['reviews', 'reviews.reviews', 'categories','categories.category'])->find($id);
         
          if ($data) {
             $data->prices=$data->prices;
