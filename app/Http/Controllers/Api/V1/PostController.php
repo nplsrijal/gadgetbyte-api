@@ -31,6 +31,13 @@ class PostController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
+     *         name="category_id",
+     *         in="query",
+     *         description="Search post for filtering by catgory id ",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
      *         name="per_page",
      *         in="query",
      *         description="Number of items per page (optional, default: 20)",
@@ -62,6 +69,12 @@ class PostController extends Controller
 
 
             });
+        }
+        if ($request->has('category_id')) {
+            $query->join('post_with_categories', 'posts.id', '=', 'post_with_categories.post_id')
+
+                    ->where('category_id', '=', $request->input('category_id'));
+
         }
 
         $data = $query->paginate($perPage)->withPath($request->getPathInfo());
