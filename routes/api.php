@@ -58,3 +58,16 @@ Route::prefix('v1')->middleware(['apiMiddleware','verify_header'])->group(functi
    
 
 });
+
+
+
+
+Route::prefix('user')->group(function () {
+    // Route will be here
+
+    Route::get('post', [PostController::class, 'index']);
+
+
+   
+
+});

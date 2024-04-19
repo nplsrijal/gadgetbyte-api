@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,4 +35,3 @@ Route::get('barcode', function () {
     return response($image)->header('Content-type','image/png');
 });
 
-Route::get('post', [PostController::class,'index']);
