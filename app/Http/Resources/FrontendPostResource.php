@@ -65,6 +65,18 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         @OA\Items(type="string"),
  *         description="Categories of the Post",
  *     ),
+ *     @OA\Property(
+ *         property="seo_title",
+ *         type="string",
+ *         description="The Title of the post's SEO",
+ *         example="Description goes here"
+ *     ),
+ *     @OA\Property(
+ *         property="seo_description",
+ *         type="string",
+ *         description="The Description of the post's SEO",
+ *         example="Description goes here"
+ *     ),
  * )
  */
 

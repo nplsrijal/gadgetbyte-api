@@ -61,6 +61,18 @@ class UpdatePostRequest extends FormRequest
  *         example="Y"
  *     ),
  *     @OA\Property(
+ *         property="seo_title",
+ *         type="string",
+ *         description="SEO title",
+ *         example="This is the title for SEO"
+ *     ),
+ *     @OA\Property(
+ *         property="seo_description",
+ *         type="string",
+ *         description="Description for seo",
+ *         example="This is description for SEO"
+ *     ),
+ *     @OA\Property(
  *         property="categories",
  *         type="array",
  *         @OA\Items(type="integer"),
@@ -96,6 +108,8 @@ class UpdatePostRequest extends FormRequest
             // "sub_category_id"=>"required|integer",
             "isprice"=>"required|string",
             "show_in_pricelist"=>"required|string",
+            "seo_title"=>"required|string",
+            "seo_description"=>"required|string",
             //"tags.*"=>"required|sometimes|integer"
             "categories.*"=>"required|sometimes|integer"
 
