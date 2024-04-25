@@ -15,6 +15,8 @@ use App\Http\Controllers\Api\V1\PostController;
 use App\Http\Controllers\Api\V1\PostPriceController;
 use App\Http\Controllers\Api\V1\PostImageController;
 use App\Http\Controllers\Api\V1\PostReviewController;
+use App\Http\Controllers\Api\V1\Frontend\PostController as FPostController;
+
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -62,10 +64,10 @@ Route::prefix('v1')->middleware(['apiMiddleware','verify_header'])->group(functi
 
 
 
-Route::prefix('user')->group(function () {
+Route::prefix('frontend')->group(function () {
     // Route will be here
 
-    Route::get('post', [PostController::class, 'index']);
+    Route::get('post', [FPostController::class, 'index']);
 
 
    
