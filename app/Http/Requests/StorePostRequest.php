@@ -78,6 +78,11 @@ class StorePostRequest extends FormRequest
  *         description="Description for seo",
  *         example="This is description for SEO"
  *     ),
+ *     @OA\Property(
+ *         property="image",
+ *         type="file",
+ *         description="Image"
+ *     ),
  * )
  */
 
@@ -105,6 +110,7 @@ class StorePostRequest extends FormRequest
             "slug"=>"required|string|max:255",
             "short_description"=>"required|string",
             "description"=>"required|string",
+            'image' => 'required|sometimes|image|mimes:jpeg,png,jpg,gif',
            // "category_id"=>"required|integer",
             //"sub_category_id"=>"required|integer",
             "isprice"=>"required|string",

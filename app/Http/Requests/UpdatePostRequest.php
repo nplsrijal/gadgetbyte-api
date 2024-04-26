@@ -73,6 +73,11 @@ class UpdatePostRequest extends FormRequest
  *         example="This is description for SEO"
  *     ),
  *     @OA\Property(
+ *         property="image",
+ *         type="file",
+ *         description="Image"
+ *     ),
+ *     @OA\Property(
  *         property="categories",
  *         type="array",
  *         @OA\Items(type="integer"),
@@ -104,6 +109,7 @@ class UpdatePostRequest extends FormRequest
             "slug"=>"required|string|max:255",
             "short_description"=>"required|string",
             "description"=>"required|string",
+            'image' => 'required|sometimes|image|mimes:jpeg,png,jpg,gif',
             // "category_id"=>"required|integer",
             // "sub_category_id"=>"required|integer",
             "isprice"=>"required|string",

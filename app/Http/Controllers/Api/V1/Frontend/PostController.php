@@ -59,11 +59,7 @@ class PostController extends Controller
         $perPage = $request->per_page ?? 20;
 
         $query = Post::with(['categories', 'categories.category']);
-        $query->leftJoin('post_images', function ($join) {
-            $join->on('post_images.post_id', '=', 'posts.id')
-                 ->where('post_images.slug', 'ilike', '%banner%');
-        });
-        $query->select('posts.*','post_images.image as featured_image'); 
+        
         if ($request->has('q')) {
             $searchTerm = strtoupper($request->input('q'));
             $query->where('title', 'ilike', '%' . $searchTerm . '%');

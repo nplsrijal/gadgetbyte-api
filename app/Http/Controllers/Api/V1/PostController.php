@@ -153,6 +153,15 @@ class PostController extends Controller
             $categories=[];
         }
 
+        if($request->file('image'))
+        {
+            Storage::makeDirectory('public/uploads');
+            Storage::makeDirectory('public/uploads/posts');
+            $file= $request->file('image');
+            $imageName= time() . '_'. '.' . $file->getClientOriginalExtension();
+            $file-> move(public_path('uploads/posts'), $imageName);
+            $validated['featured_image']='uploads/posts/'.$imageName ; 
+        }
         
          // Begin database transaction
          DB::beginTransaction();
@@ -323,6 +332,15 @@ class PostController extends Controller
             $categories=[];
         }
         
+        if($request->file('image'))
+        {
+            Storage::makeDirectory('public/uploads');
+            Storage::makeDirectory('public/uploads/posts');
+            $file= $request->file('image');
+            $imageName= time() . '_'. '.' . $file->getClientOriginalExtension();
+            $file-> move(public_path('uploads/posts'), $imageName);
+            $validatedData['featured_image']='uploads/posts/'.$imageName ; 
+        }
 
          // Begin database transaction
          DB::beginTransaction();

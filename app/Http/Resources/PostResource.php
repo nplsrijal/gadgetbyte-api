@@ -48,6 +48,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         example="Description goes here"
  *     ),
  *     @OA\Property(
+ *         property="featured_image",
+ *         type="string",
+ *         description="The Image of the post"
+ *     ),
+ *     @OA\Property(
  *         property="seo_description",
  *         type="string",
  *         description="The Description of the post's SEO",
