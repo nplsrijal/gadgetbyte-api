@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\MenuController;
 use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\UserPermissionController;
 use App\Http\Controllers\Api\V1\PostCategoryController;
+use App\Http\Controllers\Api\V1\ProductCategoryController;
 use App\Http\Controllers\Api\V1\TagController;
 use App\Http\Controllers\Api\V1\MediaController;
 use App\Http\Controllers\Api\V1\ReviewController;
@@ -56,6 +57,7 @@ Route::prefix('v1')->middleware(['apiMiddleware','verify_header'])->group(functi
     Route::apiResource('post-review', PostReviewController::class);
     Route::post('logout', [LoginController::class, 'logout']);
 
+    Route::apiResource('product-categories', ProductCategoryController::class);
 
    
 
