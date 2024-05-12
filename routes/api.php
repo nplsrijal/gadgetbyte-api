@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\V1\PostController;
 use App\Http\Controllers\Api\V1\PostPriceController;
 use App\Http\Controllers\Api\V1\PostImageController;
 use App\Http\Controllers\Api\V1\PostReviewController;
+use App\Http\Controllers\Api\V1\AttributeController;
 use App\Http\Controllers\Api\V1\Frontend\PostController as FPostController;
 
 
@@ -58,6 +59,7 @@ Route::prefix('v1')->middleware(['apiMiddleware','verify_header'])->group(functi
     Route::post('logout', [LoginController::class, 'logout']);
 
     Route::apiResource('product-categories', ProductCategoryController::class);
+    Route::apiResource('attributes', AttributeController::class);
 
    
 
