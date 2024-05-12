@@ -34,7 +34,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *         property="values",
  *         type="json",
  *         description="The Values in json format",
- *         example="["100","200"," 300"]"
+ *         example="['100','200','300']"
  *     )
  * )
  */
