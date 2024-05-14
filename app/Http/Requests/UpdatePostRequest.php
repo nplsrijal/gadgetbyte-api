@@ -96,6 +96,35 @@ class UpdatePostRequest extends FormRequest
  *         description="Date to be published on",
  *         example="2024-05-14"
  *     ),
+ *     @OA\Property(
+ *         property="reviews",
+ *         type="array",
+ *         @OA\Items(
+ *             type="object",
+ *             title="Post Review",
+ *             description="Post review details",
+ *             required={"review_id","title", "review"},
+ *             @OA\Property(
+ *                 property="review_id",
+ *                 type="integer",
+ *                 description="The id of the review",
+ *                 example="1"
+ *             ),
+ *             @OA\Property(
+ *                 property="title",
+ *                 type="string",
+ *                 description="The Text of the review",
+ *                 example="Design"
+ *             ),
+ *             @OA\Property(
+ *                 property="review",
+ *                 type="string",
+ *                 description="The review of the post",
+ *                 example="Impressive."
+ *             ),
+ *         ),
+ *         description="Array of post review details",
+ *     )
  * )
  */
 
@@ -132,7 +161,10 @@ class UpdatePostRequest extends FormRequest
             "status"=>"required|sometimes|string",
             "post_on"=>"required|sometimes|string",
             //"tags.*"=>"required|sometimes|integer"
-            "categories.*"=>"required|sometimes|integer"
+            "categories.*"=>"required|sometimes|integer",
+            'reviews.*.title' => 'required|string',
+            'reviews.*.review_id' => 'required|integer',
+            'reviews.*.review' => 'required|string',
 
 
         ];

@@ -12,6 +12,7 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Models\PostTag;
 use App\Models\PostWithCategory;
+use App\Models\PostReview;
 
 use DB;
 
@@ -180,6 +181,25 @@ class PostController extends Controller
 
             PostWithCategory::insert($insert_cat);
         }
+
+        if(isset($validated['reviews']))
+        {
+            $insert_data=[];
+            foreach ($validated['reviews'] as  $data) {
+                
+                $insert_data[] = [
+                    'review_id' => $data['review_id'],
+                    'title' => $data['title'],
+                    'post_id'=>$data->id,
+                    'review' => $data['review'],
+                    'created_by'=>$userId
+                ];
+            }
+
+            PostReview::insert($insert_data);
+
+        }
+
 
          // Check database transaction
          $transactionStatus = DB::transactionLevel();
@@ -361,6 +381,24 @@ class PostController extends Controller
             }
 
             PostWithCategory::insert($insert_cat);
+        }
+
+        if(isset($validatedData['reviews']))
+        {
+            $insert_data=[];
+            foreach ($validatedData['reviews'] as  $data) {
+                
+                $insert_data[] = [
+                    'review_id' => $data['review_id'],
+                    'title' => $data['title'],
+                    'post_id'=>$data->id,
+                    'review' => $data['review'],
+                    'created_by'=>$userId
+                ];
+            }
+
+            PostReview::insert($insert_data);
+
         }
 
          // Check database transaction
