@@ -170,7 +170,7 @@ class MediaController extends Controller
      */
     public function show(string $id)
     {
-        $data = Media::find($id);
+        $data = Media::find($id)->join('users', 'medias.created_by', '=', 'users.id')->select('medias.*','users.firstname','users.lastname')->get();
 
         if ($data) {
             return $this->success(new MediaResource($data));
@@ -187,9 +187,66 @@ class MediaController extends Controller
         //
     }
 
-    
+     /**
+     * Update the specified resource in storage.
+     *
+     * @OA\Put(
+     *     path="/api/v1/medias/{id}",
+     *     summary="Update an existing media",
+     *     tags={"Menus"},
+     *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="The ID of the media to update",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="X-User-Id",
+     *         in="header",
+     *         description="User ID for authentication",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         description="Menu data",
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/UpdateMenuRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfully updated media",
+     *         @OA\JsonContent(ref="#/components/schemas/MenuResource")
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Unprocessable Entity (Validation error)",
+     *         @OA\JsonContent(ref="#/components/schemas/ValidationErrorResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not Found"
+     *     ),
+     * )
+     */
     public function update(UpdateMediaRequest $request, string $id)
     {
+        $data = Media::find($id);
+
+        if (!$data) {
+            return $this->error('Media not found', Response::HTTP_NOT_FOUND);
+        }
+
+        $validatedData = $request->validated();
+        $userId = request()->header('X-User-Id');
+        $validatedData['updated_by'] = $userId;
+        $data->update($validatedData);
+    
+        return $this->success(new MediaResource($data), 'Media updated', Response::HTTP_OK);
     }
 
    /**
