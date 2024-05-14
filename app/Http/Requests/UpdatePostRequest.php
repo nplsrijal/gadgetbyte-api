@@ -84,6 +84,18 @@ class UpdatePostRequest extends FormRequest
  *         @OA\Items(type="integer"),
  *         description="Ids of the category",
  *     ),
+ *     @OA\Property(
+ *         property="status",
+ *         type="string",
+ *         description="Status for Draft,Review",
+ *         example="D for Draft,R for Review"
+ *     ),
+ *     @OA\Property(
+ *         property="post_on",
+ *         type="string",
+ *         description="Date to be published on",
+ *         example="2024-05-14"
+ *     ),
  * )
  */
 
@@ -117,6 +129,8 @@ class UpdatePostRequest extends FormRequest
             "show_in_pricelist"=>"required|string",
             "seo_title"=>"required|string",
             "seo_description"=>"required|string",
+            "status"=>"required|sometimes|string",
+            "post_on"=>"required|sometimes|string",
             //"tags.*"=>"required|sometimes|integer"
             "categories.*"=>"required|sometimes|integer"
 

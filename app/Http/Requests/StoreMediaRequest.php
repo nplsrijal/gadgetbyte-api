@@ -35,6 +35,12 @@ namespace App\Http\Requests;
  *         @OA\Items(type="string"),
  *         description="Description of the image",
  *     ),
+ *    @OA\Property(
+ *         property="alt_text",
+ *         type="array",
+ *         @OA\Items(type="string"),
+ *         description="Alternative text of the image if image is broken",
+ *     ),
  * )
  */
 class StoreMediaRequest extends FormRequest
@@ -60,6 +66,7 @@ class StoreMediaRequest extends FormRequest
             'name.*' => 'required|string|max:255',
             'caption.*' => 'required|string|max:255',
             'description.*' => 'required|string|max:255',
+            'alt_text.*'=>'required|string'
 
         ];
     }
