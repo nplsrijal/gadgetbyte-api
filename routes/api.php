@@ -68,10 +68,10 @@ Route::prefix('v1')->middleware(['apiMiddleware','verify_header'])->group(functi
 
 
 
-Route::prefix('frontend')->group(function () {
+Route::prefix('v1/frontend')->group(function () {
     // Route will be here
 
-    Route::get('post', [FPostController::class, 'index']);
+    Route::get('posts', [FPostController::class, 'index']);
 
 
    
