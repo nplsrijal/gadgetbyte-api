@@ -163,9 +163,10 @@ class StorePostRequest extends FormRequest
             "post_on"=>"required|sometimes|string",
             //"tags.*"=>"required|sometimes|integer"
             "categories.*"=>"required|sometimes|integer",
-            'reviews.*.title' => 'required|string',
-            'reviews.*.review_id' => 'required|integer',
-            'reviews.*.review' => 'required|string',
+            "reviews.*"=>"required|sometimes",
+            "reviews.*.title"=>"required|sometimes",
+            "reviews.*.review_id"=>"required|sometimes",
+            "reviews.*.review"=>"required|sometimes",
 
         ];
     }

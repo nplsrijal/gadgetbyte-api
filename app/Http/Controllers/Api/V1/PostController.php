@@ -153,6 +153,16 @@ class PostController extends Controller
         {
             $categories=[];
         }
+        if(isset($validated['reviews']))
+        {
+            $reviews=$validated['reviews'];
+            unset($validated['reviews']);
+
+        }
+        else
+        {
+            $reviews=[];
+        }
 
         
         
@@ -182,16 +192,16 @@ class PostController extends Controller
             PostWithCategory::insert($insert_cat);
         }
 
-        if(isset($validated['reviews']))
+        if(count($reviews)>0)
         {
             $insert_data=[];
-            foreach ($validated['reviews'] as  $data) {
+            foreach ($reviews as  $review_data) {
                 
                 $insert_data[] = [
-                    'review_id' => $data['review_id'],
-                    'title' => $data['title'],
+                    'review_id' => $review_data['review_id'],
+                    'title' => $review_data['title'],
                     'post_id'=>$data->id,
-                    'review' => $data['review'],
+                    'review' => $review_data['review'],
                     'created_by'=>$userId
                 ];
             }
@@ -344,6 +354,17 @@ class PostController extends Controller
             $categories=[];
         }
         
+        if(isset($validatedData['reviews']))
+        {
+            $reviews=$validatedData['reviews'];
+            unset($validatedData['reviews']);
+
+        }
+        else
+        {
+            $reviews=[];
+        }
+        
       
 
          // Begin database transaction
@@ -383,16 +404,16 @@ class PostController extends Controller
             PostWithCategory::insert($insert_cat);
         }
 
-        if(isset($validatedData['reviews']))
+        if(count($reviews) > 0)
         {
             $insert_data=[];
-            foreach ($validatedData['reviews'] as  $data) {
+            foreach ($reviews as  $review_data) {
                 
                 $insert_data[] = [
-                    'review_id' => $data['review_id'],
-                    'title' => $data['title'],
+                    'review_id' => $review_data['review_id'],
+                    'title' => $review_data['title'],
                     'post_id'=>$data->id,
-                    'review' => $data['review'],
+                    'review' => $review_data['review'],
                     'created_by'=>$userId
                 ];
             }
