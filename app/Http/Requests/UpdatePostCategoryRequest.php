@@ -59,11 +59,11 @@ class UpdatePostCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name"=>"required|string|max:255",
-            "slug"=>"required|string|max:255",
-            "description"=>"required|string|max:255",
-            "order_by"=>"required|integer|max:255",
-            "parent_id"=>"required|integer|max:255",
+            "name"=>"required|string",
+            "slug"=>"required|string",
+            "description"=>"required|string",
+            "order_by"=>"required|integer",
+            "parent_id"=>"required|integer",
 
         ];
     }
