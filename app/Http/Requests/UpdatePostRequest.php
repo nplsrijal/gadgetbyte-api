@@ -93,8 +93,8 @@ class UpdatePostRequest extends FormRequest
  *     @OA\Property(
  *         property="post_on",
  *         type="string",
- *         description="Date to be published on",
- *         example="2024-05-14"
+ *         description="Date & time to be published on",
+ *         example="2024-05-14 13:55:12"
  *     ),
  *     @OA\Property(
  *         property="reviews",
@@ -120,6 +120,12 @@ class UpdatePostRequest extends FormRequest
  *                 property="review",
  *                 type="string",
  *                 description="The review of the post",
+ *                 example="Impressive."
+ *             ),
+ *             @OA\Property(
+ *                 property="description",
+ *                 type="string",
+ *                 description="The description of the post review",
  *                 example="Impressive."
  *             ),
  *         ),
@@ -166,6 +172,7 @@ class UpdatePostRequest extends FormRequest
             "reviews.*.title"=>"required|sometimes",
             "reviews.*.review_id"=>"required|sometimes",
             "reviews.*.review"=>"required|sometimes",
+            "reviews.*.description"=>"required|sometimes",
 
 
         ];

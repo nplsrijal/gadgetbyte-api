@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->char('status',1)->default('P'); // D,R,
-            $table->timestamp('post_on')->nullable();
+        Schema::table('post_reviews', function (Blueprint $table) {
+            //
+            $table->string('description')->nullable();
+
         });
     }
 
@@ -22,10 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            //
-            $table->dropColumn('status');
-            $table->dropColumn('post_on');
+        Schema::table('post_reviews', function (Blueprint $table) {
+            $table->dropColumn('description');
 
         });
     }
