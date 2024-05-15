@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->string('seo_title')->nullable();
-            $table->string('seo_description')->nullable()->after('seo_description');
+            $table->text('seo_title')->nullable();
+            $table->text('seo_description')->nullable()->after('seo_description');
         });
     }
 

@@ -17,7 +17,7 @@ class PatchSeeder extends Seeder
     public function run()
     {
         //
-        $filePath = 'seeders/pgsql/medias.sql';
+        $filePath = 'seeders/pgsql/news.sql';
         $path = database_path($filePath);
         $sql = file_get_contents($path);
         DB::unprepared($sql);
