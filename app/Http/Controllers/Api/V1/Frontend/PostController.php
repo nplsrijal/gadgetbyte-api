@@ -84,7 +84,7 @@ class PostController extends Controller
 
      /**
      * @OA\Get(
-     *     path="/api/v1/frontend/posts/{id}",
+     *     path="/api/v1/frontend/post/{id}",
      *     summary="Get a specific post",
      *     tags={"Frontend Posts"},
      *     security={{"bearer_token": {}}},
