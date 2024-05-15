@@ -11,6 +11,7 @@ use App\Http\Resources\FrontendPostResource;
 use App\Models\Post;
 use App\Models\PostTag;
 use App\Models\PostWithCategory;
+use App\Models\PostReview;
 
 use DB;
 
@@ -76,6 +77,45 @@ class PostController extends Controller
 
         if ($data->count() > 0) {
             return $this->success(new PostCollection($data));
+        } else {
+            return $this->error('Post not found', Response::HTTP_NOT_FOUND);
+        }
+    }
+
+     /**
+     * @OA\Get(
+     *     path="/api/v1/frontend/posts/{id}",
+     *     summary="Get a specific post",
+     *     tags={"Frontend Posts"},
+     *     security={{"bearer_token": {}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="The ID of the post to retrieve",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/PostResource")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not Found"
+     *     ),
+     * )
+     */
+    public function show(string $id)
+    {
+        $data = Post::with(['reviews', 'reviews.reviews', 'categories','categories.category'])->find($id);
+        
+         if ($data) {
+            $data->prices=$data->prices;
+            //$data->post_tags=$data->post_tags;
+            $data->categories=$data->categories;
+            $data->reviews=$data->reviews;
+            return $this->success(new PostResource($data));
         } else {
             return $this->error('Post not found', Response::HTTP_NOT_FOUND);
         }

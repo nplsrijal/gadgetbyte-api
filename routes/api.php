@@ -71,7 +71,7 @@ Route::prefix('v1')->middleware(['apiMiddleware','verify_header'])->group(functi
 Route::prefix('v1/frontend')->group(function () {
     // Route will be here
 
-    Route::get('posts', [FPostController::class, 'index']);
+    Route::apiResource('posts', FPostController::class);
 
 
    
