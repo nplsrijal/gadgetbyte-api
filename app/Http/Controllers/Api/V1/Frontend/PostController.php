@@ -17,7 +17,7 @@ use DB;
 
 class PostController extends Controller
 {
-    /**
+   /**
      * @OA\Get(
      *     path="/api/v1/frontend/post",
      *     summary="Get a list of Posts",
@@ -82,18 +82,34 @@ class PostController extends Controller
         }
     }
 
-     /**
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
      * @OA\Get(
-     *     path="/api/v1/frontend/post/{id}",
+     *     path="/api/v1/frontend/post/{slug}",
      *     summary="Get a specific post",
      *     tags={"Frontend Posts"},
      *     security={{"bearer_token": {}}},
      *     @OA\Parameter(
-     *         name="id",
+     *         name="slug",
      *         in="path",
-     *         description="The ID of the post to retrieve",
+     *         description="The Slug of the post to retrieve",
      *         required=true,
-     *         @OA\Schema(type="integer")
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -106,19 +122,42 @@ class PostController extends Controller
      *     ),
      * )
      */
-    public function show(string $id)
+    public function show(string $slug)
     {
-        $data = Post::with(['reviews', 'reviews.reviews', 'categories','categories.category'])->find($id);
+        $data = Post::with(['reviews', 'reviews.reviews', 'categories','categories.category'])->where('slug',$slug)->first();
         
          if ($data) {
             $data->prices=$data->prices;
             //$data->post_tags=$data->post_tags;
             $data->categories=$data->categories;
             $data->reviews=$data->reviews;
-            return $this->success(new PostResource($data));
+            return $this->success(new FrontendPostResource($data));
         } else {
             return $this->error('Post not found', Response::HTTP_NOT_FOUND);
         }
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
 }
