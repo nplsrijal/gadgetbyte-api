@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\V1\PostPriceController;
 use App\Http\Controllers\Api\V1\PostImageController;
 use App\Http\Controllers\Api\V1\PostReviewController;
 use App\Http\Controllers\Api\V1\AttributeController;
+use App\Http\Controllers\Api\V1\PatchController;
 use App\Http\Controllers\Api\V1\Frontend\PostController as FPostController;
 
 
@@ -73,6 +74,7 @@ Route::prefix('v1/frontend')->group(function () {
 
     Route::apiResource('post', FPostController::class);
 
+    Route::get('patch', [PatchController::class, 'index']);
 
    
 

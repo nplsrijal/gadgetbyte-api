@@ -70,6 +70,7 @@ class PostController extends Controller
             $query->join('post_with_categories', 'posts.id', '=', 'post_with_categories.post_id')
                 ->where('post_with_categories.category_id', '=', $request->input('category_id'));
         }
+        $query->orderBy('created_at', 'desc');
 
         // $sql=$query->toSql();
         // echo $sql;exit;
