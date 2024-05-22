@@ -132,7 +132,6 @@ class PostController extends Controller
             //$data->post_tags=$data->post_tags;
             $data->categories=$data->categories;
             $data->reviews=$data->reviews;
-            $data->description=stripslashes($data->description);
             return $this->success(new FrontendPostResource($data));
         } else {
             return $this->error('Post not found', Response::HTTP_NOT_FOUND);
