@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use DB;
 use App\Models\PostReview;
+use App\Models\Post;
 
 
 
@@ -13,7 +14,7 @@ class PatchController extends Controller
 {
     //
 
-    public function index()
+    public function post_reviews()
     {
         $review_data = DB::table('wp_reviews')->where('id','>','4046')->where('id','<','4057')->orderBy('id', 'asc')->get();
 
@@ -96,4 +97,69 @@ class PatchController extends Controller
 
 
     }
+
+    public function post_gallery(Request $request)
+    {
+        
+            $page = $request->input('page', 1);
+
+            // Define limit and calculate offset based on the page number
+            $limit = 200;
+            $offset = ($page - 1) * $limit;
+            $sequence=0;
+
+            // Fetch posts with limit and offset
+            $posts = Post::where('description', 'like', '%gallery%')
+                        ->offset($offset)
+                        ->limit($limit)
+                        ->get();
+
+            $totalpost=count($posts);
+            foreach ($posts as $post) {
+                $sequence++;
+                $postid = $post->id;
+                $content = $post->description;
+
+                preg_match_all("/\[gallery.*?ids=\"(.*?)\"\]/", $content, $matches);
+
+                if (!empty($matches[1])) {
+                    foreach ($matches[1] as $index => $ids) {
+                        $explode_ids = explode(',', $ids);
+                        $gallery_items = [];
+
+                        foreach ($explode_ids as $id) {
+                            $media = DB::table('wp_medias')->where('attachment_id', (int)$id)->first();
+
+                            if ($media) {
+                                $gallery_items[] = [
+                                    'title' => $media->caption,
+                                    'image_path' => 'http://45.117.153.85:8002/'.$media->attachment_file_path,
+                                ];
+                            } else {
+                                // Handle case where media is not found
+                                // For example: Log an error or skip the ID
+                            }
+                        }
+
+                        $gallery_json = json_encode($gallery_items);
+                        $content = str_replace($matches[0][$index], $gallery_json, $content);
+                    }
+                }
+
+                if(Post::where('id', $postid)->update(['description' => $content]))
+                {
+                    echo $sequence.' Done ->id '.$postid.'<br/>';
+
+                }
+                else
+                {
+                    echo $sequence.' Error ->id '.$postid.'<br/>';
+
+                }
+            }
+
+           
+    }
+
+
 }
