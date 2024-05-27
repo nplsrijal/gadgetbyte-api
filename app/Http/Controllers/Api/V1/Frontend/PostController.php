@@ -61,7 +61,7 @@ class PostController extends Controller
 
         $query = Post::with(['categories', 'categories.category']);
          $query->join('users','users.id','=','posts.created_by')
-               ->select('posts.*', 'users.firstname', 'users.lastname');
+         ->select('posts.*', DB::raw("CONCAT(users.fname, ' ', users.lname) as author_name"));
 
         if ($request->has('q')) {
             $searchTerm = strtoupper($request->input('q'));
@@ -129,7 +129,7 @@ class PostController extends Controller
     {
         $data = Post::with(['reviews', 'reviews.reviews', 'categories','categories.category'])
         ->join('users','users.id','=','posts.created_by')
-        ->select('posts.*', 'users.firstname', 'users.lastname')
+        ->select('posts.*', DB::raw("CONCAT(users.fname, ' ', users.lname) as author_name"))
 
         ->where('slug',$slug)->first();
         
