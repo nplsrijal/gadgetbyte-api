@@ -60,7 +60,9 @@ class PostController extends Controller
         $perPage = $request->per_page ?? 20;
 
         $query = Post::with(['categories', 'categories.category']);
-        
+         $query->join('users','users.id','=','posts.created_by')
+               ->select('posts.*', 'users.firstname', 'users.lastname');
+
         if ($request->has('q')) {
             $searchTerm = strtoupper($request->input('q'));
             $query->where('title', 'ilike', '%' . $searchTerm . '%');
@@ -125,7 +127,11 @@ class PostController extends Controller
      */
     public function show(string $slug)
     {
-        $data = Post::with(['reviews', 'reviews.reviews', 'categories','categories.category'])->where('slug',$slug)->first();
+        $data = Post::with(['reviews', 'reviews.reviews', 'categories','categories.category'])
+        ->join('users','users.id','=','posts.created_by')
+        ->select('posts.*', 'users.firstname', 'users.lastname')
+
+        ->where('slug',$slug)->first();
         
          if ($data) {
             $data->prices=$data->prices;
