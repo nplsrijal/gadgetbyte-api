@@ -55,6 +55,54 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         example="1"
  *     ),
  *     @OA\Property(
+ *         property="facebook_url",
+ *         type="string",
+ *         description="The user's facebook profile link",
+ *         example="www.fb.com/abc"
+ *     ),
+ *     @OA\Property(
+ *         property="instagram_url",
+ *         type="string",
+ *         description="The user's instagram profile link",
+ *         example="www.instagram.com/abc"
+ *     ),
+ *     @OA\Property(
+ *         property="google_url",
+ *         type="string",
+ *         description="The user's google profile link",
+ *         example="www.google.com/abc"
+ *     ),
+ *     @OA\Property(
+ *         property="linkedin_url",
+ *         type="string",
+ *         description="The user's linkedin profile link",
+ *         example="www.linkedin.com/abc"
+ *     ),
+ *     @OA\Property(
+ *         property="google_url",
+ *         type="string",
+ *         description="The user's google profile link",
+ *         example="www.google.com/abc"
+ *     ),
+ *     @OA\Property(
+ *         property="twitter_url",
+ *         type="string",
+ *         description="The user's twitter profile link",
+ *         example="www.twitter.com/abc"
+ *     ),
+ *     @OA\Property(
+ *         property="youtube_url",
+ *         type="string",
+ *         description="The user's youtube profile link",
+ *         example="www.youtube.com/abc"
+ *     ),
+ *     @OA\Property(
+ *         property="description",
+ *         type="string",
+ *         description="The user's short introduction description",
+ *         example="This is me, I am doing thiss......"
+ *     ),
+ *     @OA\Property(
  *         property="created_by",
  *         type="integer",
  *         description="user created by",

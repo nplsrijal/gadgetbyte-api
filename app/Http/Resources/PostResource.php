@@ -58,6 +58,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         description="The Description of the post's SEO",
  *         example="Description goes here"
  *     ),
+ *      @OA\Property(
+ *          property="seo_title_social_media",
+ *          type="string",
+ *          description="The seo title field for social media  of the post review",
+ *          example="Apple 14 launched in Nepal."
+ *      ),
  * )
  */
 

@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::table('posts', function (Blueprint $table) {
             $table->text('seo_title')->nullable();
-            $table->text('seo_description')->nullable()->after('seo_description');
+            $table->text('seo_description')->nullable()->after('seo_title');
+            $table->text('seo_title_social_media')->nullable()->after('seo_description');
         });
     }
 
@@ -25,6 +26,7 @@ return new class extends Migration
         Schema::table('posts', function (Blueprint $table) {
             $table->dropColumn('seo_title');
             $table->dropColumn('seo_description');
+            $table->dropColumn('seo_title_social_media');
         });
     }
 };

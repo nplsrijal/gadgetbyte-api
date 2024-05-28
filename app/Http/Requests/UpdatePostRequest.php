@@ -128,6 +128,12 @@ class UpdatePostRequest extends FormRequest
  *                 description="The description of the post review",
  *                 example="Impressive."
  *             ),
+ *             @OA\Property(
+ *                 property="seo_title_social_media",
+ *                 type="string",
+ *                 description="The seo title field for social media  of the post review",
+ *                 example="Apple 14 launched in Nepal."
+ *             ),
  *         ),
  *         description="Array of post review details",
  *     )
@@ -164,6 +170,7 @@ class UpdatePostRequest extends FormRequest
             "show_in_pricelist"=>"required|string",
             "seo_title"=>"required|string",
             "seo_description"=>"required|string",
+            "seo_title_social_media"=>"required|sometimes|string",
             "status"=>"required|sometimes|string",
             "post_on"=>"required|sometimes|string",
             //"tags.*"=>"required|sometimes|integer"

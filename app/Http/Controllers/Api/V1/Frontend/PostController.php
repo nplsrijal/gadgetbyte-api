@@ -38,6 +38,13 @@ class PostController extends Controller
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Parameter(
+     *         name="category_slug",
+     *         in="query",
+     *         description="Search post for filtering by catgory slug ",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
      *         name="per_page",
      *         in="query",
      *         description="Number of items per page (optional, default: 20)",
@@ -71,6 +78,11 @@ class PostController extends Controller
         if ($request->has('category_id')) {
             $query->join('post_with_categories', 'posts.id', '=', 'post_with_categories.post_id')
                 ->where('post_with_categories.category_id', '=', $request->input('category_id'));
+        }
+        if ($request->has('category_slug')) {
+            $query->join('post_with_categories', 'posts.id', '=', 'post_with_categories.post_id')
+                  ->join('post_categories', 'post_with_categories.category_id', '=', 'post_categories.id')
+                ->where('post_categories.slug', '=', $request->input('category_slug'));
         }
         $query->orderBy('posts.created_at', 'desc');
 
