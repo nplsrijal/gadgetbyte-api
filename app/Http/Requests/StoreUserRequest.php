@@ -59,12 +59,6 @@ namespace App\Http\Requests;
  *         example="www.instagram.com/abc"
  *     ),
  *     @OA\Property(
- *         property="google_url",
- *         type="string",
- *         description="The user's google profile link",
- *         example="www.google.com/abc"
- *     ),
- *     @OA\Property(
  *         property="linkedin_url",
  *         type="string",
  *         description="The user's linkedin profile link",
