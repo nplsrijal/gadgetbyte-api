@@ -47,6 +47,11 @@ class Post extends Model implements Auditable
     {
         return $this->hasMany(PostWithCategory::class);
     }
+
+    public function faqs()
+    {
+        return $this->hasMany(PostFaq::class);
+    }
   
 
 }

@@ -147,6 +147,7 @@ class PostController extends Controller
         
          if ($data) {
             $data->prices=$data->prices;
+            $data->faqs=$data->faqs;
             //$data->post_tags=$data->post_tags;
             $data->categories=$data->categories;
             $data->reviews=$data->reviews;
