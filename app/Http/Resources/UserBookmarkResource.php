@@ -8,7 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @OA\Schema(
- *     schema="BookmarkResource",
+ *     schema="UserBookmarkResource",
  *     type="object",
  *     title="Bookmark Resource",
  *     description="Bookmark resource representation",

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * @OA\Schema(
- *     schema="StoreBookmarkRequest",
+ *     schema="StoreUserBookmarkRequest",
  *     type="object",
  *     title="Bookmark  Store Request",
  *     description="Bookmark  store request data",
