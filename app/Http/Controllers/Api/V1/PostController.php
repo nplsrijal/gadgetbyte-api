@@ -13,6 +13,7 @@ use App\Models\Post;
 use App\Models\PostTag;
 use App\Models\PostWithCategory;
 use App\Models\PostReview;
+use App\Models\PostFaq;
 
 use DB;
 
@@ -163,6 +164,16 @@ class PostController extends Controller
         {
             $reviews=[];
         }
+        if(isset($validated['faqs']))
+        {
+            $faqs=$validated['faqs'];
+            unset($validated['faqs']);
+
+        }
+        else
+        {
+            $faqs=[];
+        }
 
         
         
@@ -208,6 +219,23 @@ class PostController extends Controller
             }
 
             PostReview::insert($insert_data);
+
+        }
+
+        if(count($faqs)>0)
+        {
+            $insert_data=[];
+            foreach ($faqs as  $faq_data) {
+                
+                $insert_data[] = [
+                    'post_id'=>$data->id,
+                    'question' => $faq_data['question'],
+                    'answer' => $review_data['answer'],
+                    'created_by'=>$userId
+                ];
+            }
+
+            PostFaq::insert($insert_data);
 
         }
 
@@ -366,6 +394,16 @@ class PostController extends Controller
             $reviews=[];
         }
         
+        if(isset($validatedData['faqs']))
+        {
+            $faqs=$validatedData['faqs'];
+            unset($validatedData['faqs']);
+
+        }
+        else
+        {
+            $faqs=[];
+        }
       
 
          // Begin database transaction
@@ -407,6 +445,9 @@ class PostController extends Controller
 
         if(count($reviews) > 0)
         {
+            $postreview_data=PostReview::where('post_id', $data->id);
+            $postreview_data->update(['archived_by' => $userId]);
+            $postreview_data->delete();
             $insert_data=[];
             foreach ($reviews as  $review_data) {
                 
@@ -421,6 +462,26 @@ class PostController extends Controller
             }
 
             PostReview::insert($insert_data);
+
+        }
+
+        if(count($faqs)>0)
+        {
+            $postfaq_data=PostFaq::where('post_id', $data->id);
+            $postfaq_data->update(['archived_by' => $userId]);
+            $postfaq_data->delete();
+            $insert_data=[];
+            foreach ($faqs as  $faq_data) {
+                
+                $insert_data[] = [
+                    'post_id'=>$data->id,
+                    'question' => $faq_data['question'],
+                    'answer' => $review_data['answer'],
+                    'created_by'=>$userId
+                ];
+            }
+
+            PostFaq::insert($insert_data);
 
         }
 

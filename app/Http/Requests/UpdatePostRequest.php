@@ -96,6 +96,12 @@ class UpdatePostRequest extends FormRequest
  *         description="Date & time to be published on",
  *         example="2024-05-14 13:55:12"
  *     ),
+ *             @OA\Property(
+ *                 property="seo_title_social_media",
+ *                 type="string",
+ *                 description="The seo title field for social media  of the post review",
+ *                 example="Apple 14 launched in Nepal."
+ *             ),
  *     @OA\Property(
  *         property="reviews",
  *         type="array",
@@ -128,14 +134,31 @@ class UpdatePostRequest extends FormRequest
  *                 description="The description of the post review",
  *                 example="Impressive."
  *             ),
- *             @OA\Property(
- *                 property="seo_title_social_media",
- *                 type="string",
- *                 description="The seo title field for social media  of the post review",
- *                 example="Apple 14 launched in Nepal."
- *             ),
  *         ),
  *         description="Array of post review details",
+ *     ),
+ *     @OA\Property(
+ *         property="faqs",
+ *         type="array",
+ *         @OA\Items(
+ *             type="object",
+ *             title="FAQ",
+ *             description="FAQ details",
+ *             required={"question","answer"},
+ *             @OA\Property(
+ *                 property="question",
+ *                 type="string",
+ *                 description="The question field",
+ *                 example="How much price of Iphone?"
+ *             ),
+ *             @OA\Property(
+ *                 property="answer",
+ *                 type="string",
+ *                 description="The answer field",
+ *                 example="Its price is 45,000"
+ *             ),
+ *         ),
+ *         description="Array of FAQ details",
  *     )
  * )
  */
@@ -180,7 +203,9 @@ class UpdatePostRequest extends FormRequest
             "reviews.*.review_id"=>"required|sometimes",
             "reviews.*.review"=>"required|sometimes",
             "reviews.*.description"=>"required|sometimes",
-
+            "faqs.*"=>"required|sometimes",
+            "faqs.*.question"=>"required|sometimes",
+            "faqs.*.answer"=>"required|sometimes",
 
         ];
     }

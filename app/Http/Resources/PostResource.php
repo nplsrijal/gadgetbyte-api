@@ -64,6 +64,88 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *          description="The seo title field for social media  of the post review",
  *          example="Apple 14 launched in Nepal."
  *      ),
+ *     @OA\Property(
+ *         property="featured_image",
+ *         type="string",
+ *         description="Image",
+ *         example="https://gadgetbyte.com/logo.png"
+ *     ),
+ *     @OA\Property(
+ *         property="status",
+ *         type="string",
+ *         description="Status for Draft,Review",
+ *         example="D for Draft,R for Review"
+ *     ),
+ *     @OA\Property(
+ *         property="post_on",
+ *         type="string",
+ *         description="Date & time to be published on",
+ *         example="2024-05-14 13:55:12"
+ *     ),
+ *             @OA\Property(
+ *                 property="seo_title_social_media",
+ *                 type="string",
+ *                 description="The seo title field for social media  of the post review",
+ *                 example="Apple 14 launched in Nepal."
+ *             ),
+ *     @OA\Property(
+ *         property="reviews",
+ *         type="array",
+ *         @OA\Items(
+ *             type="object",
+ *             title="Post Review",
+ *             description="Post review details",
+ *             required={"review_id","title", "review"},
+ *             @OA\Property(
+ *                 property="review_id",
+ *                 type="integer",
+ *                 description="The id of the review",
+ *                 example="1"
+ *             ),
+ *             @OA\Property(
+ *                 property="title",
+ *                 type="string",
+ *                 description="The Text of the review",
+ *                 example="Design"
+ *             ),
+ *             @OA\Property(
+ *                 property="review",
+ *                 type="string",
+ *                 description="The review of the post",
+ *                 example="Impressive."
+ *             ),
+ *             @OA\Property(
+ *                 property="description",
+ *                 type="string",
+ *                 description="The description of the post review",
+ *                 example="Impressive."
+ *             ),
+ *         ),
+ *         description="Array of post review details",
+ *     ),
+ *     @OA\Property(
+ *         property="faqs",
+ *         type="array",
+ *         @OA\Items(
+ *             type="object",
+ *             title="FAQ",
+ *             description="FAQ details",
+ *             required={"question","answer"},
+ *             @OA\Property(
+ *                 property="question",
+ *                 type="string",
+ *                 description="The question field",
+ *                 example="How much price of Iphone?"
+ *             ),
+ *             @OA\Property(
+ *                 property="answer",
+ *                 type="string",
+ *                 description="The answer field",
+ *                 example="Its price is 45,000"
+ *             ),
+ *         ),
+ *         description="Array of FAQ details",
+ *     )
  * )
  */
 
