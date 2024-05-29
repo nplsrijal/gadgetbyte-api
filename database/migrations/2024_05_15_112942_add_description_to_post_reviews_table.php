@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::table('post_reviews', function (Blueprint $table) {
             //
             $table->string('description')->nullable();
+            $table->float('average_rating')->nullable();
+            $table->float('total_score')->nullable();
 
         });
     }
@@ -25,6 +27,8 @@ return new class extends Migration
     {
         Schema::table('post_reviews', function (Blueprint $table) {
             $table->dropColumn('description');
+            $table->dropColumn('average_rating');
+            $table->dropColumn('total_score');
 
         });
     }

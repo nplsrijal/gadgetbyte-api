@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\V1\PostReviewController;
 use App\Http\Controllers\Api\V1\AttributeController;
 use App\Http\Controllers\Api\V1\PatchController;
 use App\Http\Controllers\Api\V1\Frontend\PostController as FPostController;
+use App\Http\Controllers\Api\V1\Frontend\CustomerController;
 
 
 use Illuminate\Http\Request;
@@ -73,6 +74,7 @@ Route::prefix('v1/frontend')->group(function () {
     // Route will be here
 
     Route::apiResource('post', FPostController::class);
+    Route::apiResource('customers', CustomerController::class);
 
     Route::get('patch', [PatchController::class, 'index']);
 

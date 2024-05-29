@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use DB;
 use App\Models\PostReview;
 use App\Models\Post;
+use App\Models\PostFaq;
 
 
 
@@ -159,6 +160,39 @@ class PatchController extends Controller
             }
 
            
+    }
+
+    public function post_faq()
+    {
+        $posts = Post::where('description', 'like', '%[su_accordion%')->get();
+
+        foreach($posts as $list)
+        {
+             // Extract content within each su_spoiler tag
+           preg_match_all('/\[su_spoiler title="(.*?)"[^]]*\](.*?)\[\/su_spoiler\]/s', $list->description, $matches, PREG_SET_ORDER);
+            
+            
+            // Loop through each match and extract title and content
+            foreach ($matches as $match) {
+                $data=['question'=>$match[1],'answer'=>$match[2],'post_id'=>$list->id,'created_by'=>1];
+                PostFaq::create($data);
+            }
+             $content = preg_replace('/\[su_accordion\].*?\[\/su_accordion\]/s', '[faq]', $list->description);
+
+            if(Post::where('id', $list->id)->update(['description' => $content]))
+            {
+                echo ' Done ->id '.$list->id.'<br/>';
+
+            }
+            else
+            {
+                echo 'Error ->id '.$list->id.'<br/>';
+
+            }
+
+        }
+          
+
     }
 
 

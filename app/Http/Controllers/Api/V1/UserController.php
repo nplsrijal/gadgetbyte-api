@@ -94,7 +94,7 @@ class UserController extends Controller
      *         )
      *     ),
      *     @OA\RequestBody(
-     *         description="User Types data",
+     *         description="User data",
      *         required=true,
      *         @OA\JsonContent(ref="#/components/schemas/StoreUserRequest")
      *     ),
@@ -122,7 +122,7 @@ class UserController extends Controller
         $validated['password'] = bcrypt($validated['password']);
         $user = User::create($validated);
        
-        return $this->success(new UserResource($user), 'User Type created', Response::HTTP_CREATED);
+        return $this->success(new UserResource($user), 'User created', Response::HTTP_CREATED);
     }
 
    /**
@@ -156,7 +156,7 @@ class UserController extends Controller
         if ($user) {
             return $this->success(new UserResource($user));
         } else {
-            return $this->error('User Type not found', Response::HTTP_NOT_FOUND);
+            return $this->error('User not found', Response::HTTP_NOT_FOUND);
         }
     }
 
