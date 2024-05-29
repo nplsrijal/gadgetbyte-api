@@ -58,18 +58,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         description="The Description of the post's SEO",
  *         example="Description goes here"
  *     ),
- *      @OA\Property(
- *          property="seo_title_social_media",
- *          type="string",
- *          description="The seo title field for social media  of the post review",
- *          example="Apple 14 launched in Nepal."
- *      ),
- *     @OA\Property(
- *         property="featured_image",
- *         type="string",
- *         description="Image",
- *         example="https://gadgetbyte.com/logo.png"
- *     ),
  *     @OA\Property(
  *         property="status",
  *         type="string",
@@ -82,12 +70,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         description="Date & time to be published on",
  *         example="2024-05-14 13:55:12"
  *     ),
- *             @OA\Property(
- *                 property="seo_title_social_media",
- *                 type="string",
- *                 description="The seo title field for social media  of the post review",
- *                 example="Apple 14 launched in Nepal."
- *             ),
+ *     @OA\Property(
+ *         property="seo_title_social_media",
+ *         type="string",
+ *         description="The seo title field for social media  of the post review",
+ *         example="Apple 14 launched in Nepal."
+ *    ),
  *     @OA\Property(
  *         property="reviews",
  *         type="array",
