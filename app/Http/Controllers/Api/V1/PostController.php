@@ -230,7 +230,7 @@ class PostController extends Controller
                 $insert_data[] = [
                     'post_id'=>$data->id,
                     'question' => $faq_data['question'],
-                    'answer' => $review_data['answer'],
+                    'answer' => $faq_data['answer'],
                     'created_by'=>$userId
                 ];
             }
@@ -476,7 +476,7 @@ class PostController extends Controller
                 $insert_data[] = [
                     'post_id'=>$data->id,
                     'question' => $faq_data['question'],
-                    'answer' => $review_data['answer'],
+                    'answer' => $faq_data['answer'],
                     'created_by'=>$userId
                 ];
             }
