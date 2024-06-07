@@ -70,12 +70,42 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         description="Date & time to be published on",
  *         example="2024-05-14 13:55:12"
  *     ),
- *     @OA\Property(
- *         property="seo_title_social_media",
- *         type="string",
- *         description="The seo title field for social media  of the post review",
- *         example="Apple 14 launched in Nepal."
- *    ),
+ *             @OA\Property(
+ *                 property="seo_title_facebook",
+ *                 type="string",
+ *                 description="The seo title field for fb  of the post review",
+ *                 example="Apple 14 launched in Nepal."
+ *             ),
+ *             @OA\Property(
+ *                 property="seo_description_facebook",
+ *                 type="string",
+ *                 description="The seo description field for fb  of the post review",
+ *                 example="Apple 14 launched in Nepal."
+ *             ),
+ *             @OA\Property(
+ *                 property="seo_title_instagram",
+ *                 type="string",
+ *                 description="The seo title field for instagram  of the post review",
+ *                 example="Apple 14 launched in Nepal."
+ *             ),
+ *              @OA\Property(
+ *                 property="seo_description_instagram",
+ *                 type="string",
+ *                 description="The seo description field for instagram  of the post review",
+ *                 example="Apple 14 launched in Nepal."
+ *             ),
+ *             @OA\Property(
+ *                 property="seo_title_twitter",
+ *                 type="string",
+ *                 description="The seo title field for twitter  of the post review",
+ *                 example="Apple 14 launched in Nepal."
+ *             ),
+ *             @OA\Property(
+ *                 property="seo_description_twitter",
+ *                 type="string",
+ *                 description="The seo description field for twitter  of the post review",
+ *                 example="Apple 14 launched in Nepal."
+ *             ),
  *     @OA\Property(
  *         property="reviews",
  *         type="array",

@@ -244,6 +244,15 @@ class MediaController extends Controller
         $validatedData = $request->validated();
         $userId = request()->header('X-User-Id');
         $validatedData['updated_by'] = $userId;
+        if($request->hasfile('image'))
+        {
+            $file = $request->file('image');
+            $extenstion = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extenstion;
+            $file-> move(public_path('uploads/medias'), $filename);
+            $validatedData['image'] = $filename;
+           
+        }
         $data->update($validatedData);
     
         return $this->success(new MediaResource($data), 'Media updated', Response::HTTP_OK);

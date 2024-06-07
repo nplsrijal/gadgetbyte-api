@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::table('posts', function (Blueprint $table) {
             $table->text('seo_title')->nullable();
             $table->text('seo_description')->nullable()->after('seo_title');
-            $table->text('seo_title_social_media')->nullable()->after('seo_description');
+            $table->string('seo_keyphrase')->nullable();
+
         });
     }
 
@@ -26,7 +27,7 @@ return new class extends Migration
         Schema::table('posts', function (Blueprint $table) {
             $table->dropColumn('seo_title');
             $table->dropColumn('seo_description');
-            $table->dropColumn('seo_title_social_media');
+            $table->dropColumn('seo_keyphrase');
         });
     }
 };

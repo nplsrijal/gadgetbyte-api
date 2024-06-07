@@ -36,6 +36,12 @@ use Illuminate\Foundation\Http\FormRequest;
  *         description="The Alternative text of the media",
  *         example="apple-14-image"
  *     ),
+ *     @OA\Property(
+ *         property="image",
+ *         type="file",
+ *         description="The image",
+ *         example="apple-14-image"
+ *     ),
  * )
  */
 class UpdateMediaRequest extends FormRequest
@@ -59,7 +65,8 @@ class UpdateMediaRequest extends FormRequest
             'name' => 'required|string|max:255',
             'caption' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'alt_text'=>'required|string'
+            'alt_text'=>'required|string',
+            'image'=>'required|sometimes'
         ];
     }
 }
