@@ -179,7 +179,7 @@ class MediaController extends Controller
                      ->first();
 
         if ($data) {
-            $path = public_path($data->image);
+            $filePath = public_path($data->image);
             if (file_exists($filePath)) {
                 $data->file_size = filesize($filePath);
             } else {
