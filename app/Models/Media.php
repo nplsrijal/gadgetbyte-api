@@ -15,5 +15,9 @@ class Media extends Model implements Auditable
     protected $guarded=[];
     protected $table = 'medias';
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }
 

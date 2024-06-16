@@ -282,7 +282,10 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $data = Post::with(['reviews', 'reviews.reviews', 'categories','categories.category'])->find($id);
+        $data = Post::with(['reviews', 'reviews.reviews', 'categories','categories.category'])
+        ->join('users','users.id','=','posts.created_by')
+        ->select('posts.*', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name"))
+        ->find($id);
         
          if ($data) {
             $data->prices=$data->prices;

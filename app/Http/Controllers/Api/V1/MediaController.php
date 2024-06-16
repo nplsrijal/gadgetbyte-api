@@ -170,9 +170,23 @@ class MediaController extends Controller
      */
     public function show(string $id)
     {
-        $data = Media::find($id)->join('users', 'medias.created_by', '=', 'users.id')->select('medias.*','users.firstname','users.lastname')->get();
+        // $data = Media::with(['user' => function($query) {
+        //     $query->select('id', 'firstname', 'lastname'); // Select specific columns
+        // }])->find($id);
+        $data = Media::join('users', 'medias.created_by', '=', 'users.id')
+                     ->select('medias.*', 'users.firstname', 'users.lastname')
+                     ->where('medias.id', $id)
+                     ->first();
 
         if ($data) {
+            $path = public_path($data->image);
+            if (file_exists($filePath)) {
+                $data->file_size = filesize($filePath);
+            } else {
+                $data->file_size = null;
+            }
+           
+
             return $this->success(new MediaResource($data));
         } else {
             return $this->error('Media not found', Response::HTTP_NOT_FOUND);

@@ -109,18 +109,6 @@ class StorePostRequest extends FormRequest
  *                 example="Apple 14 launched in Nepal."
  *             ),
  *             @OA\Property(
- *                 property="seo_title_instagram",
- *                 type="string",
- *                 description="The seo title field for instagram  of the post review",
- *                 example="Apple 14 launched in Nepal."
- *             ),
- *              @OA\Property(
- *                 property="seo_description_instagram",
- *                 type="string",
- *                 description="The seo description field for instagram  of the post review",
- *                 example="Apple 14 launched in Nepal."
- *             ),
- *             @OA\Property(
  *                 property="seo_title_twitter",
  *                 type="string",
  *                 description="The seo title field for twitter  of the post review",
@@ -229,8 +217,8 @@ class StorePostRequest extends FormRequest
             "seo_keyphrase"=>"required|sometimes|string",
             "seo_title_facebook"=>"required|sometimes|string",
             "seo_description_facebook"=>"required|sometimes|string",
-            "seo_title_instagram"=>"required|sometimes|string",
-            "seo_description_instagram"=>"required|sometimes|string",
+           // "seo_title_instagram"=>"required|sometimes|string",
+            //"seo_description_instagram"=>"required|sometimes|string",
             "seo_title_twitter"=>"required|sometimes|string",
             "seo_description_twitter"=>"required|sometimes|string",
             "post_on"=>"required|sometimes|string",
