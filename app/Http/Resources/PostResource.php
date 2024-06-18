@@ -70,6 +70,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         description="Date & time to be published on",
  *         example="2024-05-14 13:55:12"
  *     ),
+ *     @OA\Property(
+ *         property="is_cornerstone",
+ *         type="string",
+ *         description="Cornerstone value in Y/N",
+ *         example="Y"
+ *     ),
  *             @OA\Property(
  *                 property="seo_title_facebook",
  *                 type="string",

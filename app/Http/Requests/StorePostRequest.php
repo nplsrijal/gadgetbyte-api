@@ -96,6 +96,12 @@ class StorePostRequest extends FormRequest
  *         description="Date & time to be published on",
  *         example="2024-05-14 13:55:12"
  *     ),
+ *     @OA\Property(
+ *         property="is_cornerstone",
+ *         type="string",
+ *         description="Cornerstone value in Y/N",
+ *         example="Y"
+ *     ),
  *             @OA\Property(
  *                 property="seo_title_facebook",
  *                 type="string",
@@ -222,6 +228,7 @@ class StorePostRequest extends FormRequest
             "seo_title_twitter"=>"required|sometimes|string",
             "seo_description_twitter"=>"required|sometimes|string",
             "post_on"=>"required|sometimes|string",
+            "is_cornerstone"=>"required|sometimes|string",
             //"tags.*"=>"required|sometimes|integer"
             "categories.*"=>"required|sometimes|integer",
             "reviews.*"=>"required|sometimes",

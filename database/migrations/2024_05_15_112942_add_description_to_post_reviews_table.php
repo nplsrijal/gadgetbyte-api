@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->float('average_rating')->nullable();
             $table->float('total_score')->nullable();
+            $table->char('is_cornerstone')->default('N');
 
         });
     }
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->dropColumn('description');
             $table->dropColumn('average_rating');
             $table->dropColumn('total_score');
+            $table->dropColumn('is_cornerstone');
 
         });
     }
