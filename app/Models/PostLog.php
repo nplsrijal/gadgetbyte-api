@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use OwenIt\Auditing\Contracts\Auditable;
 
 
-class PostFaq extends Model implements Auditable
+class PostLog extends Model
 {
     use HasFactory,SoftDeletes;
-    use \OwenIt\Auditing\Auditable;
     const DELETED_AT = 'archived_at';
     protected $guarded=[];
 
+    
     public function post()
     {
         return $this->belongsTo(Post::class);

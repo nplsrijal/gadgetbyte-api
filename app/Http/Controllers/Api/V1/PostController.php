@@ -14,6 +14,7 @@ use App\Models\PostTag;
 use App\Models\PostWithCategory;
 use App\Models\PostReview;
 use App\Models\PostFaq;
+use App\Models\PostLog;
 
 use DB;
 
@@ -293,6 +294,7 @@ class PostController extends Controller
             $data->categories=$data->categories;
             $data->reviews=$data->reviews;
             $data->faqs=$data->faqs;
+            $data->logs=$data->logs;
 
             return $this->success(new PostResource($data));
         } else {
@@ -489,6 +491,16 @@ class PostController extends Controller
             PostFaq::insert($insert_data);
 
         }
+
+        $log_Data = [
+            'post_id'=>$data->id,
+            'type' => 'Update',
+            'data_captured' => json_encode($request->validated()),
+            'created_by'=>$userId
+        ];
+
+        PostLog::create($log_Data);
+
 
          // Check database transaction
          $transactionStatus = DB::transactionLevel();
