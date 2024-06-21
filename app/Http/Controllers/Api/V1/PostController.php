@@ -224,7 +224,7 @@ class PostController extends Controller
                     'title' => $review_data['title'],
                     'post_id'=>$data->id,
                     'review' => $review_data['review'],
-                    'description' => $review_data['description'],
+                    //'description' => $review_data['description'],
                     'created_by'=>$userId
                 ];
             }
@@ -473,7 +473,7 @@ class PostController extends Controller
                     'title' => $review_data['title'],
                     'post_id'=>$data->id,
                     'review' => $review_data['review'],
-                    'description' => $review_data['description'],
+                  //  'description' => $review_data['description'],
                     'created_by'=>$userId
                 ];
             }
