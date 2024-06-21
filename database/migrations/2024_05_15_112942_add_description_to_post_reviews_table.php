@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::table('post_reviews', function (Blueprint $table) {
             //
-            $table->string('description')->nullable();
             $table->float('average_rating')->nullable();
             $table->float('total_score')->nullable();
-            $table->char('is_cornerstone')->default('N');
 
         });
     }
@@ -27,10 +25,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('post_reviews', function (Blueprint $table) {
-            $table->dropColumn('description');
             $table->dropColumn('average_rating');
             $table->dropColumn('total_score');
-            $table->dropColumn('is_cornerstone');
 
         });
     }

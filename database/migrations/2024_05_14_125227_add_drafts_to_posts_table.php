@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::table('posts', function (Blueprint $table) {
             $table->char('status',1)->default('P'); // D,R,
             $table->timestamp('post_on')->nullable();
+            $table->char('is_cornerstone')->default('N');
+
         });
     }
 
@@ -26,6 +28,8 @@ return new class extends Migration
             //
             $table->dropColumn('status');
             $table->dropColumn('post_on');
+            $table->dropColumn('is_cornerstone');
+
 
         });
     }

@@ -44,6 +44,13 @@ class PostController extends Controller
      *         required=false,
      *         @OA\Schema(type="string")
      *     ),
+     *        @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         description="Search post for filtering by status",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Parameter(
      *         name="per_page",
      *         in="query",
@@ -83,6 +90,9 @@ class PostController extends Controller
             $query->join('post_with_categories', 'posts.id', '=', 'post_with_categories.post_id')
                   ->join('post_categories', 'post_with_categories.category_id', '=', 'post_categories.id')
                 ->where('post_categories.slug', '=', $request->input('category_slug'));
+        }
+        if ($request->has('status')) {
+            $query->where('status','=',$request->input('status'));
         }
         $query->orderBy('posts.created_at', 'desc');
 

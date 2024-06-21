@@ -40,6 +40,13 @@ class PostController extends Controller
      *         required=false,
      *         @OA\Schema(type="integer")
      *     ),
+     *        @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         description="Search post for filtering by status",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Parameter(
      *         name="per_page",
      *         in="query",
@@ -78,6 +85,9 @@ class PostController extends Controller
 
                     ->where('category_id', '=', $request->input('category_id'));
 
+        }
+        if ($request->has('status')) {
+            $query->where('status','=',$request->input('status'));
         }
 
         $data = $query->paginate($perPage)->withPath($request->getPathInfo());

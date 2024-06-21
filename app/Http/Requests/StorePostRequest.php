@@ -152,12 +152,6 @@ class StorePostRequest extends FormRequest
  *                 description="The review of the post",
  *                 example="Impressive."
  *             ),
- *             @OA\Property(
- *                 property="description",
- *                 type="string",
- *                 description="The description of the post review",
- *                 example="Impressive."
- *             ),
  *         ),
  *         description="Array of post review details",
  *     ),
@@ -235,7 +229,7 @@ class StorePostRequest extends FormRequest
             "reviews.*.title"=>"required|sometimes",
             "reviews.*.review_id"=>"required|sometimes",
             "reviews.*.review"=>"required|sometimes",
-            "reviews.*.description"=>"required|sometimes",
+          //  "reviews.*.description"=>"required|sometimes",
             "faqs.*"=>"required|sometimes",
             "faqs.*.question"=>"required|sometimes",
             "faqs.*.answer"=>"required|sometimes",
