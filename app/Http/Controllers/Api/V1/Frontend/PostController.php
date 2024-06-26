@@ -51,6 +51,13 @@ class PostController extends Controller
      *         required=false,
      *         @OA\Schema(type="string")
      *     ),
+     *       @OA\Parameter(
+     *         name="author",
+     *         in="query",
+     *         description="Search post for filtering by author",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Parameter(
      *         name="per_page",
      *         in="query",
@@ -93,6 +100,9 @@ class PostController extends Controller
         }
         if ($request->has('status')) {
             $query->where('status','=',$request->input('status'));
+        }
+        if ($request->has('author')) {
+            $query->where('users.email','=',$request->input('author'));
         }
         $query->orderBy('posts.created_at', 'desc');
 
@@ -151,7 +161,7 @@ class PostController extends Controller
     {
         $data = Post::with(['reviews', 'reviews.reviews', 'categories','categories.category'])
         ->join('users','users.id','=','posts.created_by')
-        ->select('posts.*', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name"))
+        ->select('posts.*','users.email','users.facebook_url','users.instagram_url','users.linkedin_url','users.google_url','users.twitter_url','users.youtube_url', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name,users.description as author_description"))
 
         ->where('slug',$slug)->first();
         
