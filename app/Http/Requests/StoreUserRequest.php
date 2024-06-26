@@ -120,7 +120,7 @@ class StoreUserRequest extends FormRequest
             "google_url"=>"required|sometimes|string",
             "twitter_url"=>"required|sometimes|string",
             "youtube_url"=>"required|sometimes|string",
-            "user_type_id"=>"required|numeric|max:255",
+            "user_type_id"=>"required|sometimes|numeric|max:255",
 
         ];
     }
