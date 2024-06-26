@@ -6,6 +6,946 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/v1/attributes": {
+            "get": {
+                "tags": [
+                    "Attributes"
+                ],
+                "summary": "Get a list of Attributes",
+                "operationId": "7f70158fcf2ebe8119e28f5f989b4536",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name or url ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AttributeResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Attributes"
+                ],
+                "summary": "Create a new Attribute",
+                "operationId": "4802484e1daefc81ffc3523d305ad197",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Attributes data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreAttributeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created menu",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AttributeResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/attributes/{id}": {
+            "get": {
+                "tags": [
+                    "Attributes"
+                ],
+                "summary": "Get a specific menu",
+                "operationId": "ca7b1b8f967d0bafa2adb0392651973b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the menu to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AttributeResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Attributes"
+                ],
+                "summary": "Update an existing menu",
+                "description": "Update the specified resource in storage.",
+                "operationId": "d45cc99d31e0301f5a55018ff86f50c1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the menu to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Attribute data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateAttributeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated menu",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AttributeResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Attributes"
+                ],
+                "summary": "Delete an menu",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "5a19eaaa6c6f80e02f6946cc7784931b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the menu to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted menu",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Attribute deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/AttributeResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/brands": {
+            "get": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Get a list of Brands",
+                "operationId": "265f173d55c77d2ffffe46be4ba57fa8",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name or slug ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/BrandResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Create a new Brand",
+                "operationId": "354e334c26df48b4a20817df45f8fa7b",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Brands data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreBrandRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created brand",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BrandResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/brands/{id}": {
+            "get": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Get a specific brand",
+                "operationId": "41ee41610cd373b7f6b3ecf7b8253877",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the brand to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BrandResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Update an existing brand",
+                "description": "Update the specified resource in storage.",
+                "operationId": "818bae2e9412f13a474dd3af9c4049b9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the brand to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Brand data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateBrandRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated brand",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BrandResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Brands"
+                ],
+                "summary": "Delete an brand",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "a5475e12bf803edae8884e43dca17735",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the brand to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted brand",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Brand deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BrandResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/frontend/customers": {
+            "post": {
+                "tags": [
+                    "Customer"
+                ],
+                "summary": "Create a new Customer",
+                "operationId": "08a2196ed6f012f5c72bdada45a31dbd",
+                "requestBody": {
+                    "description": "User Types data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/api/v1/frontend/post": {
+            "get": {
+                "tags": [
+                    "Frontend Posts"
+                ],
+                "summary": "Get a list of Posts",
+                "operationId": "d991f7fbede20225cca971ef760da3a2",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "Search post for filtering by catgory id ",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "category_slug",
+                        "in": "query",
+                        "description": "Search post for filtering by catgory slug ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Search post for filtering by status",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/FrontendPostResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/frontend/post/{slug}": {
+            "get": {
+                "tags": [
+                    "Frontend Posts"
+                ],
+                "summary": "Get a specific post",
+                "operationId": "f7795e29e8abc13b3ba1b2109e050b27",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "The Slug of the post to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/bookmarks": {
+            "get": {
+                "tags": [
+                    "Bookmarks"
+                ],
+                "summary": "Get a list of Bookmarks",
+                "operationId": "d45ab70b827837660a30427972d1d8ef",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserBookmarkResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Bookmarks"
+                ],
+                "summary": "Create a new UserBookmark",
+                "operationId": "db9f6b1e2b9338869730b1f0fbad96f3",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Bookmarks data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreUserBookmarkRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created bookmark",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserBookmarkResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/bookmarks/{id}": {
+            "delete": {
+                "tags": [
+                    "Bookmarks"
+                ],
+                "summary": "Delete an bookmark",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "a5b835a94247113a5e3b951c4c5a3477",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the bookmark to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted bookmark",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "UserBookmark deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserBookmarkResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
         "/api/v1/login": {
             "post": {
                 "tags": [
@@ -110,6 +1050,69 @@
                         "bearer_token": []
                     }
                 ]
+            }
+        },
+        "/api/v1/socail-login": {
+            "post": {
+                "tags": [
+                    "Social Login"
+                ],
+                "summary": "User login",
+                "operationId": "cebb73c4e2812ee710cf503f2340baa6",
+                "requestBody": {
+                    "description": "Social Login data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreSocialLoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "description": "The access token",
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "Bearer"
+                                        },
+                                        "expires_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-05-14 10:00:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Invalid data",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/api/v1/medias": {
@@ -264,6 +1267,79 @@
                 "security": [
                     {
                         "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Menus"
+                ],
+                "summary": "Update an existing media",
+                "description": "Update the specified resource in storage.",
+                "operationId": "1acec4db8295496ba82d95f662bb8b72",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the media to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Menu data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateMenuRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated media",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MenuResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
                     }
                 ]
             },
@@ -807,6 +1883,15 @@
                         }
                     },
                     {
+                        "name": "type",
+                        "in": "query",
+                        "description": "For dropdown or list:(dropdown/list) ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "per_page",
                         "in": "query",
                         "description": "Number of items per page (optional, default: 20)",
@@ -1095,6 +2180,24 @@
                         "name": "q",
                         "in": "query",
                         "description": "Search term for filtering by name ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "Search post for filtering by catgory id ",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Search post for filtering by status",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -1443,6 +2546,36 @@
             }
         },
         "/api/v1/post-image/{id}": {
+            "get": {
+                "tags": [
+                    "Post Images"
+                ],
+                "summary": "Get a list of Post Images",
+                "operationId": "0ee4ed4479a63c1fe05360a8a868ce48",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PostImageResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
             "delete": {
                 "tags": [
                     "Post Image"
@@ -1510,6 +2643,46 @@
             }
         },
         "/api/v1/post-price": {
+            "get": {
+                "tags": [
+                    "Post Price"
+                ],
+                "summary": "Get a list of Post Price",
+                "operationId": "4fc6d2d5bdcedb8efc1f63e8116cef55",
+                "parameters": [
+                    {
+                        "name": "post_id",
+                        "in": "query",
+                        "description": "Post id",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PostPriceResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
             "post": {
                 "tags": [
                     "Post Price"
@@ -1978,6 +3151,309 @@
                 ]
             }
         },
+        "/api/v1/product-categories": {
+            "get": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Get a list of Product Categories",
+                "operationId": "a4ac2a70abc940669991576d36274dbd",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name or slug ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "For dropdown or list:(dropdown/list) ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductCategoryResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Create a new Product Category",
+                "operationId": "49ff726eb14e63e45d117c61e43fab90",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Product Categories data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreProductCategoryRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created post category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductCategoryResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/product-categories/{id}": {
+            "get": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Get a specific post category",
+                "operationId": "25fc5b26807b8f6388ad9c8dfff79f3f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post category to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductCategoryResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Update an existing post category",
+                "description": "Update the specified resource in storage.",
+                "operationId": "ae8a42692fd12ed16334b04b3bb76c53",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post category to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "ProductCategory data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProductCategoryRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated post category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductCategoryResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Product Categories"
+                ],
+                "summary": "Delete an post category",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "c574474e92bee8fd76db209cb232d887",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post category to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted post category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "ProductCategory deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/ProductCategoryResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
         "/api/v1/reviews": {
             "get": {
                 "tags": [
@@ -2396,7 +3872,7 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "User Types data",
+                    "description": "User data",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -2955,6 +4431,300 @@
                     }
                 ]
             }
+        },
+        "/api/v1/vendors": {
+            "get": {
+                "tags": [
+                    "Vendors"
+                ],
+                "summary": "Get a list of Vendors",
+                "operationId": "3a74345b7d6981df67075b76d655d93e",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name or slug ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/VendorResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Vendors"
+                ],
+                "summary": "Create a new Vendor",
+                "operationId": "3d4da42f2b521e8f45c946c33fe5842e",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Vendors data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreVendorRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created vendor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VendorResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/vendors/{id}": {
+            "get": {
+                "tags": [
+                    "Vendors"
+                ],
+                "summary": "Get a specific vendor",
+                "operationId": "550d6f5c6b07df747f124874d860f603",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the vendor to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VendorResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Vendors"
+                ],
+                "summary": "Update an existing vendor",
+                "description": "Update the specified resource in storage.",
+                "operationId": "9cd560e5c3b436233d14d19acbfce009",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the vendor to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Vendor data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateVendorRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated vendor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VendorResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Vendors"
+                ],
+                "summary": "Delete an vendor",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "ca44904a38c090b51ac01fb94add1064",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the vendor to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted vendor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Vendor deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/VendorResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -2980,6 +4750,80 @@
                 },
                 "type": "object"
             },
+            "StoreAttributeRequest": {
+                "title": "Attribute  Store Request",
+                "description": "Attribute  store request data",
+                "required": [
+                    "name",
+                    "slug",
+                    "is_active",
+                    "values"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "The menu display name",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "slug": {
+                        "description": "The unique slug  of the Attribute.",
+                        "type": "string",
+                        "example": "/dashboard"
+                    },
+                    "is_active": {
+                        "description": "Enable/Disable of attributes ",
+                        "type": "string",
+                        "example": "Y/N"
+                    },
+                    "values": {
+                        "description": "The Values in json format",
+                        "type": "json",
+                        "example": "['100','200','300']"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreBrandRequest": {
+                "title": "Brand  Store Request",
+                "description": "Brand  store request data",
+                "required": [
+                    "name",
+                    "slug",
+                    "image",
+                    "order_by"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The Brand display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "slug": {
+                                "description": "The Endpoint  of the Brand.",
+                                "type": "string",
+                                "example": "apple"
+                            },
+                            "image": {
+                                "description": "The Image Link ",
+                                "type": "string",
+                                "example": "this is the link of image."
+                            },
+                            "order_by": {
+                                "description": "The Priority of Brand",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "StoreMediaRequest": {
                 "title": "Media  Store Request",
                 "description": "Media  store request data",
@@ -2989,38 +4833,53 @@
                     "caption",
                     "description"
                 ],
-                "properties": {
-                    "image": {
-                        "description": "Array of the image",
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "format": "binary"
-                        }
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
                     },
-                    "name": {
-                        "description": "Name of the image",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "caption": {
-                        "description": "Caption of the image",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "description": {
-                        "description": "Description of the image",
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                    {
+                        "properties": {
+                            "image": {
+                                "description": "Array of the image",
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            },
+                            "name": {
+                                "description": "Name of the image",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "caption": {
+                                "description": "Caption of the image",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "description": {
+                                "description": "Description of the image",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "alt_text": {
+                                "description": "Alternative text of the image if image is broken",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreMenuRequest": {
                 "title": "Menu  Store Request",
@@ -3076,19 +4935,27 @@
                     "menu_id",
                     "user_type_id"
                 ],
-                "properties": {
-                    "menu_id": {
-                        "description": "The menu Id",
-                        "type": "integer",
-                        "example": "1"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
                     },
-                    "user_type_id": {
-                        "description": "The User Type's Id",
-                        "type": "integer",
-                        "example": "1"
+                    {
+                        "properties": {
+                            "menu_id": {
+                                "description": "The menu Id",
+                                "type": "integer",
+                                "example": "1"
+                            },
+                            "user_type_id": {
+                                "description": "The User Type's Id",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StorePostCategoryRequest": {
                 "title": "Post Category  Store Request",
@@ -3145,43 +5012,51 @@
                     "slug",
                     "images"
                 ],
-                "properties": {
-                    "post_id": {
-                        "description": "The ID of the post",
-                        "type": "integer"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
                     },
-                    "slug": {
-                        "description": "The unique images slug for post image",
-                        "type": "string"
-                    },
-                    "images": {
-                        "description": "Array of post image details",
-                        "type": "array",
-                        "items": {
-                            "title": "Post Image",
-                            "description": "Post image details",
-                            "required": [
-                                "title",
-                                "amount"
-                            ],
-                            "properties": {
-                                "title": {
-                                    "description": "The title of the post",
-                                    "type": "string",
-                                    "example": "Samsung Galaxy S21 Pro"
-                                },
-                                "image": {
-                                    "description": "The image path",
-                                    "type": "number",
-                                    "format": "string",
-                                    "example": "/post/post.png"
-                                }
+                    {
+                        "properties": {
+                            "post_id": {
+                                "description": "The ID of the post",
+                                "type": "integer"
                             },
-                            "type": "object"
-                        }
+                            "slug": {
+                                "description": "The unique images slug for post image",
+                                "type": "string"
+                            },
+                            "images": {
+                                "description": "Array of post image details",
+                                "type": "array",
+                                "items": {
+                                    "title": "Post Image",
+                                    "description": "Post image details",
+                                    "required": [
+                                        "title",
+                                        "image"
+                                    ],
+                                    "properties": {
+                                        "title": {
+                                            "description": "The title of the post",
+                                            "type": "string",
+                                            "example": "Samsung Galaxy S21 Pro"
+                                        },
+                                        "image": {
+                                            "description": "The image path",
+                                            "type": "number",
+                                            "format": "string",
+                                            "example": "/post/post.png"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StorePostPriceRequest": {
                 "title": "Store Post Price Request",
@@ -3190,39 +5065,47 @@
                     "post_id",
                     "price"
                 ],
-                "properties": {
-                    "post_id": {
-                        "description": "The ID of the post",
-                        "type": "integer"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
                     },
-                    "price": {
-                        "description": "Array of post price details",
-                        "type": "array",
-                        "items": {
-                            "title": "Post Price",
-                            "description": "Post price details",
-                            "required": [
-                                "title",
-                                "amount"
-                            ],
-                            "properties": {
-                                "title": {
-                                    "description": "The title of the post",
-                                    "type": "string",
-                                    "example": "Samsung Galaxy S21 Pro"
-                                },
-                                "amount": {
-                                    "description": "The price amount",
-                                    "type": "number",
-                                    "format": "float",
-                                    "example": "10000.00"
-                                }
+                    {
+                        "properties": {
+                            "post_id": {
+                                "description": "The ID of the post",
+                                "type": "integer"
                             },
-                            "type": "object"
-                        }
+                            "price": {
+                                "description": "Array of post price details",
+                                "type": "array",
+                                "items": {
+                                    "title": "Post Price",
+                                    "description": "Post price details",
+                                    "required": [
+                                        "title",
+                                        "amount"
+                                    ],
+                                    "properties": {
+                                        "title": {
+                                            "description": "The title of the post",
+                                            "type": "string",
+                                            "example": "Samsung Galaxy S21 Pro"
+                                        },
+                                        "amount": {
+                                            "description": "The price amount",
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": "10000.00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StorePostRequest": {
                 "title": "Post Store Request",
@@ -3278,11 +5161,117 @@
                         "type": "string",
                         "example": "Y"
                     },
-                    "tags": {
-                        "description": "Ids of the tag",
+                    "categories": {
+                        "description": "Ids of the category",
                         "type": "array",
                         "items": {
                             "type": "integer"
+                        }
+                    },
+                    "seo_title": {
+                        "description": "SEO title",
+                        "type": "string",
+                        "example": "This is the title for SEO"
+                    },
+                    "seo_description": {
+                        "description": "Description for seo",
+                        "type": "string",
+                        "example": "This is description for SEO"
+                    },
+                    "featured_image": {
+                        "description": "Image",
+                        "type": "string",
+                        "example": "https://gadgetbyte.com/logo.png"
+                    },
+                    "status": {
+                        "description": "Status for Draft,Review",
+                        "type": "string",
+                        "example": "D for Draft,R for Review"
+                    },
+                    "post_on": {
+                        "description": "Date & time to be published on",
+                        "type": "string",
+                        "example": "2024-05-14 13:55:12"
+                    },
+                    "is_cornerstone": {
+                        "description": "Cornerstone value in Y/N",
+                        "type": "string",
+                        "example": "Y"
+                    },
+                    "seo_title_facebook": {
+                        "description": "The seo title field for fb  of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_description_facebook": {
+                        "description": "The seo description field for fb  of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_title_twitter": {
+                        "description": "The seo title field for twitter  of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_description_twitter": {
+                        "description": "The seo description field for twitter  of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "reviews": {
+                        "description": "Array of post review details",
+                        "type": "array",
+                        "items": {
+                            "title": "Post Review",
+                            "description": "Post review details",
+                            "required": [
+                                "review_id",
+                                "title",
+                                "review"
+                            ],
+                            "properties": {
+                                "review_id": {
+                                    "description": "The id of the review",
+                                    "type": "integer",
+                                    "example": "1"
+                                },
+                                "title": {
+                                    "description": "The Text of the review",
+                                    "type": "string",
+                                    "example": "Design"
+                                },
+                                "review": {
+                                    "description": "The review of the post",
+                                    "type": "string",
+                                    "example": "Impressive."
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "faqs": {
+                        "description": "Array of FAQ details",
+                        "type": "array",
+                        "items": {
+                            "title": "FAQ",
+                            "description": "FAQ details",
+                            "required": [
+                                "question",
+                                "answer"
+                            ],
+                            "properties": {
+                                "question": {
+                                    "description": "The question field",
+                                    "type": "string",
+                                    "example": "How much price of Iphone?"
+                                },
+                                "answer": {
+                                    "description": "The answer field",
+                                    "type": "string",
+                                    "example": "Its price is 45,000"
+                                }
+                            },
+                            "type": "object"
                         }
                     }
                 },
@@ -3295,38 +5284,170 @@
                     "post_id",
                     "reviews"
                 ],
-                "properties": {
-                    "post_id": {
-                        "description": "The ID of the post",
-                        "type": "integer"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
                     },
-                    "reviews": {
-                        "description": "Array of post review details",
-                        "type": "array",
-                        "items": {
-                            "title": "Post Review",
-                            "description": "Post review details",
-                            "required": [
-                                "title",
-                                "amount"
-                            ],
-                            "properties": {
-                                "review_id": {
-                                    "description": "The id of the review",
-                                    "type": "integer",
-                                    "example": "1"
-                                },
-                                "review": {
-                                    "description": "The review of the post",
-                                    "type": "string",
-                                    "example": "Impressive."
-                                }
+                    {
+                        "properties": {
+                            "post_id": {
+                                "description": "The ID of the post",
+                                "type": "integer"
                             },
-                            "type": "object"
-                        }
+                            "reviews": {
+                                "description": "Array of post review details",
+                                "type": "array",
+                                "items": {
+                                    "title": "Post Review",
+                                    "description": "Post review details",
+                                    "required": [
+                                        "review_id",
+                                        "title",
+                                        "review"
+                                    ],
+                                    "properties": {
+                                        "review_id": {
+                                            "description": "The id of the review",
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "title": {
+                                            "description": "The Text of the review",
+                                            "type": "string",
+                                            "example": "Design"
+                                        },
+                                        "review": {
+                                            "description": "The review of the post",
+                                            "type": "string",
+                                            "example": "Impressive."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
+            },
+            "StoreProductCategoryRequest": {
+                "title": "Product Category  Store Request",
+                "description": "Product Category  store request data",
+                "required": [
+                    "name",
+                    "slug",
+                    "description",
+                    "order_by",
+                    "parent_id"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The Product Category display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "slug": {
+                                "description": "The Endpoint  of the ProductCategory.",
+                                "type": "string",
+                                "example": "apple"
+                            },
+                            "description": {
+                                "description": "The Product Category's description ",
+                                "type": "string",
+                                "example": "this is the description of it."
+                            },
+                            "image": {
+                                "description": "The Product Category's image ",
+                                "type": "string",
+                                "example": "this is the image string url."
+                            },
+                            "long_description": {
+                                "description": "The Product Category's long description ",
+                                "type": "string",
+                                "example": "this is the description of it."
+                            },
+                            "seo_title": {
+                                "description": "The Product Category's seo title ",
+                                "type": "string",
+                                "example": "this is the title of it."
+                            },
+                            "meta_description": {
+                                "description": "The Product Category's meta description ",
+                                "type": "string",
+                                "example": "this is the meta description  of it."
+                            },
+                            "order_by": {
+                                "description": "The Priority of Product Category",
+                                "type": "integer",
+                                "example": "1"
+                            },
+                            "parent_id": {
+                                "description": "If Sub  Category, Send Product Category Id else 0",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "StoreSocialLoginRequest": {
+                "title": "Social Login Store Request",
+                "description": "Social Login store request data",
+                "required": [
+                    "firstname",
+                    "lastname",
+                    "email",
+                    "type"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "firstname": {
+                                "description": "The user's first name",
+                                "type": "string",
+                                "example": "Admin"
+                            },
+                            "lastname": {
+                                "description": "The user's last name",
+                                "type": "string",
+                                "example": "Admin"
+                            },
+                            "email": {
+                                "description": "The user's email address",
+                                "type": "email",
+                                "example": "admin@gbn.com"
+                            },
+                            "type": {
+                                "description": "The Social login type",
+                                "type": "string",
+                                "example": "fb"
+                            },
+                            "google_id": {
+                                "description": "The user's unique google id",
+                                "type": "string",
+                                "example": "abcd-sj@google.com"
+                            },
+                            "fb_id": {
+                                "description": "The user's unique fb id",
+                                "type": "string",
+                                "example": "abcd-sj@fb.com"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
             },
             "StoreTagRequest": {
                 "title": "Tag  Store Request",
@@ -3356,6 +5477,21 @@
                         "type": "object"
                     }
                 ]
+            },
+            "StoreUserBookmarkRequest": {
+                "title": "Bookmark  Store Request",
+                "description": "Bookmark  store request data",
+                "required": [
+                    "post_id"
+                ],
+                "properties": {
+                    "post_id": {
+                        "description": "The id of the post",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
             },
             "StoreUserRequest": {
                 "title": "User  Store Request",
@@ -3403,6 +5539,41 @@
                                 "description": "The user's usertype id",
                                 "type": "integer",
                                 "example": "1"
+                            },
+                            "facebook_url": {
+                                "description": "The user's facebook profile link",
+                                "type": "string",
+                                "example": "www.fb.com/abc"
+                            },
+                            "instagram_url": {
+                                "description": "The user's instagram profile link",
+                                "type": "string",
+                                "example": "www.instagram.com/abc"
+                            },
+                            "linkedin_url": {
+                                "description": "The user's linkedin profile link",
+                                "type": "string",
+                                "example": "www.linkedin.com/abc"
+                            },
+                            "google_url": {
+                                "description": "The user's google profile link",
+                                "type": "string",
+                                "example": "www.google.com/abc"
+                            },
+                            "twitter_url": {
+                                "description": "The user's twitter profile link",
+                                "type": "string",
+                                "example": "www.twitter.com/abc"
+                            },
+                            "youtube_url": {
+                                "description": "The user's youtube profile link",
+                                "type": "string",
+                                "example": "www.youtube.com/abc"
+                            },
+                            "description": {
+                                "description": "The user's short introduction description",
+                                "type": "string",
+                                "example": "This is me, I am doing thiss......"
                             }
                         },
                         "type": "object"
@@ -3431,6 +5602,157 @@
                         "type": "object"
                     }
                 ]
+            },
+            "StoreVendorRequest": {
+                "title": "Vendor  Store Request",
+                "description": "Vendor  store request data",
+                "required": [
+                    "name",
+                    "slug",
+                    "image",
+                    "website_url",
+                    "order_by"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The Vendor display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "slug": {
+                                "description": "The Endpoint  of the Vendor.",
+                                "type": "string",
+                                "example": "apple"
+                            },
+                            "image": {
+                                "description": "The Image Link ",
+                                "type": "string",
+                                "example": "this is the link of image."
+                            },
+                            "website_url": {
+                                "description": "The Website url Link ",
+                                "type": "string",
+                                "example": "https://abc.com"
+                            },
+                            "order_by": {
+                                "description": "The Priority of Vendor",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "UpdateAttributeRequest": {
+                "title": "Attribute  Update Request",
+                "description": "Attribute  update request data",
+                "required": [
+                    "name",
+                    "slug",
+                    "is_active",
+                    "values"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "The menu display name",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "slug": {
+                        "description": "The unique slug  of the Attribute.",
+                        "type": "string",
+                        "example": "/dashboard"
+                    },
+                    "is_active": {
+                        "description": "Enable/Disable of attributes ",
+                        "type": "string",
+                        "example": "Y/N"
+                    },
+                    "values": {
+                        "description": "The Values in json format",
+                        "type": "json",
+                        "example": "['100','200','300']"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateBrandRequest": {
+                "title": "Brand Update Request",
+                "description": "Brand  update request data",
+                "required": [
+                    "name",
+                    "slug",
+                    "image",
+                    "order_by"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "The Brand display name",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "slug": {
+                        "description": "The Endpoint  of the Brand.",
+                        "type": "string",
+                        "example": "apple"
+                    },
+                    "image": {
+                        "description": "The Image Link ",
+                        "type": "string",
+                        "example": "this is the link of image."
+                    },
+                    "order_by": {
+                        "description": "The Priority of Brand",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateMediaRequest": {
+                "title": "Media  Update Request",
+                "description": "Media  update request data",
+                "required": [
+                    "name",
+                    "caption",
+                    "description",
+                    "alt_text"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "The media display name",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "caption": {
+                        "description": "The caption  of the Media.",
+                        "type": "string",
+                        "example": "apple-14"
+                    },
+                    "description": {
+                        "description": "The media's description ",
+                        "type": "string",
+                        "example": "This is the description of the media"
+                    },
+                    "alt_text": {
+                        "description": "The Alternative text of the media",
+                        "type": "string",
+                        "example": "apple-14-image"
+                    },
+                    "image": {
+                        "description": "The image",
+                        "type": "file",
+                        "example": "apple-14-image"
+                    }
+                },
+                "type": "object"
             },
             "UpdateMenuRequest": {
                 "title": "Menu  Update Request",
@@ -3533,20 +5855,28 @@
                     "title",
                     "price"
                 ],
-                "properties": {
-                    "title": {
-                        "description": "The Post Price display name",
-                        "type": "string",
-                        "example": "Samsung galaxy S23 Ultra"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
                     },
-                    "price": {
-                        "description": "The Amount of the  PostPrice.",
-                        "type": "number",
-                        "format": "float",
-                        "example": "10000"
+                    {
+                        "properties": {
+                            "title": {
+                                "description": "The Post Price display name",
+                                "type": "string",
+                                "example": "Samsung galaxy S23 Ultra"
+                            },
+                            "price": {
+                                "description": "The Amount of the  PostPrice.",
+                                "type": "number",
+                                "format": "float",
+                                "example": "10000"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdatePostRequest": {
                 "title": "Post Update Request",
@@ -3602,11 +5932,117 @@
                         "type": "string",
                         "example": "Y"
                     },
-                    "tags": {
-                        "description": "Ids of the tag",
+                    "seo_title": {
+                        "description": "SEO title",
+                        "type": "string",
+                        "example": "This is the title for SEO"
+                    },
+                    "seo_description": {
+                        "description": "Description for seo",
+                        "type": "string",
+                        "example": "This is description for SEO"
+                    },
+                    "featured_image": {
+                        "description": "Image",
+                        "type": "string",
+                        "example": "https://gadgetbyte.com/logo.png"
+                    },
+                    "categories": {
+                        "description": "Ids of the category",
                         "type": "array",
                         "items": {
                             "type": "integer"
+                        }
+                    },
+                    "status": {
+                        "description": "Status for Draft,Review",
+                        "type": "string",
+                        "example": "D for Draft,R for Review"
+                    },
+                    "post_on": {
+                        "description": "Date & time to be published on",
+                        "type": "string",
+                        "example": "2024-05-14 13:55:12"
+                    },
+                    "is_cornerstone": {
+                        "description": "Cornerstone value in Y/N",
+                        "type": "string",
+                        "example": "Y"
+                    },
+                    "seo_title_facebook": {
+                        "description": "The seo title field for fb  of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_description_facebook": {
+                        "description": "The seo description field for fb  of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_title_twitter": {
+                        "description": "The seo title field for twitter  of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_description_twitter": {
+                        "description": "The seo description field for twitter  of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "reviews": {
+                        "description": "Array of post review details",
+                        "type": "array",
+                        "items": {
+                            "title": "Post Review",
+                            "description": "Post review details",
+                            "required": [
+                                "review_id",
+                                "title",
+                                "review"
+                            ],
+                            "properties": {
+                                "review_id": {
+                                    "description": "The id of the review",
+                                    "type": "integer",
+                                    "example": "1"
+                                },
+                                "title": {
+                                    "description": "The Text of the review",
+                                    "type": "string",
+                                    "example": "Design"
+                                },
+                                "review": {
+                                    "description": "The review of the post",
+                                    "type": "string",
+                                    "example": "Impressive."
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "faqs": {
+                        "description": "Array of FAQ details",
+                        "type": "array",
+                        "items": {
+                            "title": "FAQ",
+                            "description": "FAQ details",
+                            "required": [
+                                "question",
+                                "answer"
+                            ],
+                            "properties": {
+                                "question": {
+                                    "description": "The question field",
+                                    "type": "string",
+                                    "example": "How much price of Iphone?"
+                                },
+                                "answer": {
+                                    "description": "The answer field",
+                                    "type": "string",
+                                    "example": "Its price is 45,000"
+                                }
+                            },
+                            "type": "object"
                         }
                     }
                 },
@@ -3616,16 +6052,103 @@
                 "title": "Post Review  Update Request",
                 "description": "Post Review  update request data",
                 "required": [
+                    "review_id",
+                    "title",
                     "review"
                 ],
-                "properties": {
-                    "review": {
-                        "description": "The Review of the  Post.",
-                        "type": "string",
-                        "example": "Very Impressive"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "review_id": {
+                                "description": "The Id of The Review",
+                                "type": "integer",
+                                "example": "1"
+                            },
+                            "title": {
+                                "description": "The Title of The Review",
+                                "type": "string",
+                                "example": "Design"
+                            },
+                            "review": {
+                                "description": "The Review of the  Post.",
+                                "type": "string",
+                                "example": "Very Impressive"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
+            },
+            "UpdateProductCategoryRequest": {
+                "title": "Product Category  Update Request",
+                "description": "Product Category  update request data",
+                "required": [
+                    "name",
+                    "slug",
+                    "description",
+                    "order_by",
+                    "parent_id"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The Product Category display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "slug": {
+                                "description": "The Endpoint  of the ProductCategory.",
+                                "type": "string",
+                                "example": "apple"
+                            },
+                            "description": {
+                                "description": "The Product Category's description ",
+                                "type": "string",
+                                "example": "this is the description of it."
+                            },
+                            "image": {
+                                "description": "The Product Category's image ",
+                                "type": "string",
+                                "example": "this is the image string url."
+                            },
+                            "long_description": {
+                                "description": "The Product Category's long description ",
+                                "type": "string",
+                                "example": "this is the description of it."
+                            },
+                            "seo_title": {
+                                "description": "The Product Category's seo title ",
+                                "type": "string",
+                                "example": "this is the title of it."
+                            },
+                            "meta_description": {
+                                "description": "The Product Category's meta description ",
+                                "type": "string",
+                                "example": "this is the meta description  of it."
+                            },
+                            "order_by": {
+                                "description": "The Priority of Product Category",
+                                "type": "integer",
+                                "example": "1"
+                            },
+                            "parent_id": {
+                                "description": "If Sub  Category, Send Product Category Id else 0",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
             },
             "UpdateTagRequest": {
                 "title": "Tag  Update Request",
@@ -3702,6 +6225,41 @@
                                 "description": "The user's usertype id",
                                 "type": "integer",
                                 "example": "1"
+                            },
+                            "facebook_url": {
+                                "description": "The user's facebook profile link",
+                                "type": "string",
+                                "example": "www.fb.com/abc"
+                            },
+                            "instagram_url": {
+                                "description": "The user's instagram profile link",
+                                "type": "string",
+                                "example": "www.instagram.com/abc"
+                            },
+                            "linkedin_url": {
+                                "description": "The user's linkedin profile link",
+                                "type": "string",
+                                "example": "www.linkedin.com/abc"
+                            },
+                            "google_url": {
+                                "description": "The user's google profile link",
+                                "type": "string",
+                                "example": "www.google.com/abc"
+                            },
+                            "twitter_url": {
+                                "description": "The user's twitter profile link",
+                                "type": "string",
+                                "example": "www.twitter.com/abc"
+                            },
+                            "youtube_url": {
+                                "description": "The user's youtube profile link",
+                                "type": "string",
+                                "example": "www.youtube.com/abc"
+                            },
+                            "description": {
+                                "description": "The user's short introduction description",
+                                "type": "string",
+                                "example": "This is me, I am doing thiss......"
                             }
                         },
                         "type": "object"
@@ -3730,6 +6288,176 @@
                         "type": "object"
                     }
                 ]
+            },
+            "UpdateVendorRequest": {
+                "title": "Vendor Update Request",
+                "description": "Vendor  update request data",
+                "required": [
+                    "name",
+                    "slug",
+                    "image",
+                    "website_url",
+                    "order_by"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The Vendor display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "slug": {
+                                "description": "The Endpoint  of the Vendor.",
+                                "type": "string",
+                                "example": "apple"
+                            },
+                            "image": {
+                                "description": "The Image Link ",
+                                "type": "string",
+                                "example": "this is the link of image."
+                            },
+                            "website_url": {
+                                "description": "The Website url Link ",
+                                "type": "string",
+                                "example": "https://abc.com"
+                            },
+                            "order_by": {
+                                "description": "The Priority of Vendor",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "AttributeResource": {
+                "title": "Attribute Resource",
+                "description": "Attribute resource representation",
+                "properties": {
+                    "name": {
+                        "description": "The menu display name",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "slug": {
+                        "description": "The unique slug  of the Attribute.",
+                        "type": "string",
+                        "example": "/dashboard"
+                    },
+                    "is_active": {
+                        "description": "Enable/Disable of attributes ",
+                        "type": "string",
+                        "example": "Y/N"
+                    },
+                    "values": {
+                        "description": "The Values in json format",
+                        "type": "json",
+                        "example": "['100','200','300']"
+                    }
+                },
+                "type": "object"
+            },
+            "BrandResource": {
+                "title": "Brand Resource",
+                "description": "Brand resource representation",
+                "properties": {
+                    "name": {
+                        "description": "The Brand display name",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "slug": {
+                        "description": "The Endpoint  of the Brand.",
+                        "type": "string",
+                        "example": "apple"
+                    },
+                    "image": {
+                        "description": "The Image Link ",
+                        "type": "string",
+                        "example": "this is the link of image."
+                    },
+                    "order_by": {
+                        "description": "The Priority of Brand",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "FrontendPostResource": {
+                "title": "Post Resource",
+                "description": "Post resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the post",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "title": {
+                        "description": "The display title of the post",
+                        "type": "string",
+                        "example": "Samsung Phone Nepal"
+                    },
+                    "slug": {
+                        "description": "The Slug of the post",
+                        "type": "string",
+                        "example": "samsung-phones-nepal"
+                    },
+                    "short_description": {
+                        "description": "The Short Description of the post",
+                        "type": "string",
+                        "example": "short description goes here"
+                    },
+                    "description": {
+                        "description": "The Description of the post",
+                        "type": "string",
+                        "example": "Description goes here"
+                    },
+                    "isprice": {
+                        "description": "The Price flag of the post",
+                        "type": "string",
+                        "example": "Y"
+                    },
+                    "show_in_pricelist": {
+                        "description": "The Pricelist flag of the post",
+                        "type": "string",
+                        "example": "Y"
+                    },
+                    "featured_image": {
+                        "description": "The Image of the post",
+                        "type": "string",
+                        "example": "https://gadgetbyte.com/logo.png"
+                    },
+                    "categories": {
+                        "description": "Categories of the Post",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "seo_title": {
+                        "description": "The Title of the post's SEO",
+                        "type": "string",
+                        "example": "Description goes here"
+                    },
+                    "seo_description": {
+                        "description": "The Description of the post's SEO",
+                        "type": "string",
+                        "example": "Description goes here"
+                    },
+                    "seo_title_social_media": {
+                        "description": "The seo title field for social media  of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    }
+                },
+                "type": "object"
             },
             "MediaResource": {
                 "title": "Media Resource",
@@ -3948,15 +6676,125 @@
                         "type": "string",
                         "example": "Description goes here"
                     },
-                    "category_id": {
-                        "description": "The Category of the post",
-                        "type": "integer",
-                        "example": "1"
+                    "seo_title": {
+                        "description": "The Title of the post's SEO",
+                        "type": "string",
+                        "example": "Description goes here"
                     },
-                    "sub_category_id": {
-                        "description": "The Sub Category of the post",
-                        "type": "integer",
-                        "example": "3"
+                    "featured_image": {
+                        "description": "The Image of the post",
+                        "type": "string"
+                    },
+                    "seo_description": {
+                        "description": "The Description of the post's SEO",
+                        "type": "string",
+                        "example": "Description goes here"
+                    },
+                    "status": {
+                        "description": "Status for Draft,Review",
+                        "type": "string",
+                        "example": "D for Draft,R for Review"
+                    },
+                    "post_on": {
+                        "description": "Date & time to be published on",
+                        "type": "string",
+                        "example": "2024-05-14 13:55:12"
+                    },
+                    "is_cornerstone": {
+                        "description": "Cornerstone value in Y/N",
+                        "type": "string",
+                        "example": "Y"
+                    },
+                    "seo_title_facebook": {
+                        "description": "The seo title field for fb  of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_description_facebook": {
+                        "description": "The seo description field for fb  of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_title_instagram": {
+                        "description": "The seo title field for instagram  of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_description_instagram": {
+                        "description": "The seo description field for instagram  of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_title_twitter": {
+                        "description": "The seo title field for twitter  of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_description_twitter": {
+                        "description": "The seo description field for twitter  of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "reviews": {
+                        "description": "Array of post review details",
+                        "type": "array",
+                        "items": {
+                            "title": "Post Review",
+                            "description": "Post review details",
+                            "required": [
+                                "review_id",
+                                "title",
+                                "review"
+                            ],
+                            "properties": {
+                                "review_id": {
+                                    "description": "The id of the review",
+                                    "type": "integer",
+                                    "example": "1"
+                                },
+                                "title": {
+                                    "description": "The Text of the review",
+                                    "type": "string",
+                                    "example": "Design"
+                                },
+                                "review": {
+                                    "description": "The review of the post",
+                                    "type": "string",
+                                    "example": "Impressive."
+                                },
+                                "description": {
+                                    "description": "The description of the post review",
+                                    "type": "string",
+                                    "example": "Impressive."
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "faqs": {
+                        "description": "Array of FAQ details",
+                        "type": "array",
+                        "items": {
+                            "title": "FAQ",
+                            "description": "FAQ details",
+                            "required": [
+                                "question",
+                                "answer"
+                            ],
+                            "properties": {
+                                "question": {
+                                    "description": "The question field",
+                                    "type": "string",
+                                    "example": "How much price of Iphone?"
+                                },
+                                "answer": {
+                                    "description": "The answer field",
+                                    "type": "string",
+                                    "example": "Its price is 45,000"
+                                }
+                            },
+                            "type": "object"
+                        }
                     }
                 },
                 "type": "object"
@@ -3984,6 +6822,63 @@
                         "description": "The review of the post",
                         "type": "string",
                         "example": "Very Nice."
+                    }
+                },
+                "type": "object"
+            },
+            "ProductCategoryResource": {
+                "title": "Product Category Resource",
+                "description": "Product Category resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the post category",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "The Product Category display name",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "slug": {
+                        "description": "The Endpoint  of the ProductCategory.",
+                        "type": "string",
+                        "example": "apple"
+                    },
+                    "description": {
+                        "description": "The Product Category's description ",
+                        "type": "string",
+                        "example": "this is the description of it."
+                    },
+                    "image": {
+                        "description": "The Product Category's image ",
+                        "type": "string",
+                        "example": "this is the image string url."
+                    },
+                    "long_description": {
+                        "description": "The Product Category's long description ",
+                        "type": "string",
+                        "example": "this is the description of it."
+                    },
+                    "seo_title": {
+                        "description": "The Product Category's seo title ",
+                        "type": "string",
+                        "example": "this is the title of it."
+                    },
+                    "meta_description": {
+                        "description": "The Product Category's meta description ",
+                        "type": "string",
+                        "example": "this is the meta description  of it."
+                    },
+                    "order_by": {
+                        "description": "The Priority of Product Category",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "parent_id": {
+                        "description": "If Sub  Category, Send Product Category Id else 0",
+                        "type": "integer",
+                        "example": "1"
                     }
                 },
                 "type": "object"
@@ -4027,6 +6922,28 @@
                 },
                 "type": "object"
             },
+            "UserBookmarkResource": {
+                "title": "Bookmark Resource",
+                "description": "Bookmark resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the tag",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "user_id": {
+                        "description": "The id of the user",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "post_id": {
+                        "description": "The id of the post",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
             "UserResource": {
                 "title": "User Resource",
                 "description": "User resource representation",
@@ -4066,6 +6983,41 @@
                         "type": "integer",
                         "example": "1"
                     },
+                    "facebook_url": {
+                        "description": "The user's facebook profile link",
+                        "type": "string",
+                        "example": "www.fb.com/abc"
+                    },
+                    "instagram_url": {
+                        "description": "The user's instagram profile link",
+                        "type": "string",
+                        "example": "www.instagram.com/abc"
+                    },
+                    "linkedin_url": {
+                        "description": "The user's linkedin profile link",
+                        "type": "string",
+                        "example": "www.linkedin.com/abc"
+                    },
+                    "google_url": {
+                        "description": "The user's google profile link",
+                        "type": "string",
+                        "example": "www.google.com/abc"
+                    },
+                    "twitter_url": {
+                        "description": "The user's twitter profile link",
+                        "type": "string",
+                        "example": "www.twitter.com/abc"
+                    },
+                    "youtube_url": {
+                        "description": "The user's youtube profile link",
+                        "type": "string",
+                        "example": "www.youtube.com/abc"
+                    },
+                    "description": {
+                        "description": "The user's short introduction description",
+                        "type": "string",
+                        "example": "This is me, I am doing thiss......"
+                    },
                     "created_by": {
                         "description": "user created by",
                         "type": "integer",
@@ -4102,6 +7054,38 @@
                         "description": "User Type created at ",
                         "type": "string",
                         "example": "2023-06-21 08:25:18.000"
+                    }
+                },
+                "type": "object"
+            },
+            "VendorResource": {
+                "title": "Vendor Resource",
+                "description": "Vendor resource representation",
+                "properties": {
+                    "name": {
+                        "description": "The Vendor display name",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "slug": {
+                        "description": "The Endpoint  of the Vendor.",
+                        "type": "string",
+                        "example": "apple"
+                    },
+                    "image": {
+                        "description": "The Image Link ",
+                        "type": "string",
+                        "example": "this is the link of image."
+                    },
+                    "website_url": {
+                        "description": "The Website Link ",
+                        "type": "string",
+                        "example": "https://abc.com"
+                    },
+                    "order_by": {
+                        "description": "The Priority of Vendor",
+                        "type": "integer",
+                        "example": "1"
                     }
                 },
                 "type": "object"
