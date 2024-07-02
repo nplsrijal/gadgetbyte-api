@@ -20,6 +20,9 @@ use App\Http\Controllers\Api\V1\AttributeController;
 use App\Http\Controllers\Api\V1\PatchController;
 use App\Http\Controllers\Api\V1\BrandController;
 use App\Http\Controllers\Api\V1\VendorController;
+use App\Http\Controllers\Api\V1\AttributeOptionController;
+use App\Http\Controllers\Api\V1\VariationController;
+use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\Frontend\PostController as FPostController;
 use App\Http\Controllers\Api\V1\Frontend\CustomerController;
 use App\Http\Controllers\Api\V1\Frontend\UserBookmarkController;
@@ -67,6 +70,10 @@ Route::prefix('v1')->middleware(['apiMiddleware','verify_header'])->group(functi
     Route::apiResource('attributes', AttributeController::class);
     Route::apiResource('brands', BrandController::class);
     Route::apiResource('vendors', VendorController::class);
+    Route::apiResource('attributes', AttributeController::class);
+    Route::apiResource('attribute-options', AttributeOptionController::class);
+    Route::apiResource('variations', VariationController::class);
+    Route::apiResource('products', ProductController::class);
 
    
 
