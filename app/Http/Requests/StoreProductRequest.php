@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Requests;
-
 /**
  * @OA\Schema(
  *     schema="StoreProductRequest",
@@ -51,30 +50,30 @@ namespace App\Http\Requests;
  *         description="Status for Active/Inactive",
  *         example="Y/N"
  *     ),
- *             @OA\Property(
- *                 property="seo_title_facebook",
- *                 type="string",
- *                 description="The seo title field for fb  of the post review",
- *                 example="Apple 14 launched in Nepal."
- *             ),
- *             @OA\Property(
- *                 property="seo_description_facebook",
- *                 type="string",
- *                 description="The seo description field for fb  of the post review",
- *                 example="Apple 14 launched in Nepal."
- *             ),
- *             @OA\Property(
- *                 property="seo_title_twitter",
- *                 type="string",
- *                 description="The seo title field for twitter  of the post review",
- *                 example="Apple 14 launched in Nepal."
- *             ),
- *             @OA\Property(
- *                 property="seo_description_twitter",
- *                 type="string",
- *                 description="The seo description field for twitter  of the post review",
- *                 example="Apple 14 launched in Nepal."
- *             ),
+ *     @OA\Property(
+ *         property="seo_title_facebook",
+ *         type="string",
+ *         description="The seo title field for fb  of the post review",
+ *         example="Apple 14 launched in Nepal."
+ *     ),
+ *     @OA\Property(
+ *         property="seo_description_facebook",
+ *         type="string",
+ *         description="The seo description field for fb  of the post review",
+ *         example="Apple 14 launched in Nepal."
+ *     ),
+ *     @OA\Property(
+ *         property="seo_title_twitter",
+ *         type="string",
+ *         description="The seo title field for twitter  of the post review",
+ *         example="Apple 14 launched in Nepal."
+ *     ),
+ *     @OA\Property(
+ *         property="seo_description_twitter",
+ *         type="string",
+ *         description="The seo description field for twitter  of the post review",
+ *         example="Apple 14 launched in Nepal."
+ *     ),
  *     @OA\Property(
  *         property="attributes",
  *         type="array",
@@ -98,8 +97,9 @@ namespace App\Http\Requests;
  *             @OA\Property(
  *                 property="values",
  *                 type="array",
+ *                 @OA\Items(type="string"),
  *                 description="The values of attribute option",
- *                 example="[2gb,4gb]."
+ *                 example="[2gb,4gb]"
  *             ),
  *         ),
  *         description="Array of post attributes details",
@@ -121,14 +121,16 @@ namespace App\Http\Requests;
  *             @OA\Property(
  *                 property="values",
  *                 type="array",
+ *                 @OA\Items(type="string"),
  *                 description="The values field",
  *                 example="[Green,Red]"
  *             ),
  *         ),
- *         description="Array of FAQ details",
+ *         description="Array of Variation details",
  *     )
  * )
  */
+
 class StoreProductRequest extends FormRequest
 {
     /**

@@ -5,7 +5,6 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-
 /**
  * @OA\Schema(
  *     schema="ProductResource",
@@ -33,20 +32,20 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     @OA\Property(
  *         property="short_description",
  *         type="string",
- *         description="The Product's short description ",
+ *         description="The Product's short description",
  *         example="this is the short description of it."
  *     ),
  *     @OA\Property(
  *         property="description",
  *         type="string",
- *         description="The Product's description ",
+ *         description="The Product's description",
  *         example="this is the description of it."
  *     ),
  *     @OA\Property(
  *         property="categories",
  *         type="array",
  *         @OA\Items(type="integer"),
- *         description="Ids of the category",
+ *         description="Ids of the category"
  *     ),
  *     @OA\Property(
  *         property="image_url",
@@ -60,30 +59,30 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         description="Status for Active/Inactive",
  *         example="Y/N"
  *     ),
- *             @OA\Property(
- *                 property="seo_title_facebook",
- *                 type="string",
- *                 description="The seo title field for fb  of the post review",
- *                 example="Apple 14 launched in Nepal."
- *             ),
- *             @OA\Property(
- *                 property="seo_description_facebook",
- *                 type="string",
- *                 description="The seo description field for fb  of the post review",
- *                 example="Apple 14 launched in Nepal."
- *             ),
- *             @OA\Property(
- *                 property="seo_title_twitter",
- *                 type="string",
- *                 description="The seo title field for twitter  of the post review",
- *                 example="Apple 14 launched in Nepal."
- *             ),
- *             @OA\Property(
- *                 property="seo_description_twitter",
- *                 type="string",
- *                 description="The seo description field for twitter  of the post review",
- *                 example="Apple 14 launched in Nepal."
- *             ),
+ *     @OA\Property(
+ *         property="seo_title_facebook",
+ *         type="string",
+ *         description="The seo title field for fb of the post review",
+ *         example="Apple 14 launched in Nepal."
+ *     ),
+ *     @OA\Property(
+ *         property="seo_description_facebook",
+ *         type="string",
+ *         description="The seo description field for fb of the post review",
+ *         example="Apple 14 launched in Nepal."
+ *     ),
+ *     @OA\Property(
+ *         property="seo_title_twitter",
+ *         type="string",
+ *         description="The seo title field for twitter of the post review",
+ *         example="Apple 14 launched in Nepal."
+ *     ),
+ *     @OA\Property(
+ *         property="seo_description_twitter",
+ *         type="string",
+ *         description="The seo description field for twitter of the post review",
+ *         example="Apple 14 launched in Nepal."
+ *     ),
  *     @OA\Property(
  *         property="attributes",
  *         type="array",
@@ -91,7 +90,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *             type="object",
  *             title="Product Attributes",
  *             description="Product Attributes details",
- *             required={"attribute_option_id","attribute_option_name", "values"},
+ *             required={"attribute_option_id","attribute_option_name","values"},
  *             @OA\Property(
  *                 property="attribute_option_id",
  *                 type="integer",
@@ -107,11 +106,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *             @OA\Property(
  *                 property="values",
  *                 type="array",
+ *                 @OA\Items(type="string"),
  *                 description="The values of attribute option",
- *                 example="[2gb,4gb]."
+ *                 example="[2gb,4gb]"
  *             ),
  *         ),
- *         description="Array of post attributes details",
+ *         description="Array of post attributes details"
  *     ),
  *     @OA\Property(
  *         property="variations",
@@ -130,14 +130,16 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *             @OA\Property(
  *                 property="values",
  *                 type="array",
+ *                 @OA\Items(type="string"),
  *                 description="The values field",
  *                 example="[Green,Red]"
  *             ),
  *         ),
- *         description="Array of FAQ details",
+ *         description="Array of FAQ details"
  *     )
  * )
  */
+
 class ProductResource extends JsonResource
 {
     /**
