@@ -7,43 +7,43 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @OA\Schema(
- *     schema="BrandResource",
+ *     schema="AttributeOptionResource",
  *     type="object",
- *     title="Brand Resource",
- *     description="Brand resource representation",
+ *     title="Attribute Option Resource",
+ *     description="Attribute Option resource representation",
  *     @OA\Property(
  *         property="id",
  *         type="integer",
- *         description="The unique id of the brand",
+ *         description="The unique id of the attribute option",
  *         example="1"
  *     ),
  *     @OA\Property(
  *         property="name",
  *         type="string",
- *         description="The Brand display name",
+ *         description="The display name",
  *         example="Dashboard"
  *     ),
  *     @OA\Property(
- *         property="slug",
+ *         property="attribute_id",
  *         type="string",
- *         description="The Endpoint  of the Brand.",
- *         example="apple"
- *     ),
- *     @OA\Property(
- *         property="image",
- *         type="string",
- *         description="The Image Link ",
- *         example="this is the link of image."
- *     ),
- *     @OA\Property(
- *         property="order_by",
- *         type="integer",
- *         description="The Priority of Brand",
+ *         description="The Id  of the Attribute.",
  *         example="1"
+ *     ),
+ *     @OA\Property(
+ *         property="values",
+ *         type="string",
+ *         description="The Values in json",
+ *         example=""
+ *     ),
+ *     @OA\Property(
+ *         property="is_active",
+ *         type="string",
+ *         description="Enable/Disable of attributes ",
+ *         example="Y/N"
  *     )
  * )
  */
-class BrandResource extends JsonResource
+class AtrributeOptionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

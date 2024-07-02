@@ -11,7 +11,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *     type="object",
  *     title="Attribute  Store Request",
  *     description="Attribute  store request data",
- *     required={"name","slug","is_active","values"},
+ *     required={"name","slug","is_active"},
  *     @OA\Property(
  *         property="name",
  *         type="string",
@@ -29,12 +29,6 @@ use Illuminate\Foundation\Http\FormRequest;
  *         type="string",
  *         description="Enable/Disable of attributes ",
  *         example="Y/N"
- *     ),
- *     @OA\Property(
- *         property="values",
- *         type="json",
- *         description="The Values in json format",
- *         example="['100','200','300']"
  *     )
  * )
  */
@@ -59,7 +53,6 @@ class StoreAttributeRequest extends FormRequest
             "name"=>"required|string|max:255",
             "slug"=>"required|string|max:255",
             "is_active"=>"required|string|max:255",
-            "values"=>"required|string",
         ];
     }
 }

@@ -5,45 +5,34 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+
 /**
  * @OA\Schema(
- *     schema="BrandResource",
+ *     schema="VariationResource",
  *     type="object",
- *     title="Brand Resource",
- *     description="Brand resource representation",
+ *     title="Variation Resource",
+ *     description="Variation resource representation",
  *     @OA\Property(
  *         property="id",
  *         type="integer",
- *         description="The unique id of the brand",
+ *         description="The unique id of the variation",
  *         example="1"
  *     ),
  *     @OA\Property(
  *         property="name",
  *         type="string",
- *         description="The Brand display name",
+ *         description="The Variation display name",
  *         example="Dashboard"
  *     ),
  *     @OA\Property(
- *         property="slug",
+ *         property="type",
  *         type="string",
- *         description="The Endpoint  of the Brand.",
+ *         description="The Type  of the Variation.",
  *         example="apple"
  *     ),
- *     @OA\Property(
- *         property="image",
- *         type="string",
- *         description="The Image Link ",
- *         example="this is the link of image."
- *     ),
- *     @OA\Property(
- *         property="order_by",
- *         type="integer",
- *         description="The Priority of Brand",
- *         example="1"
- *     )
  * )
  */
-class BrandResource extends JsonResource
+class VariationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -62,6 +51,5 @@ class BrandResource extends JsonResource
         unset($data['archived_by']);
 
 
-        return $data;
-    }
+        return $data;    }
 }

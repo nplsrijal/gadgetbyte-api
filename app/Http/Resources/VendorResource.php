@@ -12,6 +12,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     title="Vendor Resource",
  *     description="Vendor resource representation",
  *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         description="The unique id of the vendor",
+ *         example="1"
+ *     ),
+ *     @OA\Property(
  *         property="name",
  *         type="string",
  *         description="The Vendor display name",

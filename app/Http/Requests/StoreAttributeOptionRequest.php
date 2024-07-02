@@ -2,37 +2,42 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 
 /**
  * @OA\Schema(
- *     schema="UpdateAttributeRequest",
+ *     schema="StoreAttributeOptionRequest",
  *     type="object",
- *     title="Attribute  Update Request",
- *     description="Attribute  update request data",
- *     required={"name","slug","is_active"},
+ *     title="Attribute Option  Store Request",
+ *     description="Attribute Option  store request data",
+ *     required={"name","attribute_id","values","is_active"},
  *     @OA\Property(
  *         property="name",
  *         type="string",
- *         description="The menu display name",
+ *         description="The display name",
  *         example="Dashboard"
  *     ),
  *     @OA\Property(
- *         property="slug",
+ *         property="attribute_id",
  *         type="string",
- *         description="The unique slug  of the Attribute.",
- *         example="/dashboard"
+ *         description="The Id  of the Attribute.",
+ *         example="1"
+ *     ),
+ *     @OA\Property(
+ *         property="values",
+ *         type="string",
+ *         description="The Values in json",
+ *         example=""
  *     ),
  *     @OA\Property(
  *         property="is_active",
  *         type="string",
  *         description="Enable/Disable of attributes ",
  *         example="Y/N"
- *     ),
+ *     )
  * )
  */
-class UpdateAttributeRequest extends FormRequest
+
+class StoreAttributeOptionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -51,7 +56,8 @@ class UpdateAttributeRequest extends FormRequest
     {
         return [
             "name"=>"required|string|max:255",
-            "slug"=>"required|string|max:255",
+            "attribute_id"=>"required|integer",
+            "values"=>"required|string",
             "is_active"=>"required|string|max:255",
         ];
     }

@@ -12,6 +12,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     title="Attribute Resource",
  *     description="Attribute resource representation",
  *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         description="The unique id of the attribute",
+ *         example="1"
+ *     ),
+ *     @OA\Property(
  *         property="name",
  *         type="string",
  *         description="The menu display name",
@@ -29,12 +35,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         description="Enable/Disable of attributes ",
  *         example="Y/N"
  *     ),
- *     @OA\Property(
- *         property="values",
- *         type="json",
- *         description="The Values in json format",
- *         example="['100','200','300']"
- *     )
  * )
  */
 class AttributeResource extends JsonResource
