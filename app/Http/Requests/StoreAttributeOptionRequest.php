@@ -57,7 +57,7 @@ class StoreAttributeOptionRequest extends FormRequest
         return [
             "name"=>"required|string|max:255",
             "attribute_id"=>"required|integer",
-            "values"=>"required|string",
+            "values"=>"required",
             "is_active"=>"required|string|max:255",
         ];
     }

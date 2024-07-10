@@ -43,7 +43,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     )
  * )
  */
-class AtrributeOptionResource extends JsonResource
+class AttributeOptionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

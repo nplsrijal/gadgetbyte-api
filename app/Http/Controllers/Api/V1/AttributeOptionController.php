@@ -114,6 +114,7 @@ class AttributeOptionController extends Controller
         $validated = $request->validated();
         $userId = request()->header('X-User-Id');
         $validated['created_by'] = $userId;
+        $validated['values'] = json_encode($validated['values']);
         
         $data = AttributeOption::create($validated);
        
