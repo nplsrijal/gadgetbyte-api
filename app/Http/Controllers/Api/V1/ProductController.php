@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Product;
+use App\Models\ProductWithCategory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -116,10 +117,117 @@ class ProductController extends Controller
         $validated = $request->validated();
         $userId = request()->header('X-User-Id');
         $validated['created_by'] = $userId;
+        if(isset($validated['categories']))
+        {
+            $categories=$validated['categories'];
+            unset($validated['categories']);
+
+        }
+        else
+        {
+            $categories=[];
+        }
+
+        if(isset($validated['attributes']))
+        {
+            $attributes=$validated['attributes'];
+            unset($validated['attributes']);
+
+        }
+        else
+        {
+            $attributes=[];
+        }
+        if(isset($validated['variations']))
+        {
+            $variations=$validated['variations'];
+            unset($validated['variations']);
+
+        }
+        else
+        {
+            $variations=[];
+        }
+        if(isset($validated['variants']))
+        {
+            $variants=$validated['variants'];
+            unset($validated['variants']);
+
+        }
+        else
+        {
+            $variants=[];
+        }
         
+        
+      // Begin database transaction
+      DB::beginTransaction();
         $data = Product::create($validated);
+
+        if(count($categories)> 0)
+        {
+            $insert_cat=[];
+            foreach($categories as $cat)
+            {
+                $insert_cat[]=array('product_id'=>$data->id,'category_id'=>$cat);
+            }
+
+            ProductWithCategory::insert($insert_cat);
+        }
+        if(count($attributes)> 0)
+        {
+            $insert_attr=[];
+            foreach($attributes as $attr)
+            {
+                $insert_attr[]=array('product_id'=>$data->id,'attribute_option_id'=>$attr['option_id'],'attribute_name'=>$attr['name'],'values'=>$attr['values']);
+            }
+
+            ProductAttribute::insert($insert_attr);
+        }
+        if(count($variations)> 0)
+        {
+            $insert_variation=[];
+            foreach($variations as $variation)
+            {
+                $insert_variation[]=array('product_id'=>$data->id,'variation_name'=>$attr['name'],'values'=>$attr['values']);
+            }
+
+            ProductVariation::insert($insert_variation);
+        }
+        if(count($variants)> 0)
+        {
+            $insert_variant=[];
+            foreach($variants as $variant)
+            {
+                $insert_variant[]=array(
+                    'product_id'=>$data->id,
+                    'title'=>$variant['title'],
+                    'slug'=>$variant['slug'],
+                    'price'=>$variant['price'],
+                    'qty'=>$variant['qty'],
+                    'image_url'=>$variant['image_url'],
+                    'is_default'=>$variant['is_default'],
+                    'discount_price'=>($variant['discount_price'] > 0)?$variant['discount_price']:0,
+                    'discount_price_in'=>($variant['discount_price_in']!='')?$variant['discount_price_in']:null,
+                    'discount_price_start_date'=>$variant['discount_price_start_date'],
+                    'discount_price_end_date'=>$variant['discount_price_end_date'],
+                );
+            }
+
+            ProductVariation::insert($insert_variant);
+        }
        
-        return $this->success(new ProductResource($data), 'Product created', Response::HTTP_CREATED);
+        // Check database transaction
+        $transactionStatus = DB::transactionLevel();
+
+        if ($transactionStatus > 0) {
+            // Database transaction success
+            DB::commit();
+            return $this->success(new ProductResource($data), 'Product created', Response::HTTP_CREATED);
+        } else {
+            // Throw error
+            throw new Exception('Could not save Post.', 1);
+        }
     }
 
     /**
