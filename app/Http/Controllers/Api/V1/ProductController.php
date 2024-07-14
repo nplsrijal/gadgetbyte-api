@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Product;
 use App\Models\ProductWithCategory;
+use App\Models\ProductAttribute;
+use App\Models\ProductVariant;
+use App\Models\ProductVariation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -11,6 +14,8 @@ use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+
+use DB;
 
 class ProductController extends Controller
 {
@@ -214,7 +219,7 @@ class ProductController extends Controller
                 );
             }
 
-            ProductVariation::insert($insert_variant);
+            ProductVariant::insert($insert_variant);
         }
        
         // Check database transaction
