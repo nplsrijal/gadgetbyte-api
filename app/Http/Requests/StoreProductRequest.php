@@ -149,8 +149,8 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "title"=>"required|string|max:255",
-            "slug"=>"required|string|max:255",
+            "title"=>"required|string",
+            "slug"=>"required|string",
             "short_description"=>"required|string",
             "description"=>"required|string",
             "brand_id"=>"required|integer",
@@ -165,11 +165,10 @@ class StoreProductRequest extends FormRequest
             "attributes.*.attribute_option_id"=>"required|sometimes",
             "attributes.*.attribute_option_name"=>"required|sometimes",
             "attributes.*.values"=>"required|sometimes",
-            "variations.*"=>"required|sometimes",
-            "variations.*.name"=>"required|sometimes",
-            "variations.*.values"=>"required|sometimes",
-            "product_variants.*"=>"required|sometimes",
-
+           "variations.*"=>"required|sometimes",
+           "variations.*.name"=>"required|sometimes",
+           "variations.*.values"=>"required|sometimes",
+           "variants.*"=>"required|sometimes",
         ];
     }
 }

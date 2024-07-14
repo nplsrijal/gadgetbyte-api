@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products');
             $table->unsignedBigInteger('attribute_option_id');
-            $table->foreign('attribute_option_id')->references('id')->on('attributes_options');
+            $table->foreign('attribute_option_id')->references('id')->on('attribute_options');
             $table->string('attribute_name',100);
             $table->json('values');
             $table->userinfos();
