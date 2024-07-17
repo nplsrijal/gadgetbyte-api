@@ -168,6 +168,8 @@ class ProductController extends Controller
                     $insert_variation[] = [
                         'product_id' => $data->id,
                         'variation_name' => $variation['name'],
+                        'sku_code' => $variation['variation_sku_code'],
+                        'image_url' => $variation['image_url'],
                         'values' => json_encode($variation['values']) // Ensure values are encoded if they are arrays
                     ];
                 }
@@ -181,9 +183,10 @@ class ProductController extends Controller
                         'product_id' => $data->id,
                         'title' => $variant['title'],
                         'slug' => $variant['slug'],
+                        'sku_code' => $variant['variation_sku_code'],
                         'price' => $variant['price'],
                         'qty' => $variant['qty'],
-                        'image_url' => $variant['image_url'],
+                        //'image_url' => $variant['image_url'],
                         'is_default' => $variant['is_default'],
                         'discount_price' => ($variant['discount_price'] > 0) ? $variant['discount_price'] : 0,
                         'discount_price_in' => ($variant['discount_price_in'] != '') ? $variant['discount_price_in'] : null,
