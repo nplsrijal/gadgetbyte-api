@@ -7,6 +7,7 @@ use App\Models\ProductWithCategory;
 use App\Models\ProductAttribute;
 use App\Models\ProductVariant;
 use App\Models\ProductVariation;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -60,7 +61,7 @@ class ProductController extends Controller
             if ($request->has('q')) {
                 $searchTerm = strtoupper($request->input('q'));
                 $query->where(function ($query) use ($searchTerm) {
-                    $query->where('name', 'ilike', '%' . $searchTerm . '%');
+                    $query->where('title', 'ilike', '%' . $searchTerm . '%');
 
 
                 });
@@ -134,6 +135,9 @@ class ProductController extends Controller
     
         $variants = $validated['variants'] ?? [];
         unset($validated['variants']);
+
+        $images = $validated['images'] ?? [];
+        unset($validated['images']);
     
         // Begin database transaction
         DB::beginTransaction();
@@ -168,12 +172,24 @@ class ProductController extends Controller
                     $insert_variation[] = [
                         'product_id' => $data->id,
                         'variation_name' => $variation['name'],
-                        'sku_code' => $variation['variation_sku_code'],
-                        'image_url' => $variation['image_url'],
+                      //  'sku_code' => $variation['variation_sku_code'],
+                      //  'image_url' => $variation['image_url'],
                         'values' => json_encode($variation['values']) // Ensure values are encoded if they are arrays
                     ];
                 }
                 ProductVariation::insert($insert_variation);
+            }
+
+            if (count($images) > 0) {
+                $insert_images = [];
+                foreach ($images as $image) {
+                    $insert_images[] = [
+                        'product_id' => $data->id,
+                        'variation_sku_code' => $image['variation_sku_code'],
+                        'image_url' =>json_encode($image['image_url']),
+                     ];
+                }
+                ProductImage::insert($insert_images);
             }
     
             if (count($variants) > 0) {

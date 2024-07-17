@@ -169,6 +169,7 @@ class StoreProductRequest extends FormRequest
            "variations.*.name"=>"required|sometimes",
            "variations.*.values"=>"required|sometimes",
            "variants.*"=>"required|sometimes",
+           "images.*"=>"required|sometimes",
         ];
     }
 }
