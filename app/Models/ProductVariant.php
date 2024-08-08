@@ -13,4 +13,14 @@ class ProductVariant extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
     const DELETED_AT = 'archived_at';
     protected $guarded=[];
+
+    public function variantAttributes()
+    {
+        return $this->hasMany(ProductVariantAttribute::class, 'variant_slug', 'slug');
+    }
+
+    public function variantVendors()
+    {
+        return $this->hasMany(ProductVariantVendor::class, 'variant_slug', 'slug');
+    }
 }

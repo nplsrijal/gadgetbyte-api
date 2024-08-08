@@ -7,16 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class ProductAttribute extends Model implements Auditable
+class ProductVariantVendor extends Model implements Auditable
 {
     use HasFactory,SoftDeletes;
     use \OwenIt\Auditing\Auditable;
     const DELETED_AT = 'archived_at';
     protected $guarded=[];
 
-    public function product()
+    public function vendor()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Vendor::class, 'vendor_id');
     }
     
 }

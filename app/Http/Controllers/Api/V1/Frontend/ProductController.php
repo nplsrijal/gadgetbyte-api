@@ -157,7 +157,16 @@ class ProductController extends Controller
      */
     public function show(string $slug)
     {
-        $data = Product::with(['categories','categories.category'])
+        $data = Product::with([
+            'categories', 
+            'categories.category',
+            'attributes',
+            'variations',
+            'images',
+            'variants',
+            'variants.variantAttributes', 
+            'variants.variantVendors.vendor'     
+        ])
         ->join('users','users.id','=','products.created_by')
         ->select('products.*','users.email','users.facebook_url','users.instagram_url','users.linkedin_url','users.google_url','users.twitter_url','users.youtube_url', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name,users.description as author_description"))
 
@@ -165,8 +174,7 @@ class ProductController extends Controller
         
          if ($data) {
            
-            //$data->Product_tags=$data->Product_tags;
-            $data->categories=$data->categories;
+           
             return $this->success(new FrontendProductResource($data));
         } else {
             return $this->error('Product not found', Response::HTTP_NOT_FOUND);

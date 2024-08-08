@@ -6,6 +6,8 @@ use App\Models\Product;
 use App\Models\ProductWithCategory;
 use App\Models\ProductAttribute;
 use App\Models\ProductVariant;
+use App\Models\ProductVariantAttribute;
+use App\Models\ProductVariantVendor;
 use App\Models\ProductVariation;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
@@ -82,7 +84,7 @@ class ProductController extends Controller
     }
 
     /**
-     * @OA\Post(
+     * @OA\Product(
      *     path="/api/v1/products",
      *     summary="Create a new Product",
      *     tags={"Products"},
@@ -192,8 +194,9 @@ class ProductController extends Controller
                 ProductImage::insert($insert_images);
             }
     
-            if (count($variants) > 0) {
-                $insert_variant = [];
+            if (count($variants) > 0) 
+            {
+                $insert_variant =$variant_attributes=$variant_vendors= [];
                 foreach ($variants as $variant) {
                     $insert_variant[] = [
                         'product_id' => $data->id,
@@ -209,8 +212,32 @@ class ProductController extends Controller
                         'discount_price_start_date' => $variant['discount_price_start_date'],
                         'discount_price_end_date' => $variant['discount_price_end_date']
                     ];
+
+                    foreach($variant['attributes'] as $attr)
+                    {
+                        $variant_attributes[]=array(
+                            'product_id'=>$data->id,
+                            'variant_slug'=>$variant['slug'],
+                            'attribute_name'=>$attr['name'],
+                            'values'=>$attr['values'],
+                        );
+                    }
+
+                    
+                    foreach($variant['vendors'] as $vendor)
+                    {
+                        $variant_vendors[]=array(
+                            'product_id'=>$data->id,
+                            'vendor_id'=>$vendor['id'],
+                            'variant_slug'=>$variant['slug'],
+                            'product_url'=>$vendor['product_url'],
+                            'discount_price'=>$vendor['discount_price'],
+                        );
+                    }
                 }
                 ProductVariant::insert($insert_variant);
+                ProductVariantAttribute::insert($variant_attributes);
+                ProductVariantVendor::insert($variant_vendors);
             }
     
             DB::commit();
@@ -249,9 +276,22 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $data = Product::find($id);
-
-        if ($data) {
+        $data = Product::with([
+            'categories', 
+            'categories.category',
+            'attributes',
+            'variations',
+            'images',
+            'variants',
+            'variants.variantAttributes', 
+            'variants.variantVendors.vendor'     
+        ])
+        ->join('users','users.id','=','products.created_by')
+        ->select('products.*', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name"))
+        ->find($id);
+        
+         if ($data) {
+            
             return $this->success(new ProductResource($data));
         } else {
             return $this->error('Product not found', Response::HTTP_NOT_FOUND);
@@ -322,10 +362,157 @@ class ProductController extends Controller
 
         $validatedData = $request->validated();
         $userId = request()->header('X-User-Id');
-        $validatedData['updated_by'] = $userId;
-        $data->update($validatedData);
+
+        $categories = $validatedData['categories'] ?? [];
+        unset($validatedData['categories']);
     
-        return $this->success(new ProductResource($data), 'Product updated', Response::HTTP_OK);
+        $attributes = $validatedData['attributes'] ?? [];
+        unset($validatedData['attributes']);
+    
+        $variations = $validatedData['variations'] ?? [];
+        unset($validatedData['variations']);
+    
+        $variants = $validatedData['variants'] ?? [];
+        unset($validatedData['variants']);
+
+        $images = $validatedData['images'] ?? [];
+        unset($validatedData['images']);
+
+        $validatedData['updated_by'] = $userId;
+         // Begin database transaction
+         DB::beginTransaction();
+
+        $data->update($validatedData);
+
+        if (count($categories) > 0) {
+            $postcategory_data=ProductWithCategory::where('product_id', $data->id);
+            $postcategory_data->update(['archived_by' => $userId]);
+            $postcategory_data->delete();
+
+            $insert_cat = [];
+            foreach ($categories as $cat) {
+                $insert_cat[] = ['product_id' => $data->id, 'category_id' => $cat];
+            }
+            ProductWithCategory::insert($insert_cat);
+        }
+
+        if (count($attributes) > 0) {
+            $delete_data=ProductAttribute::where('product_id', $data->id);
+            $delete_data->update(['archived_by' => $userId]);
+            $delete_data->delete();
+            $insert_attr = [];
+            foreach ($attributes as $attr) {
+                $insert_attr[] = [
+                    'product_id' => $data->id,
+                    'attribute_option_id' => $attr['option_id'],
+                    'attribute_name' => $attr['name'],
+                    'values' => json_encode($attr['values']) // Ensure values are encoded if they are arrays
+                ];
+            }
+            ProductAttribute::insert($insert_attr);
+        }
+
+        if (count($variations) > 0) {
+            $delete_data=ProductVariation::where('product_id', $data->id);
+            $delete_data->update(['archived_by' => $userId]);
+            $delete_data->delete();
+            $insert_variation = [];
+            foreach ($variations as $variation) {
+                $insert_variation[] = [
+                    'product_id' => $data->id,
+                    'variation_name' => $variation['name'],
+                  //  'sku_code' => $variation['variation_sku_code'],
+                  //  'image_url' => $variation['image_url'],
+                    'values' => json_encode($variation['values']) // Ensure values are encoded if they are arrays
+                ];
+            }
+            ProductVariation::insert($insert_variation);
+        }
+
+        if (count($images) > 0) {
+            $delete_data=ProductImage::where('product_id', $data->id);
+            $delete_data->update(['archived_by' => $userId]);
+            $delete_data->delete();
+            $insert_images = [];
+            foreach ($images as $image) {
+                $insert_images[] = [
+                    'product_id' => $data->id,
+                    'variation_sku_code' => $image['variation_sku_code'],
+                    'image_url' =>json_encode($image['image_url']),
+                 ];
+            }
+            ProductImage::insert($insert_images);
+        }
+
+        if (count($variants) > 0) 
+        {
+            $delete_data=ProductVariant::where('product_id', $data->id);
+            $delete_data->update(['archived_by' => $userId]);
+            $delete_data->delete();
+
+            $delete_data=ProductVariantAttribute::where('product_id', $data->id);
+            $delete_data->update(['archived_by' => $userId]);
+            $delete_data->delete();
+
+            $delete_data=ProductVariantVendor::where('product_id', $data->id);
+            $delete_data->update(['archived_by' => $userId]);
+            $delete_data->delete();
+            $insert_variant =$variant_attributes=$variant_vendors= [];
+            foreach ($variants as $variant) {
+                $insert_variant[] = [
+                    'product_id' => $data->id,
+                    'title' => $variant['title'],
+                    'slug' => $variant['slug'],
+                    'sku_code' => $variant['variation_sku_code'],
+                    'price' => $variant['price'],
+                    'qty' => $variant['qty'],
+                    //'image_url' => $variant['image_url'],
+                    'is_default' => $variant['is_default'],
+                    'discount_price' => ($variant['discount_price'] > 0) ? $variant['discount_price'] : 0,
+                    'discount_price_in' => ($variant['discount_price_in'] != '') ? $variant['discount_price_in'] : null,
+                    'discount_price_start_date' => $variant['discount_price_start_date'],
+                    'discount_price_end_date' => $variant['discount_price_end_date']
+                ];
+
+                foreach($variant['attributes'] as $attr)
+                {
+                    $variant_attributes[]=array(
+                        'product_id'=>$data->id,
+                        'variant_slug'=>$variant['slug'],
+                        'attribute_name'=>$attr['name'],
+                        'values'=>$attr['values'],
+                    );
+                }
+
+                
+                foreach($variant['vendors'] as $vendor)
+                {
+                    $variant_vendors[]=array(
+                        'product_id'=>$data->id,
+                        'vendor_id'=>$vendor['id'],
+                        'variant_slug'=>$variant['slug'],
+                        'product_url'=>$vendor['product_url'],
+                        'discount_price'=>$vendor['discount_price'],
+                    );
+                }
+            }
+            ProductVariant::insert($insert_variant);
+            ProductVariantAttribute::insert($variant_attributes);
+            ProductVariantVendor::insert($variant_vendors);
+        }
+    
+
+         // Check database transaction
+         $transactionStatus = DB::transactionLevel();
+
+         if ($transactionStatus > 0) {
+             // Database transaction success
+             DB::commit();
+             return $this->success(new ProductResource($data), 'Product updated', Response::HTTP_OK);
+            } else {
+             // Throw error
+             throw new Exception('Could not save Post.', 1);
+         }
     }
 
     /**
