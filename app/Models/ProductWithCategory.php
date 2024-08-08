@@ -22,5 +22,7 @@ class ProductWithCategory extends Model implements Auditable
     {
         return $this->belongsTo(ProductCategory::class, 'category_id');
     }
+
+    
 }
 

@@ -17,17 +17,6 @@ class ProductCategory extends Model implements Auditable
     /**
      * Get the parent category of this category.
      */
-    public function parentCategory()
-    {
-        return $this->belongsTo(ProductCategory::class, 'parent_id');
-    }
-
-    /**
-     * Get the subcategories of this category.
-     */
-    public function subcategories()
-    {
-        return $this->hasMany(ProductCategory::class, 'parent_id');
-    }
+    
     
 }

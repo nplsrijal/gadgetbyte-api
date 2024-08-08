@@ -13,4 +13,9 @@ class Product extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
     const DELETED_AT = 'archived_at';
     protected $guarded=[];
+
+    public function categories()
+    {
+        return $this->hasMany(ProductWithCategory::class);
+    }
 }

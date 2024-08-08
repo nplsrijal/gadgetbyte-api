@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\V1\AttributeOptionController;
 use App\Http\Controllers\Api\V1\VariationController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\Frontend\PostController as FPostController;
+use App\Http\Controllers\Api\V1\Frontend\ProductController as FProductController;
 use App\Http\Controllers\Api\V1\Frontend\CustomerController;
 use App\Http\Controllers\Api\V1\Frontend\UserBookmarkController;
 
@@ -85,6 +86,7 @@ Route::prefix('v1/frontend')->group(function () {
     // Route will be here
 
     Route::apiResource('post', FPostController::class);
+    Route::apiResource('product', FProductController::class);
     Route::apiResource('customers', CustomerController::class);
 
     Route::get('patch', [PatchController::class, 'index']);
