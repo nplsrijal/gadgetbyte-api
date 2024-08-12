@@ -18,4 +18,19 @@ class Comment extends Model implements Auditable
     {
         return $this->morphTo();
     }
+
+    public function likes()
+    {
+        return $this->hasMany(CommentLike::class);
+    }
+
+    public function likesCount()
+    {
+        return $this->likes()->where('is_like', true)->count();
+    }
+
+    public function dislikesCount()
+    {
+        return $this->likes()->where('is_like', false)->count();
+    }
 }

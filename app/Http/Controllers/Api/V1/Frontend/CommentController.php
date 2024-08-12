@@ -9,10 +9,13 @@ use Illuminate\Http\Response;
 use App\Models\Product;
 use App\Models\Post;
 use App\Models\Comment;
+use App\Models\CommentLike;
 
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Resources\CommentCollection;
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\CommentLikeResource;
+use App\Http\Resources\CommentLikeCollection;
 
 class CommentController extends Controller
 {
@@ -71,7 +74,15 @@ class CommentController extends Controller
         $perPage = $request->input('per_page', 20); // Default to 20 if not provided
 
         // Initialize the query for comments
-        $query = Comment::query();
+        $query = Comment::query()
+        ->withCount([
+            'likes as likes_count' => function ($query) {
+                $query->where('is_like', true);
+            },
+            'likes as dislikes_count' => function ($query) {
+                $query->where('is_like', false);
+            },
+        ]);
 
         // Apply search filter if 'q' parameter is provided
         // if ($request->has('q')) {
@@ -222,5 +233,69 @@ class CommentController extends Controller
         ]);
         return $this->success($comment, 'Comment Created Successfully', Response::HTTP_CREATED);
 
+    }
+
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/frontend/comments/{id}/toggle-like",
+     *     summary="Like/Dislike Of Comments",
+     *     tags={"Comments Like/Dislike"},
+     *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
+     *     @OA\Parameter(
+     *         name="X-User-Id",
+     *         in="header",
+     *         description="User ID for authentication",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/CommentLikeResource"))
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     ),
+     * )
+     */
+    public function toggleLikeDislike(Request $request, $id)
+    {
+        $userId = request()->header('X-User-Id');
+
+        $comment = Comment::findOrFail($id);
+
+        // Find the existing like or dislike by the user on this comment
+        $existingLike = CommentLike::where('user_id', $userId)
+                                    ->where('comment_id', $id)
+                                    ->first();
+
+        if ($existingLike) {
+            if ($existingLike->is_like) {
+                // If it was a like, change to dislike
+                $existingLike->is_like = false;
+                $existingLike->save();
+                return $this->success(new CommentLikeCollection($existingLike), 'Comment Disliked Successfully', Response::HTTP_CREATED);
+
+            } else {
+                // If it was a dislike, change to like
+                $existingLike->is_like = true;
+                $existingLike->save();
+                return $this->success(new CommentLikeCollection($existingLike), 'Comment Liked Successfully', Response::HTTP_CREATED);
+            }
+        } else {
+            // If no like or dislike exists, create a new like
+            $data=[
+                'user_id' => $userId,
+                'comment_id' => $id,
+                'is_like' => true // default to like
+            ];
+            CommentLike::create($data);
+            return $this->success($data, 'Comment Liked Successfully', Response::HTTP_CREATED);
+        }
     }
 }

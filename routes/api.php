@@ -95,7 +95,10 @@ Route::prefix('v1/frontend')->group(function () {
     Route::apiResource('product', FProductController::class);
     Route::apiResource('customers', CustomerController::class);
     
-    Route::get('/comments', [CommentController::class, 'index']);
+    Route::get('comments', [CommentController::class, 'index']);
+
+    Route::post('comments/{id}/toggle-like', [CommentController::class, 'toggleLikeDislike']);
+
 
     Route::get('patch', [PatchController::class, 'index']);
 

@@ -300,6 +300,300 @@
                 ]
             }
         },
+        "/api/v1/attribute-options": {
+            "get": {
+                "tags": [
+                    "AttributeOptions"
+                ],
+                "summary": "Get a list of AttributeOptions",
+                "operationId": "968efb2013de3eb19f46328726001fab",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name  ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AttributeOptionResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "AttributeOptions"
+                ],
+                "summary": "Create a new AttributeOption",
+                "operationId": "415756fbf48177ede1cfec43c933b1bb",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "AttributeOptions data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreAttributeOptionRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created menu",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AttributeOptionResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/attribute-options/{id}": {
+            "get": {
+                "tags": [
+                    "AttributeOptions"
+                ],
+                "summary": "Get a specific menu",
+                "operationId": "bf4da4957854124ca5e9d00c4fd83e61",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the menu to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AttributeOptionResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "AttributeOptions"
+                ],
+                "summary": "Update an existing menu",
+                "description": "Update the specified resource in storage.",
+                "operationId": "2b4a457c3feb7e257afa195c058d0895",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the menu to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "AttributeOption data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateAttributeOptionRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated menu",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AttributeOptionResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "AttributeOptions"
+                ],
+                "summary": "Delete an menu",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "5288f226541cec28c6aac04726bb5bd8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the menu to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted menu",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "AttributeOption deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/AttributeOptionResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
         "/api/v1/brands": {
             "get": {
                 "tags": [
@@ -594,6 +888,258 @@
                 ]
             }
         },
+        "/api/v1/frontend/comments": {
+            "get": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Get a list of Comments",
+                "operationId": "db656cdad65ac53beaed3e24a52fe53b",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Type for post or for product",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Id of post or  product",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CommentResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/frontend/product/{id}/comments": {
+            "post": {
+                "tags": [
+                    "Product Comments"
+                ],
+                "summary": "Create a new Comment",
+                "operationId": "bd7531c34e86e95c6f8c958138007f9d",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Comments data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreCommentRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created comment",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommentResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/frontend/post/{id}/comments": {
+            "post": {
+                "tags": [
+                    "Post Comments"
+                ],
+                "summary": "Create a new Comment",
+                "operationId": "06f665eb87d15350326bf3525ffb5b36",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Comments data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreCommentRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created comment",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommentResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/frontend/comments/{id}/toggle-like": {
+            "get": {
+                "tags": [
+                    "Comments Like/Dislike"
+                ],
+                "summary": "Like/Dislike Of Comments",
+                "operationId": "b22d09700ebb7510625b91532c2e472b",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CommentLikeResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
         "/api/v1/frontend/customers": {
             "post": {
                 "tags": [
@@ -684,6 +1230,15 @@
                         }
                     },
                     {
+                        "name": "author",
+                        "in": "query",
+                        "description": "Search post for filtering by author",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "per_page",
                         "in": "query",
                         "description": "Number of items per page (optional, default: 20)",
@@ -744,6 +1299,135 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/PostResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/frontend/product": {
+            "get": {
+                "tags": [
+                    "Frontend products"
+                ],
+                "summary": "Get a list of products",
+                "operationId": "e36829791d8eddc9a082ce9b167ec9a0",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "Search Product for filtering by catgory id ",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "category_slug",
+                        "in": "query",
+                        "description": "Search Product for filtering by catgory slug ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Search Product for filtering by status",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "author",
+                        "in": "query",
+                        "description": "Search Product for filtering by author",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/FrontendProductResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/frontend/Product/{slug}": {
+            "get": {
+                "tags": [
+                    "Frontend products"
+                ],
+                "summary": "Get a specific Product",
+                "operationId": "fb300e6cbc23f52a525d9d795851b687",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "The Slug of the Product to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductResource"
                                 }
                             }
                         }
@@ -3454,6 +4138,300 @@
                 ]
             }
         },
+        "/api/v1/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get a list of Products",
+                "operationId": "1ce27f90dd8c39cea9520bf45d58c7c2",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name or slug ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ProductResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Create a new Product",
+                "operationId": "acaa0d3fdc74fd4b534e70fc016cf7f1",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Products data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreProductRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/products/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get a specific product",
+                "operationId": "249e765b6489191fb8167474db8867f7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the product to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update an existing product",
+                "description": "Update the specified resource in storage.",
+                "operationId": "436a5b5d1aff1d5fd341389786161044",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the product to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Product data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProductRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Delete an product",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "cc01048629edd9759ba1d7ffc989f667",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the product to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/ProductResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
         "/api/v1/reviews": {
             "get": {
                 "tags": [
@@ -4432,6 +5410,300 @@
                 ]
             }
         },
+        "/api/v1/variations": {
+            "get": {
+                "tags": [
+                    "Variations"
+                ],
+                "summary": "Get a list of Variations",
+                "operationId": "2e8ab904e673250ecf884f80d3252db3",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name or slug ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/VariationResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Variations"
+                ],
+                "summary": "Create a new Variation",
+                "operationId": "187d80a06e0cbae9d12a436ed13a9747",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Variations data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreVariationRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created variation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VariationResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/variations/{id}": {
+            "get": {
+                "tags": [
+                    "Variations"
+                ],
+                "summary": "Get a specific variation",
+                "operationId": "3c7f97408283ef1f9b74c38fef21c730",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the variation to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VariationResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Variations"
+                ],
+                "summary": "Update an existing variation",
+                "description": "Update the specified resource in storage.",
+                "operationId": "09cdd7ce320a756d0a5206a615e7a8bc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the variation to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Variation data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateVariationRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated variation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VariationResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Variations"
+                ],
+                "summary": "Delete an variation",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "5cad181c44af6910a8c26f82ed34809c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the variation to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted variation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Variation deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/VariationResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
         "/api/v1/vendors": {
             "get": {
                 "tags": [
@@ -4750,38 +6022,81 @@
                 },
                 "type": "object"
             },
+            "StoreAttributeOptionRequest": {
+                "title": "Attribute Option  Store Request",
+                "description": "Attribute Option  store request data",
+                "required": [
+                    "name",
+                    "attribute_id",
+                    "values",
+                    "is_active"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "attribute_id": {
+                                "description": "The Id  of the Attribute.",
+                                "type": "string",
+                                "example": "1"
+                            },
+                            "values": {
+                                "description": "The Values in json",
+                                "type": "string",
+                                "example": ""
+                            },
+                            "is_active": {
+                                "description": "Enable/Disable of attributes ",
+                                "type": "string",
+                                "example": "Y/N"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "StoreAttributeRequest": {
                 "title": "Attribute  Store Request",
                 "description": "Attribute  store request data",
                 "required": [
                     "name",
                     "slug",
-                    "is_active",
-                    "values"
+                    "is_active"
                 ],
-                "properties": {
-                    "name": {
-                        "description": "The menu display name",
-                        "type": "string",
-                        "example": "Dashboard"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
                     },
-                    "slug": {
-                        "description": "The unique slug  of the Attribute.",
-                        "type": "string",
-                        "example": "/dashboard"
-                    },
-                    "is_active": {
-                        "description": "Enable/Disable of attributes ",
-                        "type": "string",
-                        "example": "Y/N"
-                    },
-                    "values": {
-                        "description": "The Values in json format",
-                        "type": "json",
-                        "example": "['100','200','300']"
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The menu display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "slug": {
+                                "description": "The unique slug  of the Attribute.",
+                                "type": "string",
+                                "example": "/dashboard"
+                            },
+                            "is_active": {
+                                "description": "Enable/Disable of attributes ",
+                                "type": "string",
+                                "example": "Y/N"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "StoreBrandRequest": {
                 "title": "Brand  Store Request",
@@ -4818,6 +6133,29 @@
                                 "description": "The Priority of Brand",
                                 "type": "integer",
                                 "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "StoreCommentRequest": {
+                "title": "Comment  Store Request",
+                "description": "Comment  store request data",
+                "required": [
+                    "body"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "body": {
+                                "description": "The comment text",
+                                "type": "string",
+                                "example": "This is test"
                             }
                         },
                         "type": "object"
@@ -5398,6 +6736,150 @@
                     }
                 ]
             },
+            "StoreProductRequest": {
+                "title": "Product Store Request",
+                "description": "Product store request data",
+                "required": [
+                    "title",
+                    "slug",
+                    "description",
+                    "short_description",
+                    "brand_id",
+                    "categories",
+                    "is_active",
+                    "image_url"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "title": {
+                                "description": "The Product Title",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "slug": {
+                                "description": "The Slug for the post",
+                                "type": "string",
+                                "example": "apple"
+                            },
+                            "short_description": {
+                                "description": "The Product's short description ",
+                                "type": "string",
+                                "example": "this is the short description of it."
+                            },
+                            "description": {
+                                "description": "The Product's description ",
+                                "type": "string",
+                                "example": "this is the description of it."
+                            },
+                            "categories": {
+                                "description": "Ids of the category",
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                }
+                            },
+                            "image_url": {
+                                "description": "Image",
+                                "type": "string",
+                                "example": "https://gadgetbyte.com/logo.png"
+                            },
+                            "is_active": {
+                                "description": "Status for Active/Inactive",
+                                "type": "string",
+                                "example": "Y/N"
+                            },
+                            "seo_title_facebook": {
+                                "description": "The seo title field for fb  of the post review",
+                                "type": "string",
+                                "example": "Apple 14 launched in Nepal."
+                            },
+                            "seo_description_facebook": {
+                                "description": "The seo description field for fb  of the post review",
+                                "type": "string",
+                                "example": "Apple 14 launched in Nepal."
+                            },
+                            "seo_title_twitter": {
+                                "description": "The seo title field for twitter  of the post review",
+                                "type": "string",
+                                "example": "Apple 14 launched in Nepal."
+                            },
+                            "seo_description_twitter": {
+                                "description": "The seo description field for twitter  of the post review",
+                                "type": "string",
+                                "example": "Apple 14 launched in Nepal."
+                            },
+                            "attributes": {
+                                "description": "Array of post attributes details",
+                                "type": "array",
+                                "items": {
+                                    "title": "Product Attributes",
+                                    "description": "Product Attributes details",
+                                    "required": [
+                                        "attribute_option_id",
+                                        "attribute_option_name",
+                                        "values"
+                                    ],
+                                    "properties": {
+                                        "attribute_option_id": {
+                                            "description": "The id of the attribute option",
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "attribute_option_name": {
+                                            "description": "The Text of the attribute option name",
+                                            "type": "string",
+                                            "example": "Design"
+                                        },
+                                        "values": {
+                                            "description": "The values of attribute option",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": "[2gb,4gb]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "variations": {
+                                "description": "Array of Variation details",
+                                "type": "array",
+                                "items": {
+                                    "title": "Variations",
+                                    "description": "Variations details",
+                                    "required": [
+                                        "name",
+                                        "values"
+                                    ],
+                                    "properties": {
+                                        "name": {
+                                            "description": "The name of variation",
+                                            "type": "string",
+                                            "example": "Color"
+                                        },
+                                        "values": {
+                                            "description": "The values field",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": "[Green,Red]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "StoreSocialLoginRequest": {
                 "title": "Social Login Store Request",
                 "description": "Social Login store request data",
@@ -5603,6 +7085,35 @@
                     }
                 ]
             },
+            "StoreVariationRequest": {
+                "title": "Variation  Store Request",
+                "description": "Variation  store request data",
+                "required": [
+                    "name",
+                    "type"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The Variation display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "type": {
+                                "description": "The type  of the Variation.",
+                                "type": "string",
+                                "example": "apple"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "StoreVendorRequest": {
                 "title": "Vendor  Store Request",
                 "description": "Vendor  store request data",
@@ -5650,38 +7161,81 @@
                     }
                 ]
             },
+            "UpdateAttributeOptionRequest": {
+                "title": "Attribute Option  Update Request",
+                "description": "Attribute Option  update request data",
+                "required": [
+                    "name",
+                    "attribute_id",
+                    "values",
+                    "is_active"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "attribute_id": {
+                                "description": "The Id  of the Attribute.",
+                                "type": "string",
+                                "example": "1"
+                            },
+                            "values": {
+                                "description": "The Values in json",
+                                "type": "string",
+                                "example": ""
+                            },
+                            "is_active": {
+                                "description": "Enable/Disable of attributes ",
+                                "type": "string",
+                                "example": "Y/N"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "UpdateAttributeRequest": {
                 "title": "Attribute  Update Request",
                 "description": "Attribute  update request data",
                 "required": [
                     "name",
                     "slug",
-                    "is_active",
-                    "values"
+                    "is_active"
                 ],
-                "properties": {
-                    "name": {
-                        "description": "The menu display name",
-                        "type": "string",
-                        "example": "Dashboard"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
                     },
-                    "slug": {
-                        "description": "The unique slug  of the Attribute.",
-                        "type": "string",
-                        "example": "/dashboard"
-                    },
-                    "is_active": {
-                        "description": "Enable/Disable of attributes ",
-                        "type": "string",
-                        "example": "Y/N"
-                    },
-                    "values": {
-                        "description": "The Values in json format",
-                        "type": "json",
-                        "example": "['100','200','300']"
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The menu display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "slug": {
+                                "description": "The unique slug  of the Attribute.",
+                                "type": "string",
+                                "example": "/dashboard"
+                            },
+                            "is_active": {
+                                "description": "Enable/Disable of attributes ",
+                                "type": "string",
+                                "example": "Y/N"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateBrandRequest": {
                 "title": "Brand Update Request",
@@ -5692,29 +7246,37 @@
                     "image",
                     "order_by"
                 ],
-                "properties": {
-                    "name": {
-                        "description": "The Brand display name",
-                        "type": "string",
-                        "example": "Dashboard"
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
                     },
-                    "slug": {
-                        "description": "The Endpoint  of the Brand.",
-                        "type": "string",
-                        "example": "apple"
-                    },
-                    "image": {
-                        "description": "The Image Link ",
-                        "type": "string",
-                        "example": "this is the link of image."
-                    },
-                    "order_by": {
-                        "description": "The Priority of Brand",
-                        "type": "integer",
-                        "example": "1"
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The Brand display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "slug": {
+                                "description": "The Endpoint  of the Brand.",
+                                "type": "string",
+                                "example": "apple"
+                            },
+                            "image": {
+                                "description": "The Image Link ",
+                                "type": "string",
+                                "example": "this is the link of image."
+                            },
+                            "order_by": {
+                                "description": "The Priority of Brand",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
             "UpdateMediaRequest": {
                 "title": "Media  Update Request",
@@ -6150,6 +7712,150 @@
                     }
                 ]
             },
+            "UpdateProductRequest": {
+                "title": "Product Update Request",
+                "description": "Product update request data",
+                "required": [
+                    "title",
+                    "slug",
+                    "description",
+                    "short_description",
+                    "brand_id",
+                    "categories",
+                    "is_active",
+                    "image_url"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "title": {
+                                "description": "The Product Title",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "slug": {
+                                "description": "The Slug for the post",
+                                "type": "string",
+                                "example": "apple"
+                            },
+                            "short_description": {
+                                "description": "The Product's short description",
+                                "type": "string",
+                                "example": "this is the short description of it."
+                            },
+                            "description": {
+                                "description": "The Product's description",
+                                "type": "string",
+                                "example": "this is the description of it."
+                            },
+                            "categories": {
+                                "description": "Ids of the category",
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                }
+                            },
+                            "image_url": {
+                                "description": "Image",
+                                "type": "string",
+                                "example": "https://gadgetbyte.com/logo.png"
+                            },
+                            "is_active": {
+                                "description": "Status for Active/Inactive",
+                                "type": "string",
+                                "example": "Y/N"
+                            },
+                            "seo_title_facebook": {
+                                "description": "The seo title field for fb of the post review",
+                                "type": "string",
+                                "example": "Apple 14 launched in Nepal."
+                            },
+                            "seo_description_facebook": {
+                                "description": "The seo description field for fb of the post review",
+                                "type": "string",
+                                "example": "Apple 14 launched in Nepal."
+                            },
+                            "seo_title_twitter": {
+                                "description": "The seo title field for twitter of the post review",
+                                "type": "string",
+                                "example": "Apple 14 launched in Nepal."
+                            },
+                            "seo_description_twitter": {
+                                "description": "The seo description field for twitter of the post review",
+                                "type": "string",
+                                "example": "Apple 14 launched in Nepal."
+                            },
+                            "attributes": {
+                                "description": "Array of product attributes details",
+                                "type": "array",
+                                "items": {
+                                    "title": "Product Attributes",
+                                    "description": "Product Attributes details",
+                                    "required": [
+                                        "attribute_option_id",
+                                        "attribute_option_name",
+                                        "values"
+                                    ],
+                                    "properties": {
+                                        "attribute_option_id": {
+                                            "description": "The id of the attribute option",
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "attribute_option_name": {
+                                            "description": "The Text of the attribute option name",
+                                            "type": "string",
+                                            "example": "Design"
+                                        },
+                                        "values": {
+                                            "description": "The values of attribute option",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": "[2gb,4gb]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "variations": {
+                                "description": "Array of product variations details",
+                                "type": "array",
+                                "items": {
+                                    "title": "Variations",
+                                    "description": "Variations details",
+                                    "required": [
+                                        "name",
+                                        "values"
+                                    ],
+                                    "properties": {
+                                        "name": {
+                                            "description": "The name of variation",
+                                            "type": "string",
+                                            "example": "Color"
+                                        },
+                                        "values": {
+                                            "description": "The values field",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "example": "[Green,Red]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "UpdateTagRequest": {
                 "title": "Tag  Update Request",
                 "description": "Tag  update request data",
@@ -6289,6 +7995,35 @@
                     }
                 ]
             },
+            "UpdateVariationRequest": {
+                "title": "Variation Update Request",
+                "description": "Variation  update request data",
+                "required": [
+                    "name",
+                    "type"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "name": {
+                                "description": "The Variation display name",
+                                "type": "string",
+                                "example": "Dashboard"
+                            },
+                            "type": {
+                                "description": "The type  of the Variation.",
+                                "type": "string",
+                                "example": "apple"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "UpdateVendorRequest": {
                 "title": "Vendor Update Request",
                 "description": "Vendor  update request data",
@@ -6336,10 +8071,47 @@
                     }
                 ]
             },
+            "AttributeOptionResource": {
+                "title": "Attribute Option Resource",
+                "description": "Attribute Option resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the attribute option",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "The display name",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "attribute_id": {
+                        "description": "The Id  of the Attribute.",
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "values": {
+                        "description": "The Values in json",
+                        "type": "string",
+                        "example": ""
+                    },
+                    "is_active": {
+                        "description": "Enable/Disable of attributes ",
+                        "type": "string",
+                        "example": "Y/N"
+                    }
+                },
+                "type": "object"
+            },
             "AttributeResource": {
                 "title": "Attribute Resource",
                 "description": "Attribute resource representation",
                 "properties": {
+                    "id": {
+                        "description": "The unique id of the attribute",
+                        "type": "integer",
+                        "example": "1"
+                    },
                     "name": {
                         "description": "The menu display name",
                         "type": "string",
@@ -6354,11 +8126,6 @@
                         "description": "Enable/Disable of attributes ",
                         "type": "string",
                         "example": "Y/N"
-                    },
-                    "values": {
-                        "description": "The Values in json format",
-                        "type": "json",
-                        "example": "['100','200','300']"
                     }
                 },
                 "type": "object"
@@ -6367,6 +8134,11 @@
                 "title": "Brand Resource",
                 "description": "Brand resource representation",
                 "properties": {
+                    "id": {
+                        "description": "The unique id of the brand",
+                        "type": "integer",
+                        "example": "1"
+                    },
                     "name": {
                         "description": "The Brand display name",
                         "type": "string",
@@ -6384,6 +8156,55 @@
                     },
                     "order_by": {
                         "description": "The Priority of Brand",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "CommentLikeResource": {
+                "title": "Comment Like Resource",
+                "description": "Comment Like resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the like/dislike",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "user_id": {
+                        "description": "The User's Id",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "comment_id": {
+                        "description": "The Id's  of the Comment.",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "CommentResource": {
+                "title": "Comment Resource",
+                "description": "Comment resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the comment",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "body": {
+                        "description": "The comments text",
+                        "type": "string",
+                        "example": "Samsung Phone Nepal"
+                    },
+                    "commentable_type": {
+                        "description": "The type of the comments done for",
+                        "type": "string",
+                        "example": "Post"
+                    },
+                    "commentable_id": {
+                        "description": "The ids of the comments done for",
                         "type": "integer",
                         "example": "1"
                     }
@@ -6455,6 +8276,137 @@
                         "description": "The seo title field for social media  of the post review",
                         "type": "string",
                         "example": "Apple 14 launched in Nepal."
+                    }
+                },
+                "type": "object"
+            },
+            "FrontendProductResource": {
+                "title": "Frontend Product Resource",
+                "description": "Frontend Product resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the product",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "title": {
+                        "description": "The Product Title",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "slug": {
+                        "description": "The Slug for the post",
+                        "type": "string",
+                        "example": "apple"
+                    },
+                    "short_description": {
+                        "description": "The Product's short description",
+                        "type": "string",
+                        "example": "this is the short description of it."
+                    },
+                    "description": {
+                        "description": "The Product's description",
+                        "type": "string",
+                        "example": "this is the description of it."
+                    },
+                    "categories": {
+                        "description": "Ids of the category",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "image_url": {
+                        "description": "Image",
+                        "type": "string",
+                        "example": "https://gadgetbyte.com/logo.png"
+                    },
+                    "is_active": {
+                        "description": "Status for Active/Inactive",
+                        "type": "string",
+                        "example": "Y/N"
+                    },
+                    "seo_title_facebook": {
+                        "description": "The seo title field for fb of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_description_facebook": {
+                        "description": "The seo description field for fb of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_title_twitter": {
+                        "description": "The seo title field for twitter of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_description_twitter": {
+                        "description": "The seo description field for twitter of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "attributes": {
+                        "description": "Array of post attributes details",
+                        "type": "array",
+                        "items": {
+                            "title": "Product Attributes",
+                            "description": "Product Attributes details",
+                            "required": [
+                                "attribute_option_id",
+                                "attribute_option_name",
+                                "values"
+                            ],
+                            "properties": {
+                                "attribute_option_id": {
+                                    "description": "The id of the attribute option",
+                                    "type": "integer",
+                                    "example": "1"
+                                },
+                                "attribute_option_name": {
+                                    "description": "The Text of the attribute option name",
+                                    "type": "string",
+                                    "example": "Design"
+                                },
+                                "values": {
+                                    "description": "The values of attribute option",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "example": "[2gb,4gb]"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "variations": {
+                        "description": "Array of FAQ details",
+                        "type": "array",
+                        "items": {
+                            "title": "Variations",
+                            "description": "Variations details",
+                            "required": [
+                                "name",
+                                "values"
+                            ],
+                            "properties": {
+                                "name": {
+                                    "description": "The name of variation",
+                                    "type": "string",
+                                    "example": "Color"
+                                },
+                                "values": {
+                                    "description": "The values field",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "example": "[Green,Red]"
+                                }
+                            },
+                            "type": "object"
+                        }
                     }
                 },
                 "type": "object"
@@ -6883,6 +8835,137 @@
                 },
                 "type": "object"
             },
+            "ProductResource": {
+                "title": "Product Resource",
+                "description": "Product resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the product",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "title": {
+                        "description": "The Product Title",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "slug": {
+                        "description": "The Slug for the post",
+                        "type": "string",
+                        "example": "apple"
+                    },
+                    "short_description": {
+                        "description": "The Product's short description",
+                        "type": "string",
+                        "example": "this is the short description of it."
+                    },
+                    "description": {
+                        "description": "The Product's description",
+                        "type": "string",
+                        "example": "this is the description of it."
+                    },
+                    "categories": {
+                        "description": "Ids of the category",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "image_url": {
+                        "description": "Image",
+                        "type": "string",
+                        "example": "https://gadgetbyte.com/logo.png"
+                    },
+                    "is_active": {
+                        "description": "Status for Active/Inactive",
+                        "type": "string",
+                        "example": "Y/N"
+                    },
+                    "seo_title_facebook": {
+                        "description": "The seo title field for fb of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_description_facebook": {
+                        "description": "The seo description field for fb of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_title_twitter": {
+                        "description": "The seo title field for twitter of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "seo_description_twitter": {
+                        "description": "The seo description field for twitter of the post review",
+                        "type": "string",
+                        "example": "Apple 14 launched in Nepal."
+                    },
+                    "attributes": {
+                        "description": "Array of post attributes details",
+                        "type": "array",
+                        "items": {
+                            "title": "Product Attributes",
+                            "description": "Product Attributes details",
+                            "required": [
+                                "attribute_option_id",
+                                "attribute_option_name",
+                                "values"
+                            ],
+                            "properties": {
+                                "attribute_option_id": {
+                                    "description": "The id of the attribute option",
+                                    "type": "integer",
+                                    "example": "1"
+                                },
+                                "attribute_option_name": {
+                                    "description": "The Text of the attribute option name",
+                                    "type": "string",
+                                    "example": "Design"
+                                },
+                                "values": {
+                                    "description": "The values of attribute option",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "example": "[2gb,4gb]"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "variations": {
+                        "description": "Array of FAQ details",
+                        "type": "array",
+                        "items": {
+                            "title": "Variations",
+                            "description": "Variations details",
+                            "required": [
+                                "name",
+                                "values"
+                            ],
+                            "properties": {
+                                "name": {
+                                    "description": "The name of variation",
+                                    "type": "string",
+                                    "example": "Color"
+                                },
+                                "values": {
+                                    "description": "The values field",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "example": "[Green,Red]"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "ReviewResource": {
                 "title": "Review Resource",
                 "description": "Review resource representation",
@@ -7058,10 +9141,37 @@
                 },
                 "type": "object"
             },
+            "VariationResource": {
+                "title": "Variation Resource",
+                "description": "Variation resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the variation",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "The Variation display name",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "type": {
+                        "description": "The Type  of the Variation.",
+                        "type": "string",
+                        "example": "apple"
+                    }
+                },
+                "type": "object"
+            },
             "VendorResource": {
                 "title": "Vendor Resource",
                 "description": "Vendor resource representation",
                 "properties": {
+                    "id": {
+                        "description": "The unique id of the vendor",
+                        "type": "integer",
+                        "example": "1"
+                    },
                     "name": {
                         "description": "The Vendor display name",
                         "type": "string",
