@@ -58,5 +58,9 @@ class Post extends Model implements Auditable
         return $this->hasMany(PostLog::class);
     }
   
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
 
 }

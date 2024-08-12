@@ -83,8 +83,8 @@ class ProductController extends Controller
         //
     }
 
-    /**
-     * @OA\Product(
+     /**
+     * @OA\Post(
      *     path="/api/v1/products",
      *     summary="Create a new Product",
      *     tags={"Products"},

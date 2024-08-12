@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\V1\Frontend\PostController as FPostController;
 use App\Http\Controllers\Api\V1\Frontend\ProductController as FProductController;
 use App\Http\Controllers\Api\V1\Frontend\CustomerController;
 use App\Http\Controllers\Api\V1\Frontend\UserBookmarkController;
+use App\Http\Controllers\Api\V1\Frontend\CommentController;
 
 
 use Illuminate\Http\Request;
@@ -85,9 +86,16 @@ Route::prefix('v1')->middleware(['apiMiddleware','verify_header'])->group(functi
 Route::prefix('v1/frontend')->group(function () {
     // Route will be here
 
+    Route::post('post/{postId}/comments', [CommentController::class, 'storePostComment']);
+
     Route::apiResource('post', FPostController::class);
+
+    Route::post('product/{productId}/comments', [CommentController::class, 'storeProductComment']);
+    
     Route::apiResource('product', FProductController::class);
     Route::apiResource('customers', CustomerController::class);
+    
+    Route::get('/comments', [CommentController::class, 'index']);
 
     Route::get('patch', [PatchController::class, 'index']);
 

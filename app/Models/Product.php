@@ -38,4 +38,9 @@ class Product extends Model implements Auditable
     {
         return $this->hasMany(ProductVariant::class);
     }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
 }
