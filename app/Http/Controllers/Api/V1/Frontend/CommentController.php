@@ -86,7 +86,7 @@ class CommentController extends Controller
             },
         ]);
         $query->join('users','users.id','=','comments.created_by')
-        ->select('comments.*', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name"));
+        ->addSelect('comments.*', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name"));
 
         // Apply search filter if 'q' parameter is provided
         // if ($request->has('q')) {

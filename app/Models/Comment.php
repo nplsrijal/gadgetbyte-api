@@ -19,6 +19,11 @@ class Comment extends Model implements Auditable
         return $this->morphTo();
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
     public function likes()
     {
         return $this->hasMany(CommentLike::class);
