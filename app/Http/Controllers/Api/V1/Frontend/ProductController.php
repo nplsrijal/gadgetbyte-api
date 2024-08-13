@@ -10,6 +10,7 @@ use App\Http\Resources\ProductCollection;
 use App\Http\Resources\FrontendProductResource;
 use App\Models\Product;
 use App\Models\ProductWithCategory;
+use App\Models\User;
 
 use DB;
 
@@ -155,7 +156,7 @@ class ProductController extends Controller
      *     ),
      * )
      */
-    public function show(string $slug)
+    public function show(Request $request,string $slug)
     {
         $data = Product::with([
             'categories', 
@@ -175,7 +176,26 @@ class ProductController extends Controller
          if ($data) {
            
            
-            return $this->success(new FrontendProductResource($data));
+           // return $this->success(new FrontendProductResource($data));
+           // Get the authenticated user ID from the header
+                $userId = $request->header('X-User-Id');
+
+                $likedArray = [];
+                $dislikedArray = [];
+
+                if ($userId) {
+                    $user = User::find($userId);
+
+                    $likedArray = $user->likedCommentsForProduct($data->id)->pluck('comment_id')->toArray();
+                    $dislikedArray = $user->dislikedCommentsForProduct($data->id)->pluck('comment_id')->toArray();
+                }
+
+                // Add liked_array and disliked_array to the response data
+                return $this->success([
+                    'product' => new FrontendProductResource($data),
+                    'comment_liked_array' => $likedArray,
+                    'comment_disliked_array' => $dislikedArray
+                ]);
         } else {
             return $this->error('Product not found', Response::HTTP_NOT_FOUND);
         }

@@ -33,4 +33,5 @@ class Comment extends Model implements Auditable
     {
         return $this->likes()->where('is_like', false)->count();
     }
+
 }

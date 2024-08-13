@@ -17,6 +17,8 @@ use App\Http\Resources\CommentResource;
 use App\Http\Resources\CommentLikeResource;
 use App\Http\Resources\CommentLikeCollection;
 
+use DB;
+
 class CommentController extends Controller
 {
     /**
@@ -83,6 +85,8 @@ class CommentController extends Controller
                 $query->where('is_like', false);
             },
         ]);
+        $query->join('users','users.id','=','comments.created_by')
+        ->select('comments.*', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name"));
 
         // Apply search filter if 'q' parameter is provided
         // if ($request->has('q')) {
@@ -297,5 +301,64 @@ class CommentController extends Controller
             CommentLike::create($data);
             return $this->success($data, 'Comment Liked Successfully', Response::HTTP_CREATED);
         }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @OA\Delete(
+     *     path="/api/v1/comments/{id}",
+     *     summary="Delete an Comment",
+     *     tags={"Comments"},
+     *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="The ID of the brand to delete",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="X-User-Id",
+     *         in="header",
+     *         description="User ID for authentication",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfully deleted comment",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Comment deleted successfully"),
+     *             @OA\Property(property="data", ref="#/components/schemas/CommentResource")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not Found"
+     *     ),
+     * )
+     */
+    public function destroy(string $id)
+    {
+        $userId = request()->header('X-User-Id');
+
+        // $data = Comment::find($id);
+        $data = Comment::where('created_by', $userId)
+        ->where('id', $id)
+        ->first();
+
+        if (!$data) {
+            return $this->error('Comment not found', Response::HTTP_NOT_FOUND);
+        }
+
+        $data->update(['archived_by' => $userId]);
+        $data->delete();
+        return $this->success(new CommentResource($data), 'Comment deleted successfully', Response::HTTP_OK);
+    
     }
 }

@@ -25,4 +25,20 @@ class User extends Authenticatable implements Auditable
         return $this->belongsTo(UserType::class, 'user_type_id');
     }
 
+    public function likedCommentsForProduct($productId)
+    {
+        return $this->hasManyThrough(CommentLike::class, Comment::class, 'id', 'comment_id')
+                    ->where('is_like', true)
+                    ->where('commentable_id', $productId)
+                    ->where('commentable_type', Product::class);
+    }
+
+    public function dislikedCommentsForProduct($productId)
+    {
+        return $this->hasManyThrough(CommentLike::class, Comment::class, 'id', 'comment_id')
+                    ->where('is_like', false)
+                    ->where('commentable_id', $productId)
+                    ->where('commentable_type', Product::class);
+    }
+
 }

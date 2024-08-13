@@ -96,6 +96,7 @@ Route::prefix('v1/frontend')->group(function () {
     Route::apiResource('customers', CustomerController::class);
     
     Route::get('comments', [CommentController::class, 'index']);
+    Route::delete('comments/{id}', [CommentController::class, 'destroy']);
 
     Route::post('comments/{id}/toggle-like', [CommentController::class, 'toggleLikeDislike']);
 
