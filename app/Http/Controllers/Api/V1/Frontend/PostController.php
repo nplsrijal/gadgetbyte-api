@@ -163,7 +163,7 @@ class PostController extends Controller
         ->join('users','users.id','=','posts.created_by')
         ->select('posts.*','users.email','users.facebook_url','users.instagram_url','users.linkedin_url','users.google_url','users.twitter_url','users.youtube_url', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name,users.description as author_description"))
 
-        ->where('slug',$slug)->first();
+        ->where('posts.slug', 'like', '%' . $slug . '%')->first();
         
          if ($data) {
             $data->prices=$data->prices;
