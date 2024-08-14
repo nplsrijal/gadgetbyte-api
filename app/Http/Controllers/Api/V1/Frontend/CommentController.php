@@ -222,7 +222,8 @@ class CommentController extends Controller
     public function storePostComment(StoreCommentRequest $request, $postId)
     {
         
-        $userId = request()->header('X-User-Id');
+        $userId = $request->header('X-User-Id');
+
 
         // Find the post by ID
         $post = Post::find($postId);
@@ -269,7 +270,7 @@ class CommentController extends Controller
      */
     public function toggleLikeDislike(Request $request, $id)
     {
-        $userId = request()->header('X-User-Id');
+        $userId = $request->header('X-User-Id');
 
         $comment = Comment::findOrFail($id);
 
@@ -343,9 +344,9 @@ class CommentController extends Controller
      *     ),
      * )
      */
-    public function destroy(string $id)
+    public function destroy(Request $request,string $id)
     {
-        $userId = request()->header('X-User-Id');
+        $userId = $request->header('X-User-Id');
 
         // $data = Comment::find($id);
         $data = Comment::where('created_by', $userId)

@@ -109,7 +109,7 @@ Route::prefix('v1/frontend')->group(function () {
         Route::get('comments', [CommentController::class, 'index']);
         Route::delete('comments/{id}', [CommentController::class, 'destroy']);
     
-        Route::post('comments/{id}/toggle-like', [CommentController::class, 'toggleLikeDislike']);
+        Route::get('comments/{id}/toggle-like', [CommentController::class, 'toggleLikeDislike']);
     
     });
 
