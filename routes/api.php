@@ -28,6 +28,7 @@ use App\Http\Controllers\Api\V1\Frontend\ProductController as FProductController
 use App\Http\Controllers\Api\V1\Frontend\CustomerController;
 use App\Http\Controllers\Api\V1\Frontend\UserBookmarkController;
 use App\Http\Controllers\Api\V1\Frontend\CommentController;
+use App\Http\Controllers\Api\V1\Frontend\AuthorController;
 
 
 use Illuminate\Http\Request;
@@ -86,27 +87,30 @@ Route::prefix('v1')->middleware(['apiMiddleware','verify_header'])->group(functi
 Route::prefix('v1/frontend')->group(function () {
     // Route will be here
 
-    Route::post('post/{postId}/comments', [CommentController::class, 'storePostComment']);
 
     Route::apiResource('post', FPostController::class);
 
-    Route::post('product/{productId}/comments', [CommentController::class, 'storeProductComment']);
     
     Route::apiResource('product', FProductController::class);
     Route::apiResource('customers', CustomerController::class);
     
-    Route::get('comments', [CommentController::class, 'index']);
-    Route::delete('comments/{id}', [CommentController::class, 'destroy']);
-
-    Route::post('comments/{id}/toggle-like', [CommentController::class, 'toggleLikeDislike']);
-
+   
+    Route::apiResource('authors', AuthorController::class);
 
     Route::get('patch', [PatchController::class, 'index']);
 
     
 
     Route::middleware(['apiMiddleware','verify_header'])->group(function () {
+        Route::post('post/{postId}/comments', [CommentController::class, 'storePostComment']);
+        Route::post('product/{productId}/comments', [CommentController::class, 'storeProductComment']);
+
         Route::apiResource('bookmarks', UserBookmarkController::class);
+        Route::get('comments', [CommentController::class, 'index']);
+        Route::delete('comments/{id}', [CommentController::class, 'destroy']);
+    
+        Route::post('comments/{id}/toggle-like', [CommentController::class, 'toggleLikeDislike']);
+    
     });
 
    

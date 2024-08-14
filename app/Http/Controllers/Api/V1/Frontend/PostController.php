@@ -12,6 +12,7 @@ use App\Models\Post;
 use App\Models\PostTag;
 use App\Models\PostWithCategory;
 use App\Models\PostReview;
+use App\Models\User;
 
 use DB;
 
@@ -157,7 +158,7 @@ class PostController extends Controller
      *     ),
      * )
      */
-    public function show(string $slug)
+    public function show(Request $request,string $slug)
     {
         $data = Post::with(['reviews', 'reviews.reviews', 'categories','categories.category'])
         ->join('users','users.id','=','posts.created_by')
@@ -171,6 +172,21 @@ class PostController extends Controller
             //$data->post_tags=$data->post_tags;
             $data->categories=$data->categories;
             $data->reviews=$data->reviews;
+             // Get the authenticated user ID from the header
+             $userId = $request->header('X-User-Id');
+
+             $likedArray = [];
+             $dislikedArray = [];
+
+             if ($userId) {
+                 $user = User::find($userId);
+
+                 $likedArray = $user->likedCommentsForPost($data->id)->pluck('comment_id')->toArray();
+                 $dislikedArray = $user->dislikedCommentsForPost($data->id)->pluck('comment_id')->toArray();
+             }
+
+            $data->comment_liked_array = $likedArray;
+            $data->comment_disliked_array = $dislikedArray;
             return $this->success(new FrontendPostResource($data));
         } else {
             return $this->error('Post not found', Response::HTTP_NOT_FOUND);

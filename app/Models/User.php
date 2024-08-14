@@ -41,4 +41,21 @@ class User extends Authenticatable implements Auditable
                     ->where('commentable_type', Product::class);
     }
 
+
+    public function likedCommentsForPost($postId)
+    {
+        return $this->hasManyThrough(CommentLike::class, Comment::class, 'id', 'comment_id')
+                    ->where('is_like', true)
+                    ->where('commentable_id', $postId)
+                    ->where('commentable_type', Post::class);
+    }
+
+    public function dislikedCommentsForPost($postId)
+    {
+        return $this->hasManyThrough(CommentLike::class, Comment::class, 'id', 'comment_id')
+                    ->where('is_like', false)
+                    ->where('commentable_id', $postId)
+                    ->where('commentable_type', Post::class);
+    }
+
 }
