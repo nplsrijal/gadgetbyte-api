@@ -99,14 +99,14 @@ Route::prefix('v1/frontend')->group(function () {
 
     Route::get('patch', [PatchController::class, 'index']);
 
-    
+    Route::get('comments', [CommentController::class, 'index']);
+
 
     Route::middleware(['apiMiddleware','verify_header'])->group(function () {
         Route::post('post/{postId}/comments', [CommentController::class, 'storePostComment']);
         Route::post('product/{productId}/comments', [CommentController::class, 'storeProductComment']);
 
         Route::apiResource('bookmarks', UserBookmarkController::class);
-        Route::get('comments', [CommentController::class, 'index']);
         Route::delete('comments/{id}', [CommentController::class, 'destroy']);
     
         Route::get('comments/{id}/toggle-like', [CommentController::class, 'toggleLikeDislike']);
