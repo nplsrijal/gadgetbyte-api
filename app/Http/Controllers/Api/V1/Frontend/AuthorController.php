@@ -17,7 +17,7 @@ class AuthorController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/v1/authors",
+     *     path="/api/v1/frontend/authors",
      *     summary="Get a list of Authors",
      *     tags={"Authors"},
      *     security={{"bearer_token": {}}},
@@ -92,16 +92,16 @@ class AuthorController extends Controller
      */
      /**
      * @OA\Get(
-     *     path="/api/v1/authors/{id}",
+     *     path="/api/v1/frontend/authors/{slug}",
      *     summary="Get a specific author",
      *     tags={"Authors"},
      *     security={{"bearer_token": {}}},
      *     @OA\Parameter(
-     *         name="id",
+     *         name="slug",
      *         in="path",
-     *         description="The ID of the author to retrieve",
+     *         description="The Name of the author to retrieve",
      *         required=true,
-     *         @OA\Schema(type="integer")
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(
      *         response=200,
