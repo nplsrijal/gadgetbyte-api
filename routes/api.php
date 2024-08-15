@@ -109,7 +109,7 @@ Route::prefix('v1/frontend')->group(function () {
         Route::apiResource('bookmarks', UserBookmarkController::class);
         Route::delete('comments/{id}', [CommentController::class, 'destroy']);
     
-        Route::get('comments/{id}/toggle-like', [CommentController::class, 'toggleLikeDislike']);
+        Route::post('comments/{id}/toggle-like', [CommentController::class, 'toggleLikeDislike']);
     
     });
 

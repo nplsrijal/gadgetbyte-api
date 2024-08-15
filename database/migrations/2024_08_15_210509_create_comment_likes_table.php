@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('comment_id')->constrained()->onDelete('cascade');
-            $table->boolean('is_like')->default(true); // true for like, false for dislike
+            $table->boolean('is_like')->nullable(); // true for like, false for dislike
             $table->unique(['user_id', 'comment_id']);
             $table->userinfos();
             $table->archivedInfos();

@@ -888,6 +888,99 @@
                 ]
             }
         },
+        "/api/v1/frontend/authors": {
+            "get": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Get a list of Authors",
+                "operationId": "31ad02fed7646d9891a41840e1366f1e",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by firstname or lastname or email or authorname",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/frontend/authors/{slug}": {
+            "get": {
+                "tags": [
+                    "Authors"
+                ],
+                "summary": "Get a specific author",
+                "operationId": "bbb220494857646bfbddeadc7d691db0",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "The Name of the author to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
         "/api/v1/frontend/comments": {
             "get": {
                 "tags": [
@@ -1128,6 +1221,73 @@
                     },
                     "400": {
                         "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/comments/{id}": {
+            "delete": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Delete an Comment",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "141c0281d8acd74ab1c49cf193209b05",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the brand to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted comment",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Comment deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/CommentResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
                     }
                 },
                 "security": [
@@ -6156,6 +6316,33 @@
                                 "description": "The comment text",
                                 "type": "string",
                                 "example": "This is test"
+                            },
+                            "parent_id": {
+                                "description": "The parent's comment id (if comment reply to be done)",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "StoreLikeRequest": {
+                "title": "Like  Store Request",
+                "description": "Like  store request data",
+                "required": [
+                    "is_like"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "is_like": {
+                                "description": "true/false/null",
+                                "type": "string"
                             }
                         },
                         "type": "object"

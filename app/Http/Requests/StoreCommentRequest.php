@@ -16,6 +16,12 @@ namespace App\Http\Requests;
  *         description="The comment text",
  *         example="This is test"
  *     ),
+ *     @OA\Property(
+ *         property="parent_id",
+ *         type="integer",
+ *         description="The parent's comment id (if comment reply to be done)",
+ *         example="1"
+ *     ),
  * )
  */
 class StoreCommentRequest extends FormRequest
@@ -37,6 +43,7 @@ class StoreCommentRequest extends FormRequest
     {
         return [
             'body' => 'required|string',
+            'parent_id' => 'required|numeric|sometimes',
 
         ];
     }

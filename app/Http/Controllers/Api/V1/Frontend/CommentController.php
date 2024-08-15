@@ -12,6 +12,7 @@ use App\Models\Comment;
 use App\Models\CommentLike;
 
 use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\StoreLikeRequest;
 use App\Http\Resources\CommentCollection;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\CommentLikeResource;
@@ -235,6 +236,7 @@ class CommentController extends Controller
         $comment = $post->comments()->create([
             'body' => $request->body,
             'created_by' => $userId,
+            'parent_comment_id'=>($request->has('parent_id') && (int)$request->parent_id > 0)?$request->parent_id:0
         ]);
         return $this->success($comment, 'Comment Created Successfully', Response::HTTP_CREATED);
 
@@ -268,11 +270,19 @@ class CommentController extends Controller
      *     ),
      * )
      */
-    public function toggleLikeDislike(Request $request, $id)
+    public function toggleLikeDislike(StoreLikeRequest $request, $id)
     {
         $userId = $request->header('X-User-Id');
+        $validated = $request->validated();
+
 
         $comment = Comment::findOrFail($id);
+
+        $data=[
+            'user_id' => $userId,
+            'comment_id' => $id,
+            'is_like' => true 
+        ];
 
         // Find the existing like or dislike by the user on this comment
         $existingLike = CommentLike::where('user_id', $userId)
@@ -280,35 +290,28 @@ class CommentController extends Controller
                                     ->first();
 
         if ($existingLike) {
-            if ($existingLike->is_like) {
-                // If it was a like, change to dislike
-                $existingLike->is_like = false;
-                $existingLike->save();
-                $data=[
-                    'user_id' => $userId,
-                    'comment_id' => $id,
-                    'is_like' => false
-                ];
-                return $this->success($data, 'Comment Disliked Successfully', Response::HTTP_CREATED);
+            // if ($existingLike->is_like) {
+            //     // If it was a like, change to dislike
+            //     $existingLike->is_like = false;
+            //     $existingLike->save();
+            //     $data['is_like']=false;
+            //     return $this->success($data, 'Comment Disliked Successfully', Response::HTTP_CREATED);
 
-            } else {
-                // If it was a dislike, change to like
-                $existingLike->is_like = true;
+            // } else {
+            //     // If it was a dislike, change to like
+            //     $existingLike->is_like = true;
+            //     $existingLike->save();
+            //     $data['is_like']=true;
+
+            //     return $this->success($data, 'Comment Liked Successfully', Response::HTTP_CREATED);
+            // }
+                $existingLike->is_like = ($validated['is_like']=='none')?null:$validated['is_like'];
                 $existingLike->save();
-                $data=[
-                    'user_id' => $userId,
-                    'comment_id' => $id,
-                    'is_like' => true 
-                ];
-                return $this->success($data, 'Comment Liked Successfully', Response::HTTP_CREATED);
-            }
+                $data['is_like']=$validated['is_like'];
+                return $this->success($data, 'Comment Status Updated Successfully', Response::HTTP_CREATED);
         } else {
-            // If no like or dislike exists, create a new like
-            $data=[
-                'user_id' => $userId,
-                'comment_id' => $id,
-                'is_like' => true // default to like
-            ];
+            $data['is_like']=($validated['is_like']=='none')?null:$validated['is_like'];
+
             CommentLike::create($data);
             return $this->success($data, 'Comment Liked Successfully', Response::HTTP_CREATED);
         }
