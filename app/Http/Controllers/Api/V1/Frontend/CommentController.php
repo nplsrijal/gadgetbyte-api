@@ -284,13 +284,23 @@ class CommentController extends Controller
                 // If it was a like, change to dislike
                 $existingLike->is_like = false;
                 $existingLike->save();
-                return $this->success(new CommentLikeCollection($existingLike), 'Comment Disliked Successfully', Response::HTTP_CREATED);
+                $data=[
+                    'user_id' => $userId,
+                    'comment_id' => $id,
+                    'is_like' => false
+                ];
+                return $this->success($data, 'Comment Disliked Successfully', Response::HTTP_CREATED);
 
             } else {
                 // If it was a dislike, change to like
                 $existingLike->is_like = true;
                 $existingLike->save();
-                return $this->success(new CommentLikeCollection($existingLike), 'Comment Liked Successfully', Response::HTTP_CREATED);
+                $data=[
+                    'user_id' => $userId,
+                    'comment_id' => $id,
+                    'is_like' => true 
+                ];
+                return $this->success($data, 'Comment Liked Successfully', Response::HTTP_CREATED);
             }
         } else {
             // If no like or dislike exists, create a new like
