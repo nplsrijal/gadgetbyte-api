@@ -39,4 +39,9 @@ class Comment extends Model implements Auditable
         return $this->likes()->where('is_like', false)->count();
     }
 
+    public function replies()
+    {
+        return $this->hasMany(Comment::class, 'parent_comment_id')->orderBy('created_at', 'asc');
+    }
+
 }

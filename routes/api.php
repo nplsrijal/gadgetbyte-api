@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\V1\VendorController;
 use App\Http\Controllers\Api\V1\AttributeOptionController;
 use App\Http\Controllers\Api\V1\VariationController;
 use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\BlindCameraTestController;
 use App\Http\Controllers\Api\V1\Frontend\PostController as FPostController;
 use App\Http\Controllers\Api\V1\Frontend\ProductController as FProductController;
 use App\Http\Controllers\Api\V1\Frontend\CustomerController;
@@ -76,6 +77,7 @@ Route::prefix('v1')->middleware(['apiMiddleware','verify_header'])->group(functi
     Route::apiResource('attribute-options', AttributeOptionController::class);
     Route::apiResource('variations', VariationController::class);
     Route::apiResource('products', ProductController::class);
+    Route::apiResource('blind-camera-tests', BlindCameraTestController::class);
 
    
 
@@ -110,7 +112,8 @@ Route::prefix('v1/frontend')->group(function () {
         Route::delete('comments/{id}', [CommentController::class, 'destroy']);
     
         Route::post('comments/{id}/toggle-like', [CommentController::class, 'toggleLikeDislike']);
-    
+        Route::post('comments/{id}/report', [CommentController::class, 'reportComment']);
+
     });
 
    

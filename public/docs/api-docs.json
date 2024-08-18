@@ -594,6 +594,300 @@
                 ]
             }
         },
+        "/api/v1/blindcamera-tests": {
+            "get": {
+                "tags": [
+                    "BlindCameraTests"
+                ],
+                "summary": "Get a list of BlindCameraTests",
+                "operationId": "c7ab065e225ad2a5dad8436c957ed19d",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name  ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/BlindCameraTestResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "BlindCameraTests"
+                ],
+                "summary": "Create a new BlindCameraTest",
+                "operationId": "46fe17decec85dec0ea0370a8c33e8a7",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "BlindCameraTests data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreBlindCameraTestRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created menu",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BlindCameraTestResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/blindcamera-tests/{id}": {
+            "get": {
+                "tags": [
+                    "BlindCameraTests"
+                ],
+                "summary": "Get a specific menu",
+                "operationId": "d3b4bf92bbd0668c2d4bb38de8a7c19c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the menu to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BlindCameraTestResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "BlindCameraTests"
+                ],
+                "summary": "Update an existing menu",
+                "description": "Update the specified resource in storage.",
+                "operationId": "1056e32f5ccafcb0ca75c3daf99d7768",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the menu to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "BlindCameraTest data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateBlindCameraTestRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated menu",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BlindCameraTestResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "BlindCameraTests"
+                ],
+                "summary": "Delete an menu",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "03469fe4ee6ad244037fc8bfbef3e5c8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the menu to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "BlindCameraTest deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BlindCameraTestResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
         "/api/v1/brands": {
             "get": {
                 "tags": [
@@ -1187,12 +1481,12 @@
             }
         },
         "/api/v1/frontend/comments/{id}/toggle-like": {
-            "get": {
+            "post": {
                 "tags": [
                     "Comments Like/Dislike"
                 ],
                 "summary": "Like/Dislike Of Comments",
-                "operationId": "b22d09700ebb7510625b91532c2e472b",
+                "operationId": "1bd6699bad5967e70c882c72a54a0a2b",
                 "parameters": [
                     {
                         "name": "X-User-Id",
@@ -1214,6 +1508,53 @@
                                     "type": "array",
                                     "items": {
                                         "$ref": "#/components/schemas/CommentLikeResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/frontend/comments/{id}/report": {
+            "post": {
+                "tags": [
+                    "Comment Reports"
+                ],
+                "summary": "Report Of Comments",
+                "operationId": "959d370ee2361756fcb9ce20b708f80c",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CommentReportResource"
                                     }
                                 }
                             }
@@ -6258,6 +6599,53 @@
                     }
                 ]
             },
+            "StoreBlindCameraTestRequest": {
+                "title": "Blind Camera Test  Store Request",
+                "description": "Blind Camera Test  store request data",
+                "required": [
+                    "product_a_title",
+                    "product_b_title",
+                    "cover_image",
+                    "product_a_images",
+                    "product_b_images"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "product_a_title": {
+                                "description": "The display name of the product a",
+                                "type": "string",
+                                "example": "Apple Iphone 14"
+                            },
+                            "product_b_title": {
+                                "description": "The display name of the product b.",
+                                "type": "string",
+                                "example": "Samsung Galaxy S24"
+                            },
+                            "cover_image": {
+                                "description": "The image path ",
+                                "type": "string",
+                                "example": "https://img.gadgetbyte.com"
+                            },
+                            "product_a_images": {
+                                "description": "The Values in json",
+                                "type": "string",
+                                "example": ""
+                            },
+                            "product_b_images": {
+                                "description": "The Values in json",
+                                "type": "string",
+                                "example": ""
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "StoreBrandRequest": {
                 "title": "Brand  Store Request",
                 "description": "Brand  store request data",
@@ -6293,6 +6681,29 @@
                                 "description": "The Priority of Brand",
                                 "type": "integer",
                                 "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "StoreCommentReportRequest": {
+                "title": "Comment Report  Store Request",
+                "description": "Comment Report  store request data",
+                "required": [
+                    "description"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "description": {
+                                "description": "The report description",
+                                "type": "string",
+                                "example": "This is dummy data"
                             }
                         },
                         "type": "object"
@@ -7424,6 +7835,53 @@
                     }
                 ]
             },
+            "UpdateBlindCameraTestRequest": {
+                "title": "Blind Camera Test Update Request",
+                "description": "Blind Camera Test update request data",
+                "required": [
+                    "product_a_title",
+                    "product_b_title",
+                    "cover_image",
+                    "product_a_images",
+                    "product_b_images"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "product_a_title": {
+                                "description": "The display name of the product a",
+                                "type": "string",
+                                "example": "Apple Iphone 14"
+                            },
+                            "product_b_title": {
+                                "description": "The display name of the product b.",
+                                "type": "string",
+                                "example": "Samsung Galaxy S24"
+                            },
+                            "cover_image": {
+                                "description": "The image path ",
+                                "type": "string",
+                                "example": "https://img.gadgetbyte.com"
+                            },
+                            "product_a_images": {
+                                "description": "The Values in json",
+                                "type": "string",
+                                "example": ""
+                            },
+                            "product_b_images": {
+                                "description": "The Values in json",
+                                "type": "string",
+                                "example": ""
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "UpdateBrandRequest": {
                 "title": "Brand Update Request",
                 "description": "Brand  update request data",
@@ -8317,6 +8775,43 @@
                 },
                 "type": "object"
             },
+            "BlindCameraTestResource": {
+                "title": "Blind Camera Test Resource",
+                "description": "Blind Camera Test resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the blind camera test",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "product_a_title": {
+                        "description": "The display name of the product a",
+                        "type": "string",
+                        "example": "Apple Iphone 14"
+                    },
+                    "product_b_title": {
+                        "description": "The display name of the product b.",
+                        "type": "string",
+                        "example": "Samsung Galaxy S24"
+                    },
+                    "cover_image": {
+                        "description": "The image path ",
+                        "type": "string",
+                        "example": "https://img.gadgetbyte.com"
+                    },
+                    "product_a_images": {
+                        "description": "The Values in json",
+                        "type": "string",
+                        "example": ""
+                    },
+                    "product_b_images": {
+                        "description": "The Values in json",
+                        "type": "string",
+                        "example": ""
+                    }
+                },
+                "type": "object"
+            },
             "BrandResource": {
                 "title": "Brand Resource",
                 "description": "Brand resource representation",
@@ -8367,6 +8862,28 @@
                         "description": "The Id's  of the Comment.",
                         "type": "integer",
                         "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "CommentReportResource": {
+                "title": "Comment Report Resource",
+                "description": "Comment Report resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the comment's report",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "comment_id": {
+                        "description": "The Id of the commented comment id",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "description": {
+                        "description": "The report text done by user",
+                        "type": "string",
+                        "example": "This is dummy text."
                     }
                 },
                 "type": "object"

@@ -10,13 +10,17 @@ use App\Models\Product;
 use App\Models\Post;
 use App\Models\Comment;
 use App\Models\CommentLike;
+use App\Models\CommenReport;
 
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\StoreLikeRequest;
+use App\Http\Requests\StoreCommentReportRequest;
 use App\Http\Resources\CommentCollection;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\CommentLikeResource;
 use App\Http\Resources\CommentLikeCollection;
+use App\Http\Resources\CommentReportResource;
+use App\Http\Resources\CommentReportCollection;
 
 use DB;
 
@@ -72,58 +76,52 @@ class CommentController extends Controller
      */
     public function index(Request $request)
     {
-        
-
         $perPage = $request->input('per_page', 20); // Default to 20 if not provided
-
-        // Initialize the query for comments
+    
+        // Initialize the query for parent comments (those with parent_comment_id = 0)
         $query = Comment::query()
-        ->withCount([
-            'likes as likes_count' => function ($query) {
-                $query->where('is_like', true);
-            },
-            'likes as dislikes_count' => function ($query) {
-                $query->where('is_like', false);
-            },
-        ]);
-        $query->join('users','users.id','=','comments.created_by')
-        ->addSelect('comments.*', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name"));
-
-        // Apply search filter if 'q' parameter is provided
-        // if ($request->has('q')) {
-        //     $searchTerm = strtoupper($request->input('q'));
-        //     $query->where(function ($query) use ($searchTerm) {
-        //         $query->where('body', 'ilike', '%' . $searchTerm . '%');
-        //     });
-        // }
-
+            ->where('parent_comment_id', 0) // Only get top-level comments
+            ->withCount([
+                'likes as likes_count' => function ($query) {
+                    $query->where('is_like', true);
+                },
+                'likes as dislikes_count' => function ($query) {
+                    $query->where('is_like', false);
+                },
+            ])
+            ->with(['user', 'replies' => function ($query) {
+                $query->withCount([
+                    'likes as likes_count' => function ($query) {
+                        $query->where('is_like', true);
+                    },
+                    'likes as dislikes_count' => function ($query) {
+                        $query->where('is_like', false);
+                    },
+                ]);
+            }]);
+    
+        $query->join('users', 'users.id', '=', 'comments.created_by')
+            ->addSelect('comments.*', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name"));
+    
         // Filter by commentable_type (e.g., Post or Product) if provided
         if ($request->has('type')) {
             $type = $request->input('type');
-            if($type=='post')
-            {
-                $query->where('commentable_type', 'App\Models\Post');
-
-            }
-            else if($type=='product')
-            {
-                $query->where('commentable_type', 'App\Models\Product');
-
-            }
+            $query->where('commentable_type', $type === 'post' ? 'App\Models\Post' : 'App\Models\Product');
         }
-
+    
         // Filter by commentable_id (specific post or product) if provided
         if ($request->has('id')) {
             $commentableId = $request->input('id');
             $query->where('commentable_id', $commentableId);
         }
-
+    
         // Paginate the results
         $data = $query->paginate($perPage)->withPath($request->getPathInfo());
-
-        // Return the paginated and filtered comments
+    
+        // Return the paginated and filtered comments with replies nested
         return $this->success(new CommentCollection($data));
     }
+    
 
 
     /**
@@ -244,7 +242,7 @@ class CommentController extends Controller
 
 
     /**
-     * @OA\Get(
+     * @OA\Post(
      *     path="/api/v1/frontend/comments/{id}/toggle-like",
      *     summary="Like/Dislike Of Comments",
      *     tags={"Comments Like/Dislike"},
@@ -315,6 +313,56 @@ class CommentController extends Controller
             CommentLike::create($data);
             return $this->success($data, 'Comment Liked Successfully', Response::HTTP_CREATED);
         }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/v1/frontend/comments/{id}/report",
+     *     summary="Report Of Comments",
+     *     tags={"Comment Reports"},
+     *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
+     *     @OA\Parameter(
+     *         name="X-User-Id",
+     *         in="header",
+     *         description="User ID for authentication",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/CommentReportResource"))
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     ),
+     * )
+     */
+    public function reportComment(StoreCommentReportRequest $request, $commentId)
+    {
+        
+        $userId = $request->header('X-User-Id');
+        $validated = $request->validated();
+
+
+        // Find the comment by ID
+        $data = Comment::find($commentId);
+
+        // Check if the comment was not found
+        if (!$data) {
+            return response()->json(['error' => 'Comment not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $validated['created_by'] = $userId;
+        
+        $data = CommentReport::create($validated);
+        return $this->success(new CommentReportResource($data), 'Comment Report created', Response::HTTP_CREATED);
+
+
     }
 
     /**
