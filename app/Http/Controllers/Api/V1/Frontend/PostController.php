@@ -173,20 +173,20 @@ class PostController extends Controller
             $data->categories=$data->categories;
             $data->reviews=$data->reviews;
              // Get the authenticated user ID from the header
-             $userId = $request->header('X-User-Id');
+            //  $userId = $request->header('X-User-Id');
 
-             $likedArray = [];
-             $dislikedArray = [];
+            //  $likedArray = [];
+            //  $dislikedArray = [];
 
-             if ($userId) {
-                 $user = User::find($userId);
+            //  if ($userId) {
+            //      $user = User::find($userId);
 
-                 $likedArray = $user->likedCommentsForPost($data->id)->pluck('comment_id')->toArray();
-                 $dislikedArray = $user->dislikedCommentsForPost($data->id)->pluck('comment_id')->toArray();
-             }
+            //      $likedArray = $user->likedCommentsForPost($data->id)->pluck('comment_id')->toArray();
+            //      $dislikedArray = $user->dislikedCommentsForPost($data->id)->pluck('comment_id')->toArray();
+            //  }
 
-            $data->comment_liked_array = $likedArray;
-            $data->comment_disliked_array = $dislikedArray;
+            // $data->comment_liked_array = $likedArray;
+            // $data->comment_disliked_array = $dislikedArray;
             return $this->success(new FrontendPostResource($data));
         } else {
             return $this->error('Post not found', Response::HTTP_NOT_FOUND);

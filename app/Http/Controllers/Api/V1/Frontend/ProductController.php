@@ -176,26 +176,26 @@ class ProductController extends Controller
          if ($data) {
            
            
-           // return $this->success(new FrontendProductResource($data));
+            return $this->success(new FrontendProductResource($data));
            // Get the authenticated user ID from the header
-                $userId = $request->header('X-User-Id');
+                // $userId = $request->header('X-User-Id');
 
-                $likedArray = [];
-                $dislikedArray = [];
+                // $likedArray = [];
+                // $dislikedArray = [];
 
-                if ($userId) {
-                    $user = User::find($userId);
+                // if ($userId) {
+                //     $user = User::find($userId);
 
-                    $likedArray = $user->likedCommentsForProduct($data->id)->pluck('comment_id')->toArray();
-                    $dislikedArray = $user->dislikedCommentsForProduct($data->id)->pluck('comment_id')->toArray();
-                }
+                //     $likedArray = $user->likedCommentsForProduct($data->id)->pluck('comment_id')->toArray();
+                //     $dislikedArray = $user->dislikedCommentsForProduct($data->id)->pluck('comment_id')->toArray();
+                // }
 
-                // Add liked_array and disliked_array to the response data
-                return $this->success([
-                    'product' => new FrontendProductResource($data),
-                    'comment_liked_array' => $likedArray,
-                    'comment_disliked_array' => $dislikedArray
-                ]);
+                // // Add liked_array and disliked_array to the response data
+                // return $this->success([
+                //     'product' => new FrontendProductResource($data),
+                //     'comment_liked_array' => $likedArray,
+                //     'comment_disliked_array' => $dislikedArray
+                // ]);
         } else {
             return $this->error('Product not found', Response::HTTP_NOT_FOUND);
         }

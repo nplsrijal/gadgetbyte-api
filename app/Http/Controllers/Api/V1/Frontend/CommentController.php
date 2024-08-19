@@ -11,6 +11,8 @@ use App\Models\Post;
 use App\Models\Comment;
 use App\Models\CommentLike;
 use App\Models\CommentReport;
+use App\Models\User;
+
 
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\StoreLikeRequest;
@@ -75,21 +77,23 @@ class CommentController extends Controller
      * )
      */
     public function index(Request $request)
-    {
-        $perPage = $request->input('per_page', 20); // Default to 20 if not provided
-    
-        // Initialize the query for parent comments (those with parent_comment_id = 0)
-        $query = Comment::query()
-            ->where('parent_comment_id', 0) // Only get top-level comments
-            ->withCount([
-                'likes as likes_count' => function ($query) {
-                    $query->where('is_like', true);
-                },
-                'likes as dislikes_count' => function ($query) {
-                    $query->where('is_like', false);
-                },
-            ])
-            ->with(['user', 'replies' => function ($query) {
+{
+    $perPage = $request->input('per_page', 20); // Default to 20 if not provided
+
+    // Initialize the query for parent comments (those with parent_comment_id = 0)
+    $query = Comment::query()
+        ->where('parent_comment_id', 0) // Only get top-level comments
+        ->withCount([
+            'likes as likes_count' => function ($query) {
+                $query->where('is_like', true);
+            },
+            'likes as dislikes_count' => function ($query) {
+                $query->where('is_like', false);
+            },
+        ])
+        ->with([
+            'user', // Load the user for the parent comment
+            'replies' => function ($query) {
                 $query->withCount([
                     'likes as likes_count' => function ($query) {
                         $query->where('is_like', true);
@@ -97,30 +101,62 @@ class CommentController extends Controller
                     'likes as dislikes_count' => function ($query) {
                         $query->where('is_like', false);
                     },
-                ]);
-            }]);
-    
-        $query->join('users', 'users.id', '=', 'comments.created_by')
-            ->addSelect('comments.*', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name"));
-    
-        // Filter by commentable_type (e.g., Post or Product) if provided
-        if ($request->has('type')) {
-            $type = $request->input('type');
-            $query->where('commentable_type', $type === 'post' ? 'App\Models\Post' : 'App\Models\Product');
-        }
-    
-        // Filter by commentable_id (specific post or product) if provided
-        if ($request->has('id')) {
-            $commentableId = $request->input('id');
-            $query->where('commentable_id', $commentableId);
-        }
-    
-        // Paginate the results
-        $data = $query->paginate($perPage)->withPath($request->getPathInfo());
-    
-        // Return the paginated and filtered comments with replies nested
-        return $this->success(new CommentCollection($data));
+                ])
+                ->with(['user']) // Load the user for each reply
+                ->join('users', 'users.id', '=', 'comments.created_by')
+                ->addSelect('comments.*', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name"));
+            }
+        ]);
+
+    $query->join('users', 'users.id', '=', 'comments.created_by')
+        ->addSelect('comments.*', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name"));
+
+    // Filter by commentable_type (e.g., Post or Product) if provided
+    if ($request->has('type')) {
+        $type = $request->input('type');
+        $query->where('commentable_type', $type === 'post' ? 'App\Models\Post' : 'App\Models\Product');
     }
+
+    // Filter by commentable_id (specific post or product) if provided
+    if ($request->has('id')) {
+        $commentableId = $request->input('id');
+        $query->where('commentable_id', $commentableId);
+    }
+
+    // Paginate the results
+    $data = $query->paginate($perPage)->withPath($request->getPathInfo());
+
+    // Return the paginated and filtered comments with replies nested
+    //return $this->success(new CommentCollection($data));
+                $userId = $request->header('X-User-Id');
+
+                $likedArray = [];
+                $dislikedArray = [];
+
+                if ($userId && $request->has('id')) {
+                    $user = User::find($userId);
+
+                    if($request->input('type')=='post')
+                    {
+                        $likedArray = $user->likedCommentsForPost($request->input('id'))->pluck('comment_id')->toArray();
+                        $dislikedArray = $user->dislikedCommentsForPost($request->input('id'))->pluck('comment_id')->toArray();
+                    }
+                    else
+                    {
+                        $likedArray = $user->likedCommentsForProduct($request->input('id'))->pluck('comment_id')->toArray();
+                        $dislikedArray = $user->dislikedCommentsForProduct($request->input('id'))->pluck('comment_id')->toArray();
+                    }
+                    
+                }
+
+                // Add liked_array and disliked_array to the response data
+                return $this->success([
+                    'product' => new FrontendProductResource($data),
+                    'comment_liked_array' => $likedArray,
+                    'comment_disliked_array' => $dislikedArray
+                ]);
+}
+
     
 
 
