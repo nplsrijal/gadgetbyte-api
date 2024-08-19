@@ -358,6 +358,7 @@ class CommentController extends Controller
         }
 
         $validated['created_by'] = $userId;
+        $validated['comment_id'] = $commentId;
         
         $data = CommentReport::create($validated);
         return $this->success(new CommentReportResource($data), 'Comment Report created', Response::HTTP_CREATED);
