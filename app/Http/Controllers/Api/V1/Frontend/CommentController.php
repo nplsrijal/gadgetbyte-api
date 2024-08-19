@@ -151,7 +151,7 @@ class CommentController extends Controller
 
                 // Add liked_array and disliked_array to the response data
                 return $this->success([
-                    'product' => new FrontendProductResource($data),
+                    'comment' => new CommentCollection($data),
                     'comment_liked_array' => $likedArray,
                     'comment_disliked_array' => $dislikedArray
                 ]);
