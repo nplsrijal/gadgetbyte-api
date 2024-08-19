@@ -10,7 +10,7 @@ use App\Models\Product;
 use App\Models\Post;
 use App\Models\Comment;
 use App\Models\CommentLike;
-use App\Models\CommenReport;
+use App\Models\CommentReport;
 
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\StoreLikeRequest;
