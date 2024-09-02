@@ -100,6 +100,7 @@ Route::prefix('v1/frontend')->group(function () {
     Route::apiResource('authors', AuthorController::class);
 
     Route::get('patch', [PatchController::class, 'index']);
+    Route::get('product_test', [PatchController::class, 'product']);
 
     Route::get('comments', [CommentController::class, 'index']);
 

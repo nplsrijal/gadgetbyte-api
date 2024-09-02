@@ -195,5 +195,49 @@ class PatchController extends Controller
 
     }
 
+    public function product()
+    {
+        $review_data = DB::table('product_wp')->where('wp_id','>','121944')->where('wp_id','<','122000')->orderBy('wp_id', 'asc')->get();
+
+        foreach($review_data as $data)
+        {
+            //var_Dump($data->productattribute);
+            // $data_attr = json_decode($data->productattribute, true);
+            // var_dump($data_attr);exit;
+            $a_serializedData = stripslashes($data->productattribute);
+
+
+            $attributes = unserialize($a_serializedData);
+           // var_Dump($attributes);exit;
+
+            $product=$data->post_name;
+            $productAttributes = [];
+            foreach ($attributes as $taxonomy => $attribute) {
+                $productAttributes = $this->extracted($taxonomy, $data->wp_id, $attribute, $productAttributes);
+            }
+            $data->productAttribute = $productAttributes;
+            unset($data->productattribute);
+        }
+        echo json_encode($review_data);exit;
+    }
+
+    public function extracted(int|string $taxonomy, int $product, mixed $attribute, array $productAttributes): array
+    {
+        $terms = DB::table('taxanomy_wp')
+            
+            ->where('taxonomy', $taxonomy)
+            ->where('object_id', $product)
+            ->select('name')
+            ->get();
+        if (!empty($terms)) {
+            $attribute['value'] = [];
+            foreach ($terms as $term) {
+                $attribute['value'][] = $term->name;
+            }
+        }
+        $productAttributes[] = $attribute;
+        return $productAttributes;
+    }
+
 
 }
