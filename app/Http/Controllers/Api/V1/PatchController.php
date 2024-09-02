@@ -204,21 +204,89 @@ class PatchController extends Controller
             //var_Dump($data->productattribute);
             // $data_attr = json_decode($data->productattribute, true);
             // var_dump($data_attr);exit;
-            $a_serializedData = stripslashes($data->productattribute);
+            //$a_serializedData = stripslashes($data->productattribute);
 
 
-            $attributes = unserialize($a_serializedData);
+            //$attributes = unserialize($a_serializedData);
            // var_Dump($attributes);exit;
 
             $product=$data->post_name;
-            $productAttributes = [];
-            foreach ($attributes as $taxonomy => $attribute) {
-                $productAttributes = $this->extracted($taxonomy, $data->wp_id, $attribute, $productAttributes);
-            }
-            $data->productAttribute = $productAttributes;
+            //$productAttributes = [];
+            // foreach ($attributes as $taxonomy => $attribute) {
+            //     $productAttributes = $this->extracted($taxonomy, $data->wp_id, $attribute, $productAttributes);
+            // }
+            //$data->productAttribute = $productAttributes;
+            $data->specs = $this->getSpecsForProduct($data->wp_id);
             unset($data->productattribute);
         }
         echo json_encode($review_data);exit;
+    }
+    public function getSpecsForProduct($productId)
+    {
+        $review_data = DB::table('specification_wp')->where('post_id',$productId)->get();
+
+       
+
+        $results = $review_data;
+
+        $groupedResults = [];
+        foreach ($results as $row) {
+            if (preg_match('/specifications_(\d+)_sub_specifications_(\d+)_(.+)/', $row->meta_key, $matches)) {
+                $groupIndex = $matches[1];
+                $subIndex = $matches[2];
+                $attribute = $matches[3];
+
+                if (!isset($groupedResults[$groupIndex])) {
+                    $groupedResults[$groupIndex] = [];
+                }
+
+                if (!isset($groupedResults[$groupIndex][$subIndex])) {
+                    $groupedResults[$groupIndex][$subIndex] = [];
+                }
+
+                // Check if the attribute starts with 'spec_value'
+                if (strpos($attribute, 'spec_value') === 0) {
+                    // If it does, add the meta_value to an array under the 'spec_values' key
+                    if (strpos($row->meta_value, 'a:') === 0) {
+                        
+                    } else {
+                        $groupedResults[$groupIndex][$subIndex]['specs_child'][] = $row->meta_value;
+                    }
+                } else {
+                    $groupedResults[$groupIndex][$subIndex][$attribute.'_child'] = $row->meta_value;
+                }
+            } elseif (preg_match('/specifications_(\d+)_specifications_group_title/', $row->meta_key, $matches)) {
+                $groupIndex = $matches[1];
+                $groupedResults[$groupIndex]['group_title'] = $row->meta_value;
+            }
+        }
+
+        // Convert the groupedResults object into an array
+        $groupedResults = json_decode(json_encode($groupedResults), true);
+
+        // Convert the associative array to an indexed array and sort it
+        $groupedResults = array_values($groupedResults);
+        sort($groupedResults);
+
+        // Convert the 'specs' object into an array
+        $specsArray = [];
+        foreach ($groupedResults as $key => $value) {
+            $specsArray[] = $value;
+        }
+
+        // Convert the 'specs' object into an array
+        $finalArray = [];
+        foreach ($specsArray as $key => $value) {
+            $groupValues = [];
+            foreach ($value as $k => $v) {
+                if ($k !== 'group_title') {
+                    $groupValues[] = $v;
+                }
+            }
+            $finalArray[] = ['attribute_master' => $value['group_title'], 'attribute_value' => $groupValues];
+        }
+
+        return $finalArray;
     }
 
     public function extracted(int|string $taxonomy, int $product, mixed $attribute, array $productAttributes): array
