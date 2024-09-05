@@ -207,7 +207,7 @@ class MediaController extends Controller
      * @OA\Put(
      *     path="/api/v1/medias/{id}",
      *     summary="Update an existing media",
-     *     tags={"Menus"},
+     *     tags={"Medias"},
      *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
      *     @OA\Parameter(
      *         name="id",

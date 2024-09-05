@@ -223,7 +223,7 @@ class PatchController extends Controller
     }
     public function getSpecsForProduct($productId)
     {
-        $review_data = DB::table('specification_wp')->where('post_id',$productId)->get();
+        $review_data = DB::table('specification_wp')->where('post_id',$productId)->orderBy('meta_key', 'asc')->get();
 
        
 
@@ -261,22 +261,16 @@ class PatchController extends Controller
             }
         }
 
-        // Convert the groupedResults object into an array
-        $groupedResults = json_decode(json_encode($groupedResults), true);
-
+      
         // Convert the associative array to an indexed array and sort it
         $groupedResults = array_values($groupedResults);
-        sort($groupedResults);
 
-        // Convert the 'specs' object into an array
-        $specsArray = [];
-        foreach ($groupedResults as $key => $value) {
-            $specsArray[] = $value;
-        }
+       
 
         // Convert the 'specs' object into an array
         $finalArray = [];
-        foreach ($specsArray as $key => $value) {
+        foreach ($groupedResults as $key => $value) {
+           // var_dump($key,$value);
             $groupValues = [];
             foreach ($value as $k => $v) {
                 if ($k !== 'group_title') {
