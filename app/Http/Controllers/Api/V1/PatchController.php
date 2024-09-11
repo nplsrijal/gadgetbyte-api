@@ -220,6 +220,7 @@ class PatchController extends Controller
             $data->child = $this->getProductVariant($data->wp_id);
 
             unset($data->productattribute);
+            
         }
         echo json_encode($review_data);exit;
     }
