@@ -217,6 +217,8 @@ class PatchController extends Controller
             // }
             //$data->productAttribute = $productAttributes;
             $data->specs = $this->getSpecsForProduct($data->wp_id);
+            $data->child = $this->getProductVariant($data->wp_id);
+
             unset($data->productattribute);
         }
         echo json_encode($review_data);exit;
@@ -299,6 +301,77 @@ class PatchController extends Controller
         }
         $productAttributes[] = $attribute;
         return $productAttributes;
+    }
+    public function getProductVariant($productId)
+    {
+        $query = DB::table('variant_wp')
+            ->where('wp_id', $productId);
+
+        $results = $query->get();
+
+        $brandData = DB::table('brand_wp')
+            ->first();
+        $a_serializedData = stripslashes($brandData->post_content);
+       
+
+    // $data_attr = json_decode($a_serializedData, true);
+
+        $brandChoices = unserialize($a_serializedData)['choices'];
+
+        $groupedResults = [];
+        foreach ($results as $row) {
+            if (preg_match('/external_prices_group_(\d+)_variant(?:s_(\d+))?_(.+)/', $row->meta_key, $matches)) {
+                $groupIndex = $matches[1];
+                $variantIndex = isset($matches[2]) ? $matches[2] : 0; // Use 0 as the default variant index
+                $attribute = $matches[3];
+
+                if (!isset($groupedResults[$groupIndex])) {
+                    $groupedResults[$groupIndex] = [];
+                }
+
+                if (!isset($groupedResults[$groupIndex][$variantIndex])) {
+                    $groupedResults[$groupIndex][$variantIndex] = [];
+                }
+
+                if (!isset($groupedResults[$groupIndex][$variantIndex][$attribute])) {
+                    $groupedResults[$groupIndex][$variantIndex][$attribute] = [];
+                }
+
+                $groupedResults[$groupIndex][$variantIndex][$attribute][] = $row->meta_value;
+
+                if ($attribute == 'brand' && isset($brandChoices[end($groupedResults[$groupIndex][$variantIndex][$attribute])])) {
+                    end($groupedResults[$groupIndex][$variantIndex][$attribute]);
+                    $lastKey = key($groupedResults[$groupIndex][$variantIndex][$attribute]);
+                    $groupedResults[$groupIndex][$variantIndex][$attribute][$lastKey] = $brandChoices[$groupedResults[$groupIndex][$variantIndex][$attribute][$lastKey]];
+                }
+            }
+        }
+
+        // Convert the grouped results to a more readable format
+        $readableResults = [];
+        foreach ($groupedResults as $groupIndex => $variants) {
+            $group = ['group' => $groupIndex, 'variants' => []];
+            foreach ($variants as $variantIndex => $attributes) {
+                $variant = ['variant' => $variantIndex];
+                foreach ($attributes as $attribute => $values) {
+                    if ($attribute == 'size' || $attribute == 'size_storage') {
+                        // Fetch the actual term value from the 'wp_terms' table
+                        if (!empty($values) && isset($values[0])) {
+                            $termValue = DB::table('terms_wp')
+                                ->where('term_id', $values[0])
+                                ->value('name');
+                            $variant[$attribute] = $termValue;
+                        }
+                    }  else {
+                        $variant[$attribute] = implode(', ', $values);
+                    }
+                }
+                $group['variants'][] = $variant;
+            }
+            $readableResults[] = $group;
+        }
+
+        return $readableResults;
     }
 
 
