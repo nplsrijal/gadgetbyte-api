@@ -197,7 +197,7 @@ class PatchController extends Controller
 
     public function product()
     {
-        $review_data = DB::table('product_wp')->where('wp_id','>','121944')->where('wp_id','<','122000')->orderBy('wp_id', 'asc')->get();
+        $review_data = DB::table('product_wp')->where('wp_id','159652')->orderBy('wp_id', 'asc')->get();
 
         foreach($review_data as $data)
         {
@@ -220,7 +220,7 @@ class PatchController extends Controller
             $data->child = $this->getProductVariant($data->wp_id);
 
             unset($data->productattribute);
-            
+
         }
         echo json_encode($review_data);exit;
     }
