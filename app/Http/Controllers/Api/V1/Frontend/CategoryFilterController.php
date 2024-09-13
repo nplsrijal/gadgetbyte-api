@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers\Api\V1\Frontend;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\V1\Controller;
+
 use App\Models\Attribute;
 use App\Models\AttributeOption;
+use App\Models\CategoryShowcase;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+
 use App\Http\Resources\AttributeCollection;
 use App\Http\Resources\AttributeResource;
+use App\Http\Resources\CategoryShowCaseCollection;
+use App\Http\Resources\CategoryShowCaseResource;
 
 
 class CategoryFilterController extends Controller
