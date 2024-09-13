@@ -1182,6 +1182,300 @@
                 ]
             }
         },
+        "/api/v1/category-showcases": {
+            "get": {
+                "tags": [
+                    "CategoryShowcases"
+                ],
+                "summary": "Get a list of CategoryShowcases",
+                "operationId": "a720612367befcda3e3ec7e80cc36f86",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CategoryShowCaseResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "CategoryShowcases"
+                ],
+                "summary": "Create a new CategoryShowcase",
+                "operationId": "39ce66a8b338287212a4ee658e962e63",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "CategoryShowcases data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreCategoryShowCaseRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created vendor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryShowCaseResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/category-showcases/{id}": {
+            "get": {
+                "tags": [
+                    "CategoryShowcases"
+                ],
+                "summary": "Get a specific vendor",
+                "operationId": "c51e13db83bac8eb4f26af94e710275c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the vendor to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryShowCaseResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "CategoryShowcases"
+                ],
+                "summary": "Update an existing vendor",
+                "description": "Update the specified resource in storage.",
+                "operationId": "0d1538dc17ce707cec89bafae366aeef",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the vendor to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "CategoryShowcase data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateCategoryShowCaseRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully updated vendor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CategoryShowCaseResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "CategoryShowcases"
+                ],
+                "summary": "Delete an vendor",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "b767645a9fbd98d11b8ce59a248089e3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the vendor to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted vendor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "CategoryShowcase deleted successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/CategoryShowCaseResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
         "/api/v1/frontend/authors": {
             "get": {
                 "tags": [
@@ -1266,6 +1560,49 @@
                     },
                     "404": {
                         "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/category-side-filters": {
+            "get": {
+                "tags": [
+                    "Side Filter Categories"
+                ],
+                "summary": "Get a list of Categories",
+                "operationId": "efe0379e4bb4bbd7d91c8699f7db351d",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by camera/laptop/mobile",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PostCategoryResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
                     }
                 },
                 "security": [
@@ -2457,7 +2794,7 @@
             },
             "put": {
                 "tags": [
-                    "Menus"
+                    "Medias"
                 ],
                 "summary": "Update an existing media",
                 "description": "Update the specified resource in storage.",
@@ -6687,6 +7024,41 @@
                     }
                 ]
             },
+            "StoreCategoryShowCaseRequest": {
+                "title": "Category ShowCase Store Request",
+                "description": "Category ShowCase store request data",
+                "required": [
+                    "category_id",
+                    "is_active",
+                    "order_by"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "category_id": {
+                                "description": "The Category Id of the Product-category",
+                                "type": "integer",
+                                "example": "1"
+                            },
+                            "is_active": {
+                                "description": "Active/Inactive",
+                                "type": "string",
+                                "example": "Y"
+                            },
+                            "order_by": {
+                                "description": "The Priority of Category",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "StoreCommentReportRequest": {
                 "title": "Comment Report  Store Request",
                 "description": "Comment Report  store request data",
@@ -7923,6 +8295,41 @@
                     }
                 ]
             },
+            "UpdateCategoryShowCaseRequest": {
+                "title": "Category ShowCase Update Request",
+                "description": "Category ShowCase update request data",
+                "required": [
+                    "category_id",
+                    "is_active",
+                    "order_by"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "category_id": {
+                                "description": "The Category Id of the Product-category",
+                                "type": "integer",
+                                "example": "1"
+                            },
+                            "is_active": {
+                                "description": "Active/Inactive",
+                                "type": "string",
+                                "example": "Y"
+                            },
+                            "order_by": {
+                                "description": "The Priority of Category",
+                                "type": "integer",
+                                "example": "1"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
             "UpdateMediaRequest": {
                 "title": "Media  Update Request",
                 "description": "Media  update request data",
@@ -8838,6 +9245,33 @@
                     },
                     "order_by": {
                         "description": "The Priority of Brand",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "CategoryShowCaseResource": {
+                "title": "Category ShowCase Resource",
+                "description": "Category ShowCase resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique id of the vendor",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "category_id": {
+                        "description": "The Category Id of the Product-category",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "is_active": {
+                        "description": "Active/Inactive",
+                        "type": "string",
+                        "example": "Y"
+                    },
+                    "order_by": {
+                        "description": "The Priority of Category",
                         "type": "integer",
                         "example": "1"
                     }

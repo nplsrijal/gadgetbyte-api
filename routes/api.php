@@ -24,12 +24,14 @@ use App\Http\Controllers\Api\V1\AttributeOptionController;
 use App\Http\Controllers\Api\V1\VariationController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\BlindCameraTestController;
+use App\Http\Controllers\Api\V1\CategoryShowcaseController;
 use App\Http\Controllers\Api\V1\Frontend\PostController as FPostController;
 use App\Http\Controllers\Api\V1\Frontend\ProductController as FProductController;
 use App\Http\Controllers\Api\V1\Frontend\CustomerController;
 use App\Http\Controllers\Api\V1\Frontend\UserBookmarkController;
 use App\Http\Controllers\Api\V1\Frontend\CommentController;
 use App\Http\Controllers\Api\V1\Frontend\AuthorController;
+use App\Http\Controllers\Api\V1\Frontend\CategoryFilterController;
 
 
 use Illuminate\Http\Request;
@@ -78,6 +80,7 @@ Route::prefix('v1')->middleware(['apiMiddleware','verify_header'])->group(functi
     Route::apiResource('variations', VariationController::class);
     Route::apiResource('products', ProductController::class);
     Route::apiResource('blind-camera-tests', BlindCameraTestController::class);
+    Route::apiResource('category-showcases', CategoryShowcaseController::class);
 
    
 
@@ -103,6 +106,7 @@ Route::prefix('v1/frontend')->group(function () {
     Route::get('product_test', [PatchController::class, 'product']);
 
     Route::get('comments', [CommentController::class, 'index']);
+    Route::get('category-side-filters', [CategoryFilterController::class, 'index']);
 
 
     Route::middleware(['apiMiddleware','verify_header'])->group(function () {
