@@ -60,4 +60,58 @@ class CategoryFilterController extends Controller
         return $this->success(new AttributeCollection($data));
 
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/frontend/category-showcases",
+     *     summary="Get a list of CategoryShowcases",
+     *     tags={"Frontend CategoryShowcases"},
+     *     security={{"bearer_token": {}}},
+     *     @OA\Parameter(
+     *         name="q",
+     *         in="query",
+     *         description="Search term for filtering by name ",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Number of items per page (optional, default: 20)",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=20)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/CategoryShowCaseResource"))
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     ),
+     * )
+     */
+    public function categorybar(Request $request)
+    {
+        $perPage=$request->per_page;
+            if(empty($perPage)){
+                $perPage=20;
+            }
+            $query = CategoryShowcase::query();
+            if ($request->has('q')) {
+                $searchTerm = strtoupper($request->input('q'));
+                $query->where(function ($query) use ($searchTerm) {
+                    $query->where('name', 'ilike', '%' . $searchTerm . '%');
+
+
+                });
+            }
+
+
+            $data = $query->paginate($perPage)->withPath($request->getPathInfo());
+ 
+         return $this->success(new CategoryShowCaseCollection($data));
+
+    }
 }

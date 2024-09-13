@@ -107,6 +107,7 @@ Route::prefix('v1/frontend')->group(function () {
 
     Route::get('comments', [CommentController::class, 'index']);
     Route::get('category-side-filters', [CategoryFilterController::class, 'index']);
+    Route::get('category-showcases', [CategoryFilterController::class, 'categorybar']);
 
 
     Route::middleware(['apiMiddleware','verify_header'])->group(function () {
