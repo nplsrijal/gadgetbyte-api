@@ -21,7 +21,7 @@ class CategoryFilterController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/v1/category-side-filters",
+     *     path="/api/v1/frontend/category-side-filters",
      *     summary="Get a list of Categories",
      *     tags={"Side Filter Categories"},
      *     security={{"bearer_token": {}}},
