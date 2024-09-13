@@ -50,7 +50,6 @@ class CategoryFilterController extends Controller
         $query = Attribute::query();
        
             $query->where('name',$request->input('q'));
-            $query->orderBy('order_by');
             $data=$query->get();
             foreach ($data as $key => $menu) {
                 $subQuery = AttributeOption::query();
@@ -105,6 +104,8 @@ class CategoryFilterController extends Controller
                 $perPage=20;
             }
             $query = CategoryShowcase::query();
+            $query->orderBy('order_by');
+
             if ($request->has('q')) {
                 $searchTerm = strtoupper($request->input('q'));
                 $query->where(function ($query) use ($searchTerm) {
