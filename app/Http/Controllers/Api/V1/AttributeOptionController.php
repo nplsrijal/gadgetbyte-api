@@ -13,6 +13,8 @@ use App\Http\Requests\StoreAttributeOptionRequest;
 use App\Http\Requests\UpdateAttributeOptionRequest;
 use App\Http\Requests\StoreFilterAttributeOptionRequest;
 
+use DB;
+
 
 class AttributeOptionController extends Controller
 {
@@ -348,12 +350,27 @@ class AttributeOptionController extends Controller
         $attribute['name']=ucwords(str_replace('-',' ',$validated['slug']));
         $attribute['slug']=$validated['slug'];
         $attribute['is_active']='Y';
+
+          // Begin database transaction
+          DB::beginTransaction();
+
         $data = Attribute::create($attribute);
         unset($validated['slug']);
         $validated['attribute_id']=$data->id;
         $data = AttributeOption::create($validated);
+
+        // Check database transaction
+        $transactionStatus = DB::transactionLevel();
+
+        if ($transactionStatus > 0) {
+            // Database transaction success
+            DB::commit();
+            return $this->success(new AttributeOptionResource($data), 'AttributeOption created', Response::HTTP_CREATED);
+        } else {
+            // Throw error
+            throw new Exception('Could not save Data.', 1);
+        }
        
-        return $this->success(new AttributeOptionResource($data), 'AttributeOption created', Response::HTTP_CREATED);
    
     }
 }

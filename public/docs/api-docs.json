@@ -318,6 +318,15 @@
                         }
                     },
                     {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Search term for filtering by type  ",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "per_page",
                         "in": "query",
                         "description": "Number of items per page (optional, default: 20)",
@@ -582,6 +591,71 @@
                     },
                     "404": {
                         "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    },
+                    {
+                        "X-User-Id": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/category-attribute-options": {
+            "post": {
+                "tags": [
+                    "AttributeOptions"
+                ],
+                "summary": "Create a new AttributeOption For Category Filter",
+                "operationId": "971741bd593e2a632b8fca70d6bbcc53",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "AttributeOptions data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreFilterAttributeOptionRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successfully created menu",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AttributeOptionResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity (Validation error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
                     }
                 },
                 "security": [
@@ -1569,13 +1643,13 @@
                 ]
             }
         },
-        "/api/v1/category-side-filters": {
+        "/api/v1/frontend/category-side-filters": {
             "get": {
                 "tags": [
                     "Side Filter Categories"
                 ],
                 "summary": "Get a list of Categories",
-                "operationId": "efe0379e4bb4bbd7d91c8699f7db351d",
+                "operationId": "694766ad096626820b2921f10b2091a1",
                 "parameters": [
                     {
                         "name": "q",
@@ -1596,6 +1670,59 @@
                                     "type": "array",
                                     "items": {
                                         "$ref": "#/components/schemas/PostCategoryResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/frontend/category-showcases": {
+            "get": {
+                "tags": [
+                    "Frontend CategoryShowcases"
+                ],
+                "summary": "Get a list of CategoryShowcases",
+                "operationId": "2746738a1e818ea8aa780919c06e3b3f",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search term for filtering by name ",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (optional, default: 20)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CategoryShowCaseResource"
                                     }
                                 }
                             }
@@ -7109,6 +7236,39 @@
                         "type": "object"
                     }
                 ]
+            },
+            "StoreFilterAttributeOptionRequest": {
+                "title": "Category Attribute Option  Store Request",
+                "description": "Category Attribute Option  store request data",
+                "required": [
+                    "name",
+                    "slug",
+                    "values",
+                    "is_active"
+                ],
+                "properties": {
+                    "slug": {
+                        "description": "The Slug of the Category",
+                        "type": "string",
+                        "example": "mobile"
+                    },
+                    "name": {
+                        "description": "The display name",
+                        "type": "string",
+                        "example": "Dashboard"
+                    },
+                    "values": {
+                        "description": "The Values in json",
+                        "type": "string",
+                        "example": ""
+                    },
+                    "is_active": {
+                        "description": "Enable/Disable of attributes ",
+                        "type": "string",
+                        "example": "Y/N"
+                    }
+                },
+                "type": "object"
             },
             "StoreLikeRequest": {
                 "title": "Like  Store Request",
