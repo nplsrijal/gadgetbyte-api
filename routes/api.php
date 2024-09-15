@@ -76,6 +76,7 @@ Route::prefix('v1')->middleware(['apiMiddleware','verify_header'])->group(functi
     Route::apiResource('attributes', AttributeController::class);
     Route::apiResource('brands', BrandController::class);
     Route::apiResource('vendors', VendorController::class);
+    Route::post('category-attribute-options', [AttributeOptionController::class,'storeFilterAttributes']);
     Route::apiResource('attribute-options', AttributeOptionController::class);
     Route::apiResource('variations', VariationController::class);
     Route::apiResource('products', ProductController::class);

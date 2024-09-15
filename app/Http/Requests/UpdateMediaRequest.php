@@ -64,7 +64,7 @@ class UpdateMediaRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'caption' => 'required|string|max:255',
-            'description' => 'required|sometimes|string|max:255',
+            'description' => 'required|string|max:255',
             'alt_text'=>'required|string',
             'image'=>'required|sometimes'
         ];

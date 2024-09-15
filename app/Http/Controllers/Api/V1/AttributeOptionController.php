@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\AttributeOption;
+use App\Models\Attribute;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -10,6 +11,7 @@ use App\Http\Resources\AttributeOptionCollection;
 use App\Http\Resources\AttributeOptionResource;
 use App\Http\Requests\StoreAttributeOptionRequest;
 use App\Http\Requests\UpdateAttributeOptionRequest;
+use App\Http\Requests\StoreFilterAttributeOptionRequest;
 
 
 class AttributeOptionController extends Controller
@@ -25,6 +27,13 @@ class AttributeOptionController extends Controller
      *         in="query",
      *         description="Search term for filtering by name  ",
      *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *        @OA\Parameter(
+     *         name="type",
+     *         in="query",
+     *         description="Search term for filtering by type  ",
+     *         required=true,
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
@@ -47,21 +56,29 @@ class AttributeOptionController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage=$request->per_page;
-        if(empty($perPage)){
-            $perPage=20;
-        }
-        $query = AttributeOption::query();
-        if ($request->has('q')) {
-            $searchTerm = strtoupper($request->input('q'));
-            $query->where(function ($query) use ($searchTerm) {
-                $query->where('name', 'ilike', '%' . $searchTerm . '%');
+        $perPage = $request->per_page ?? 20;
 
-            });
-        }
+            $query = AttributeOption::query()
+                ->select('attribute_options.*', 'attributes.name as attribute_name')
+                ->join('attributes', 'attributes.id', '=', 'attribute_options.attribute_id');
 
-        $data = $query->paginate($perPage)->withPath($request->getPathInfo());
-        return $this->success(new AttributeOptionCollection($data));
+            if ($request->has('q')) {
+                $searchTerm = strtoupper($request->input('q'));
+                $query->where(function ($query) use ($searchTerm) {
+                    $query->where('attribute_options.name', 'ilike', '%' . $searchTerm . '%')
+                        ->orWhere('attributes.name', 'ilike', '%' . $searchTerm . '%');
+                });
+            }
+
+            if($request->has('type'))
+            {
+                $query->where('type',$request->input('type'));
+            }
+
+            $data = $query->paginate($perPage)->withPath($request->getPathInfo());
+
+            return $this->success(new AttributeOptionCollection($data));
+
     }
 
     /**
@@ -280,5 +297,63 @@ class AttributeOptionController extends Controller
         $data->delete();
         return $this->success(new AttributeOptionResource($data), 'AttributeOption deleted successfully', Response::HTTP_OK);
     
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/v1/category-attribute-options",
+     *     summary="Create a new AttributeOption For Category Filter",
+     *     tags={"AttributeOptions"},
+     *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
+     *     @OA\Parameter(
+     *         name="X-User-Id",
+     *         in="header",
+     *         description="User ID for authentication",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         description="AttributeOptions data",
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/StoreFilterAttributeOptionRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Successfully created menu",
+     *         @OA\JsonContent(ref="#/components/schemas/AttributeOptionResource")
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Unprocessable Entity (Validation error)",
+     *         @OA\JsonContent(ref="#/components/schemas/ValidationErrorResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad Request"
+     *     ),
+     * )
+     */
+    public function storeFilterAttributes(StoreFilterAttributeOptionRequest $request)
+    {
+        $validated = $request->validated();
+        $userId = request()->header('X-User-Id');
+        $validated['created_by'] = $userId;
+        $validated['values'] = json_encode($validated['values']);
+
+        $attribute['created_by'] = $userId;
+        $attribute['type']='category';
+        $attribute['name']=ucwords(str_replace('-',' ',$validated['slug']));
+        $attribute['slug']=$validated['slug'];
+        $attribute['is_active']='Y';
+        $data = Attribute::create($attribute);
+        unset($validated['slug']);
+        $validated['attribute_id']=$data->id;
+        $data = AttributeOption::create($validated);
+       
+        return $this->success(new AttributeOptionResource($data), 'AttributeOption created', Response::HTTP_CREATED);
+   
     }
 }

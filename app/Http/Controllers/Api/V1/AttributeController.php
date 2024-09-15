@@ -52,6 +52,7 @@ class AttributeController extends Controller
             $perPage=20;
         }
         $query = Attribute::query();
+        $query->where('type','product');
         if ($request->has('q')) {
             $searchTerm = strtoupper($request->input('q'));
             $query->where(function ($query) use ($searchTerm) {
@@ -116,7 +117,7 @@ class AttributeController extends Controller
         $validated = $request->validated();
         $userId = request()->header('X-User-Id');
         $validated['created_by'] = $userId;
-        
+        $validated['type']='product';
         $data = Attribute::create($validated);
        
         return $this->success(new AttributeResource($data), 'Attribute created', Response::HTTP_CREATED);

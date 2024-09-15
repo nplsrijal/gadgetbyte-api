@@ -130,10 +130,10 @@ class MediaController extends Controller
            
 
             $imagesData[] = [
-                'name' => $request->name[$index],
+                'name' => (isset($request->name[$index]) && $request->name[$index]!='')?$request->name[$index]:'',
                 'image'=>'uploads/medias/'.$imageName,
-                'caption' => $request->caption[$index],
-                'description' => $request->description[$index],
+                'caption' => (isset($request->caption[$index]) && $request->caption[$index]!='')?$request->caption[$index]:'',
+                'description' => (isset($request->description[$index]) && $request->description[$index]!='')?$request->description[$index]:'',
                 'created_by'=>$userId
             ];
         }

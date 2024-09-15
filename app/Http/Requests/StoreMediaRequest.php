@@ -63,10 +63,10 @@ class StoreMediaRequest extends FormRequest
         return [
            
             'image.*' => 'required|image|mimes:jpeg,png,jpg,gif', // Adjust max file size as needed
-            'name.*' => 'required|string|max:255',
-            'caption.*' => 'required|string|max:255',
+            'name.*' => 'required|sometimes|string|max:255',
+            'caption.*' => 'required|sometimes|string|max:255',
             'description.*' => 'required|sometimes|string|max:255',
-            'alt_text.*'=>'required|string'
+            'alt_text.*'=>'required|sometimes|string'
 
         ];
     }
