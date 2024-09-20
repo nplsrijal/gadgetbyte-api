@@ -10,6 +10,8 @@ use App\Models\ProductVariantAttribute;
 use App\Models\ProductVariantVendor;
 use App\Models\ProductVariation;
 use App\Models\ProductImage;
+use App\Models\ProductPost;
+use App\Models\ProductVideo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -140,6 +142,12 @@ class ProductController extends Controller
 
         $images = $validated['images'] ?? [];
         unset($validated['images']);
+
+        $videos = $validated['videos'] ?? [];
+        unset($validated['videos']);
+
+        $posts = $validated['posts'] ?? [];
+        unset($validated['posts']);
     
         // Begin database transaction
         DB::beginTransaction();
@@ -153,6 +161,20 @@ class ProductController extends Controller
                     $insert_cat[] = ['product_id' => $data->id, 'category_id' => $cat];
                 }
                 ProductWithCategory::insert($insert_cat);
+            }
+            if (count($posts) > 0) {
+                $insert_post = [];
+                foreach ($posts as $cat) {
+                    $insert_post[] = ['product_id' => $data->id, 'post_id' => $cat];
+                }
+                ProductPost::insert($insert_post);
+            }
+            if (count($videos) > 0) {
+                $insert_video = [];
+                foreach ($videos as $cat) {
+                    $insert_video[] = ['product_id' => $data->id, 'video_url' => $cat];
+                }
+                ProductVideo::insert($insert_video);
             }
     
             if (count($attributes) > 0) {
@@ -378,6 +400,12 @@ class ProductController extends Controller
         $images = $validatedData['images'] ?? [];
         unset($validatedData['images']);
 
+        $videos = $validated['videos'] ?? [];
+        unset($validated['videos']);
+
+        $posts = $validated['posts'] ?? [];
+        unset($validated['posts']);
+
         $validatedData['updated_by'] = $userId;
          // Begin database transaction
          DB::beginTransaction();
@@ -394,6 +422,27 @@ class ProductController extends Controller
                 $insert_cat[] = ['product_id' => $data->id, 'category_id' => $cat];
             }
             ProductWithCategory::insert($insert_cat);
+        }
+
+        if (count($posts) > 0) {
+            $postcategory_data=ProductPost::where('product_id', $data->id);
+            $postcategory_data->update(['archived_by' => $userId]);
+            $postcategory_data->delete();
+            $insert_post = [];
+            foreach ($posts as $cat) {
+                $insert_post[] = ['product_id' => $data->id, 'post_id' => $cat];
+            }
+            ProductPost::insert($insert_post);
+        }
+        if (count($videos) > 0) {
+            $postcategory_data=ProductVideo::where('product_id', $data->id);
+            $postcategory_data->update(['archived_by' => $userId]);
+            $postcategory_data->delete();
+            $insert_video = [];
+            foreach ($videos as $cat) {
+                $insert_video[] = ['product_id' => $data->id, 'video_url' => $cat];
+            }
+            ProductVideo::insert($insert_video);
         }
 
         if (count($attributes) > 0) {

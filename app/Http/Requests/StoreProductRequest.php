@@ -7,7 +7,7 @@ namespace App\Http\Requests;
  *     type="object",
  *     title="Product Store Request",
  *     description="Product store request data",
- *     required={"title","slug","description","short_description","brand_id","categories","is_active","image_url"},
+ *     required={"title","slug","description","short_description","brand_id","categories","is_active","image_url","posts","videos"},
  *     @OA\Property(
  *         property="title",
  *         type="string",
@@ -37,6 +37,18 @@ namespace App\Http\Requests;
  *         type="array",
  *         @OA\Items(type="integer"),
  *         description="Ids of the category",
+ *     ),
+ *     @OA\Property(
+ *         property="posts",
+ *         type="array",
+ *         @OA\Items(type="integer"),
+ *         description="Ids of the posts",
+ *     ),
+ *     @OA\Property(
+ *         property="videos",
+ *         type="array",
+ *         @OA\Items(type="string"),
+ *         description="Youtube Video URL",
  *     ),
  *     @OA\Property(
  *         property="image_url",
@@ -161,7 +173,9 @@ class StoreProductRequest extends FormRequest
             "seo_title_twitter"=>"required|sometimes|string",
             "seo_description_twitter"=>"required|sometimes|string",
             "categories.*"=>"required|sometimes|integer",
+            "posts.*"=>"required|sometimes|integer",
             "attributes.*"=>"required|sometimes",
+            "videos.*"=>"required|sometimes",
             "attributes.*.attribute_option_id"=>"required|sometimes",
             "attributes.*.attribute_option_name"=>"required|sometimes",
             "attributes.*.values"=>"required|sometimes",

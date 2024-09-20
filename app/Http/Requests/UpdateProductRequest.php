@@ -9,7 +9,7 @@ namespace App\Http\Requests;
  *     type="object",
  *     title="Product Update Request",
  *     description="Product update request data",
- *     required={"title","slug","description","short_description","brand_id","categories","is_active","image_url"},
+ *     required={"title","slug","description","short_description","brand_id","categories","is_active","image_url","posts","videos"},
  *     @OA\Property(
  *         property="title",
  *         type="string",
@@ -39,6 +39,18 @@ namespace App\Http\Requests;
  *         type="array",
  *         @OA\Items(type="integer"),
  *         description="Ids of the category"
+ *     ),
+ *     @OA\Property(
+ *         property="posts",
+ *         type="array",
+ *         @OA\Items(type="integer"),
+ *         description="Ids of the posts",
+ *     ),
+ *     @OA\Property(
+ *         property="videos",
+ *         type="array",
+ *         @OA\Items(type="string"),
+ *         description="Youtube Video URL",
  *     ),
  *     @OA\Property(
  *         property="image_url",

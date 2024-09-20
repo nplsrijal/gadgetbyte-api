@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('medias', function (Blueprint $table) {
+        Schema::create('product_posts', function (Blueprint $table) {
             $table->id();
-            $table->string('name',100)->nullable();
-            $table->string('image',100);
-            $table->string('caption',100)->nullable();
-            $table->string('description',100)->nullable();
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products');
+            $table->unsignedBigInteger('post_id');
+            $table->foreign('post_id')->references('id')->on('posts');
             $table->userinfos();
             $table->archivedInfos();
             $table->timestamps();
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('medias');
+        Schema::dropIfExists('product_posts');
     }
 };

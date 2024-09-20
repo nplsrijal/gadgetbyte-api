@@ -19,7 +19,7 @@ class UserBookmarkController extends Controller
 {
    /**
      * @OA\Get(
-     *     path="/api/v1/bookmarks",
+     *     path="/api/v1/frontend/bookmarks",
      *     summary="Get a list of Bookmarks",
      *     tags={"Bookmarks"},
      *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
@@ -76,7 +76,7 @@ class UserBookmarkController extends Controller
 
    /**
      * @OA\Post(
-     *     path="/api/v1/bookmarks",
+     *     path="/api/v1/frontend/bookmarks",
      *     summary="Create a new UserBookmark",
      *     tags={"Bookmarks"},
      *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
@@ -152,7 +152,7 @@ class UserBookmarkController extends Controller
      * Remove the specified resource from storage.
      *
      * @OA\Delete(
-     *     path="/api/v1/bookmarks/{id}",
+     *     path="/api/v1/frontend/bookmarks/{id}",
      *     summary="Delete an bookmark",
      *     tags={"Bookmarks"},
      *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
