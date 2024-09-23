@@ -11,6 +11,7 @@ use App\Http\Resources\MediaResource;
 use App\Http\Requests\StoreMediaRequest;
 use App\Http\Requests\UpdateMediaRequest;
 use Illuminate\Support\Facades\Storage;
+use DB;
 
 
 
@@ -114,35 +115,47 @@ class MediaController extends Controller
      */
     public function store(StoreMediaRequest $request)
     {
+            
         $validated = $request->validated();
         $userId = request()->header('X-User-Id');
         $imagesData = [];
+        $createdMedia = []; // To store the created media records with IDs
+
         Storage::makeDirectory('public/uploads');
         Storage::makeDirectory('public/uploads/medias');
 
-        foreach ($request->file('image') as $index => $image) {
-            // $imageName = time() . '_' . $index . '.' . $image->getClientOriginalExtension();
-            // $image->storeAs('public/images', $imageName);
+        DB::beginTransaction(); // Start the transaction
 
-            $file= $request->file('image')[$index];
-            $imageName= time() . '_' . $index . '.' . $image->getClientOriginalExtension();
-            $file-> move(public_path('uploads/medias'), $imageName);
-           
+        try {
+            foreach ($request->file('image') as $index => $image) {
+                $file = $request->file('image')[$index];
+                $imageName = time() . '_' . $index . '.' . $image->getClientOriginalExtension();
+                $file->move(public_path('uploads/medias'), $imageName);
 
-            $imagesData[] = [
-                'name' => (isset($request->name[$index]) && $request->name[$index]!='')?$request->name[$index]:'',
-                'image'=>'uploads/medias/'.$imageName,
-                'caption' => (isset($request->caption[$index]) && $request->caption[$index]!='')?$request->caption[$index]:'',
-                'description' => (isset($request->description[$index]) && $request->description[$index]!='')?$request->description[$index]:'',
-                'created_by'=>$userId
-            ];
+                $media = Media::create([
+                    'name' => (isset($request->name[$index]) && $request->name[$index] != '') ? $request->name[$index] : '',
+                    'image' => 'uploads/medias/' . $imageName,
+                    'caption' => (isset($request->caption[$index]) && $request->caption[$index] != '') ? $request->caption[$index] : '',
+                    'alt_text' => (isset($request->alt_text[$index]) && $request->alt_text[$index] != '') ? $request->alt_text[$index] : '',
+                    'description' => (isset($request->description[$index]) && $request->description[$index] != '') ? $request->description[$index] : '',
+                    'created_by' => $userId
+                ]);
+
+                // Store the created media instance with the ID
+                $createdMedia[] = $media;
+            }
+
+            DB::commit(); // Commit the transaction if everything is successful
+        } catch (\Exception $e) {
+            DB::rollBack(); // Roll back the transaction in case of any failure
+
+            // Optionally, you can log the error or return a custom error message
+            return $this->error('Media creation failed: ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        
-        $data = Media::insert($imagesData);
-       
-        return $this->success(new MediaResource($imagesData), 'Media created', Response::HTTP_CREATED);
-   
-    }
+
+        // Use the createdMedia collection for the response
+        return $this->success(MediaResource::collection($createdMedia), 'Media created', Response::HTTP_CREATED);
+            }
 
      /**
      * @OA\Get(

@@ -89,6 +89,7 @@ class PostController extends Controller
         if ($request->has('status')) {
             $query->where('status','=',$request->input('status'));
         }
+        $query->orderBy('posts.created_at','desc');
 
         $data = $query->paginate($perPage)->withPath($request->getPathInfo());
         return $this->success(new PostCollection($data));
