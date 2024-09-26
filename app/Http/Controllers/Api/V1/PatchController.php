@@ -11,6 +11,7 @@ use App\Models\PostFaq;
 use App\Models\Attribute;
 use App\Models\AttributeOption;
 use App\Models\ProductAttribute;
+use App\Models\ProductPost;
 
 
 
@@ -534,4 +535,56 @@ class PatchController extends Controller
     }
 
 
+    public function patch_product_post()
+    {
+        ini_set('max_execution_time', 0);
+
+        $review_data = DB::table('wp_product_post')->where('product_id','>','169182')->orderBy('id', 'asc')->get();
+
+        foreach($review_data as $data)
+        {
+            $a_serializedData = stripslashes($data->relatedposts);
+
+
+            
+            // Unserialize the data
+            $unserializedData = unserialize($a_serializedData);
+
+            // Check if unserialization was successful
+            if ($unserializedData !== false) {
+
+                foreach($unserializedData as $postid)
+                {
+
+                    $postId = DB::table('wp_news as n')
+                    ->join('posts as p', 'n.post_slug', '=', 'p.slug')
+                    ->where('n.wp_id', $postid)
+                    ->select('p.id')
+                    ->first();
+                    if($postId)
+                    {
+                        $ins=array(
+                            'post_id'=>$postId->id,
+                            'product_id'=>$data->product_id,
+                        );
+    
+                        ProductPost::create($ins);
+                    }
+
+                
+                   
+                    
+               // echo $data->product_id.' -> '.$postid.'<br/>';
+               }
+
+            } else {
+                // Handle case where unserialization failed
+                echo "Error: Unable to unserialize data.";
+            }
+      }
+
+
+
+
+    }
 }

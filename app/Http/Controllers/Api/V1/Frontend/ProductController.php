@@ -164,6 +164,7 @@ class ProductController extends Controller
             //'attributes',
             'variations',
             'images',
+            'videos',
             'variants',
             'variants.variantAttributes', 
             'variants.variantVendors.vendor'     

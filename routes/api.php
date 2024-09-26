@@ -106,6 +106,7 @@ Route::prefix('v1/frontend')->group(function () {
     Route::get('patch', [PatchController::class, 'index']);
     Route::get('product_test', [PatchController::class, 'product']);
     Route::get('attribute_patch', [PatchController::class, 'patch_attributes']);
+    Route::get('product-post-patch', [PatchController::class, 'patch_product_post']);
 
     Route::get('comments', [CommentController::class, 'index']);
     Route::get('category-side-filters', [CategoryFilterController::class, 'index']);
