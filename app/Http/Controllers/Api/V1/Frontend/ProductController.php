@@ -161,7 +161,7 @@ class ProductController extends Controller
         $data = Product::with([
             'categories', 
             'categories.category',
-            'attributes',
+            //'attributes',
             'variations',
             'images',
             'variants',
@@ -174,8 +174,25 @@ class ProductController extends Controller
         ->where('slug',$slug)->first();
         
          if ($data) {
-           
-           
+            $attributes = DB::table('product_attributes as pa')
+            ->join('attribute_options as ao', 'pa.attribute_option_id', '=', 'ao.id')
+            ->join('attributes as a', 'a.id', '=', 'ao.attribute_id')
+            ->where('pa.product_id', $data->id)
+            ->select('a.id', 'a.name')
+            ->distinct()
+            ->get();
+
+            foreach($attributes as $key => $li)
+            {
+                $attributes[$key]->attributes = DB::table('product_attributes as pa')
+                ->join('attribute_options as ao', 'pa.attribute_option_id', '=', 'ao.id')
+                ->join('attributes as a', 'a.id', '=', 'ao.attribute_id')
+                ->where('pa.product_id', $data->id)
+                ->where('a.id', $li->id)
+                ->select('pa.id', 'pa.attribute_name as name','pa.values')
+                ->get();
+            }
+            $data->attribute_sets=$attributes;
             return $this->success(new FrontendProductResource($data));
            // Get the authenticated user ID from the header
                 // $userId = $request->header('X-User-Id');

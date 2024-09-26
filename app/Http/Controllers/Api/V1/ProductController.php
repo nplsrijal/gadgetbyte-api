@@ -560,6 +560,7 @@ class ProductController extends Controller
              return $this->success(new ProductResource($data), 'Product updated', Response::HTTP_OK);
             } else {
              // Throw error
+             DB::rollBack();
              throw new Exception('Could not save Post.', 1);
          }
     }

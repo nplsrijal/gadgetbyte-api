@@ -38,6 +38,13 @@ class AttributeOptionController extends Controller
      *         required=true,
      *         @OA\Schema(type="string")
      *     ),
+     *        @OA\Parameter(
+     *         name="for",
+     *         in="query",
+     *         description="To list all options for dropdown (send:dropdown)  ",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Parameter(
      *         name="per_page",
      *         in="query",
@@ -77,7 +84,15 @@ class AttributeOptionController extends Controller
                 $query->where('type',$request->input('type'));
             }
 
-            $data = $query->paginate($perPage)->withPath($request->getPathInfo());
+            if($request->has('for') && $request->input('for')=='dropdown')
+            {
+                $data=$query->get();
+            }
+            else
+            {
+                $data = $query->paginate($perPage)->withPath($request->getPathInfo());
+
+            }
 
             return $this->success(new AttributeOptionCollection($data));
 

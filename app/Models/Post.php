@@ -55,7 +55,7 @@ class Post extends Model implements Auditable
 
     public function logs()
     {
-        return $this->hasMany(PostLog::class);
+        return $this->hasMany(PostLog::class)->with('createdByUser');
     }
   
     public function comments()

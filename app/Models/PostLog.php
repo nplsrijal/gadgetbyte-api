@@ -18,4 +18,8 @@ class PostLog extends Model
     {
         return $this->belongsTo(Post::class);
     }
+    public function createdByUser()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }

@@ -294,7 +294,7 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $data = Post::with(['reviews', 'reviews.reviews', 'categories','categories.category'])
+        $data = Post::with(['reviews', 'reviews.reviews', 'categories','categories.category','logs.createdByUser'])
         ->join('users','users.id','=','posts.created_by')
         ->select('posts.*', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name"))
         ->find($id);
@@ -306,6 +306,11 @@ class PostController extends Controller
             $data->reviews=$data->reviews;
             $data->faqs=$data->faqs;
             $data->logs=$data->logs;
+            $data->logs = $data->logs->map(function ($log) {
+                // Add the user's name to each log
+                $log->updated_by_user = $log->createdByUser ? $log->createdByUser->firstname . ' ' . $log->createdByUser->lastname : null;
+                return $log;
+            });
 
             return $this->success(new PostResource($data));
         } else {

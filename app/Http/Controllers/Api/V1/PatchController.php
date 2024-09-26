@@ -8,6 +8,9 @@ use DB;
 use App\Models\PostReview;
 use App\Models\Post;
 use App\Models\PostFaq;
+use App\Models\Attribute;
+use App\Models\AttributeOption;
+use App\Models\ProductAttribute;
 
 
 
@@ -373,6 +376,161 @@ class PatchController extends Controller
         }
 
         return $readableResults;
+    }
+
+    function patch_attributes()
+    {
+        ini_set('max_execution_time', 0);
+        $results = DB::table('product_wp')
+        ->whereNotIn('wp_id', function ($query) {
+            $query->select('product_id')
+                  ->distinct()
+                  ->from('product_attributes');
+        })
+        ->limit(40)
+        ->pluck('wp_id');
+        foreach($results as $data)
+        {
+           
+            $save = $this->getAtributes($data);
+            echo 'Productid > '.$data.' _ '.$save.'<br/>';
+
+
+        }
+        
+
+    }
+
+    public function getAtributes($productId)
+    {
+        $review_data = DB::table('specification_wp')->where('post_id',$productId)->orderBy('meta_key', 'asc')->get();
+
+       
+
+        $results = $review_data;
+
+        $groupedResults = [];
+        foreach ($results as $row) {
+            if (preg_match('/specifications_(\d+)_sub_specifications_(\d+)_(.+)/', $row->meta_key, $matches)) {
+                $groupIndex = $matches[1];
+                $subIndex = $matches[2];
+                $attribute = $matches[3];
+
+                if (!isset($groupedResults[$groupIndex])) {
+                    $groupedResults[$groupIndex] = [];
+                }
+
+                if (!isset($groupedResults[$groupIndex][$subIndex])) {
+                    $groupedResults[$groupIndex][$subIndex] = [];
+                }
+
+                // Check if the attribute starts with 'spec_value'
+                if (strpos($attribute, 'spec_value') === 0) {
+                    // If it does, add the meta_value to an array under the 'spec_values' key
+                    if (strpos($row->meta_value, 'a:') === 0) {
+                        
+                    } else {
+                        $groupedResults[$groupIndex][$subIndex]['specs_child'][] = $row->meta_value;
+                    }
+                } else {
+                    $groupedResults[$groupIndex][$subIndex][$attribute.'_child'] = $row->meta_value;
+                }
+            } elseif (preg_match('/specifications_(\d+)_specifications_group_title/', $row->meta_key, $matches)) {
+                $groupIndex = $matches[1];
+                $groupedResults[$groupIndex]['group_title'] = $row->meta_value;
+            }
+        }
+
+      
+        // Convert the associative array to an indexed array and sort it
+        $groupedResults = array_values($groupedResults);
+
+       
+        // Begin database transaction
+        DB::beginTransaction();
+        // Convert the 'specs' object into an array
+        $finalArray = [];
+        foreach ($groupedResults as $key => $value) {
+           // var_dump($key,$value);
+            $groupValues = [];
+            foreach ($value as $k => $v) {
+                if ($k !== 'group_title') {
+                    $groupValues[] = $v;
+                }
+            }
+
+            $check_attribute=Attribute::where('name',$value['group_title'])->first();
+            if($check_attribute)
+            {
+                $id=$check_attribute->id;
+            }
+            else
+            {
+                $attribute_data=array('name'=>$value['group_title'],'slug'=>$this->createSlug($value['group_title']),'is_active'=>'Y','type'=>'product');
+                $store_attribute = Attribute::create($attribute_data);
+               $id= $store_attribute->id;
+            }
+
+            
+           //$id=38;
+
+
+
+           foreach($groupValues as $li)
+           {
+            if(isset($li['specs_child']))
+            {
+                $check_attributeoption=AttributeOption::where('name',$li['title_child'])->where('attribute_id',$id)->first();
+
+                if($check_attributeoption)
+                {
+                    $ao_id=$check_attributeoption->id;
+                }
+                else
+                {
+                    $option_data=array('name'=>$li['title_child'],'attribute_id'=>@$id,'values'=>json_encode($li['specs_child']),'is_active'=>'Y');
+                    $data = AttributeOption::create($option_data);
+                    $ao_id=$data->id;
+                }
+               
+
+                $insert_attr = [
+                    'product_id' => $productId,
+                    'attribute_option_id' => $ao_id,
+                    'attribute_name' => $li['title_child'],
+                    'values' => json_encode($li['specs_child']) // Ensure values are encoded if they are arrays
+                ];
+
+                ProductAttribute::create($insert_attr);
+
+            }
+           }
+            //$finalArray[] = ['attribute_master' => $value['group_title'], 'attribute_value' => $groupValues];
+        }
+
+        // Check database transaction
+        $transactionStatus = DB::transactionLevel();
+
+        if ($transactionStatus > 0) {
+            // Database transaction success
+            DB::commit();
+            return 'Success';
+           } else {
+            // Throw error
+            DB::rollBack();
+            return 'Failed';
+        }
+   
+       
+    }
+
+    function createSlug($string) {
+        // Convert the string to lowercase
+        $slug = strtolower($string);
+        // Replace spaces with hyphens
+        $slug = str_replace(' ', '-', $slug);
+        // Return the slug
+        return $slug;
     }
 
 
