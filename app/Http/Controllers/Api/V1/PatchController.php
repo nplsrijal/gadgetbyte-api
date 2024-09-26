@@ -201,7 +201,7 @@ class PatchController extends Controller
 
     public function product()
     {
-        $review_data = DB::table('product_wp')->where('wp_id','159652')->orderBy('wp_id', 'asc')->get();
+        $review_data = DB::table('product_wp')->where('wp_id','141384')->orderBy('wp_id', 'asc')->get();
 
         foreach($review_data as $data)
         {

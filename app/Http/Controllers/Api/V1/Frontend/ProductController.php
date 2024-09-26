@@ -103,6 +103,22 @@ class ProductController extends Controller
         if ($request->has('author')) {
             $query->where('users.email','=',$request->input('author'));
         }
+        if($request->has('type')  && $request->input('type') == 'filter'){
+            $query->join('product_attributes as pa', 'pa.product_id', '=', 'products.id')
+                ->join('attribute_options as ao', 'ao.id', '=', 'pa.attribute_option_id')
+                ->join('attributes as a', 'a.id', '=', 'ao.attribute_id');
+        
+        
+            if($request->has('display')) {
+                $query->whereRaw("LOWER(a.slug) = 'display'")  // Check if attribute slug is 'display'
+                    ->whereRaw("pa.values::text ILIKE '%".$request->input('display')."%'");  // Check if values contain 'amoled' (PostgreSQL-specific)
+            }
+            if($request->has('cameras')) {
+                $query->whereRaw("LOWER(a.slug) like '%camera%'")  // Check if attribute slug is 'display'
+                    ->whereRaw("pa.attribute_name ILIKE '%".$request->input('cameras')."%'");  // Check if values contain 'amoled' (PostgreSQL-specific)
+            }
+       }
+      
         $query->orderBy('products.created_at', 'desc');
 
         // $sql=$query->toSql();
