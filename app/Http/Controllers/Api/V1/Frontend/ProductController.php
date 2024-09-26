@@ -89,11 +89,11 @@ class ProductController extends Controller
         }
 
         if ($request->has('category_id')) {
-            $query->join('product_with_categories', 'products.id', '=', 'product_with_categories.Product_id')
+            $query->join('product_with_categories', 'products.id', '=', 'product_with_categories.product_id')
                 ->where('product_with_categories.category_id', '=', $request->input('category_id'));
         }
         if ($request->has('category_slug')) {
-            $query->join('product_with_categories', 'products.id', '=', 'product_with_categories.Product_id')
+            $query->join('product_with_categories', 'products.id', '=', 'product_with_categories.product_id')
                   ->join('product_categories', 'product_with_categories.category_id', '=', 'product_categories.id')
                 ->where('product_categories.slug', '=', $request->input('category_slug'));
         }
