@@ -47,7 +47,7 @@ class UserBookmarkController extends Controller
      *         in="query",
      *         description="To distinguish for post/product",
      *         required=false,
-     *         @OA\Schema(type="string", default=all)
+     *         @OA\Schema(type="string", default="all")
      *     ),
      *     @OA\Response(
      *         response=200,
