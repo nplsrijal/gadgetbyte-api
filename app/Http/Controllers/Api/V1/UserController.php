@@ -35,6 +35,13 @@ class UserController extends Controller
      *         required=false,
      *         @OA\Schema(type="integer", default=20)
      *     ),
+     *        @OA\Parameter(
+     *         name="user_type",
+     *         in="query",
+     *         description="To get users by usertype",
+     *         required=false,
+     *         @OA\Schema(type="string", default="admin")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -63,6 +70,18 @@ class UserController extends Controller
 
 
             });
+        }
+        if($request->has('user_type'))
+        {
+            if($request->input('user_type')=='customer')
+            {
+              $query->where('user_type_id','3');
+            }
+        }
+        else
+        {
+            $query->where('user_type_id','!=','3');
+
         }
 
         $users = $query->paginate($perPage)->withPath($request->getPathInfo());
@@ -256,6 +275,13 @@ class UserController extends Controller
      *             format="int64"
      *         )
      *     ),
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="query",
+     *         description="if delete is send , user is hard deleted",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successfully deleted User",
@@ -271,7 +297,7 @@ class UserController extends Controller
      *     ),
      * )
      */
-    public function destroy(string $id)
+    public function destroy(Request $request,string $id)
     {
         $user = User::find($id);
 
@@ -280,8 +306,16 @@ class UserController extends Controller
         }
 
         $userId = request()->header('X-User-Id');
-        $user->update(['archived_by' => $userId]);
-        $user->delete();
+        if($request->has('type') && $request->input('type')=='delete')
+        {
+            $user->forceDelete();
+        }
+        else
+        {
+            $user->update(['archived_by' => $userId]);
+            $user->delete();
+        }
+      
         return $this->success(new UserResource($user), 'User deleted successfully', Response::HTTP_OK);
     
     }
