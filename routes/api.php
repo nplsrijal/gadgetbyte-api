@@ -32,6 +32,7 @@ use App\Http\Controllers\Api\V1\Frontend\UserBookmarkController;
 use App\Http\Controllers\Api\V1\Frontend\CommentController;
 use App\Http\Controllers\Api\V1\Frontend\AuthorController;
 use App\Http\Controllers\Api\V1\Frontend\CategoryFilterController;
+use App\Http\Controllers\Api\V1\Frontend\BlindCameraTestController as FBlindCameraTestController;
 
 
 use Illuminate\Http\Request;
@@ -111,6 +112,7 @@ Route::prefix('v1/frontend')->group(function () {
     Route::get('comments', [CommentController::class, 'index']);
     Route::get('category-side-filters', [CategoryFilterController::class, 'index']);
     Route::get('category-showcases', [CategoryFilterController::class, 'categorybar']);
+    Route::apiResource('blind-camera-test', FBlindCameraTestController::class);
 
 
     Route::middleware(['apiMiddleware','verify_header'])->group(function () {

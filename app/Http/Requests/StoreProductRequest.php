@@ -7,7 +7,7 @@ namespace App\Http\Requests;
  *     type="object",
  *     title="Product Store Request",
  *     description="Product store request data",
- *     required={"title","slug","description","short_description","brand_id","categories","is_active","image_url","posts","videos"},
+ *     required={"title","slug","description","short_description","brand_id","categories","is_active","image_url","expert_rating","posts","videos"},
  *     @OA\Property(
  *         property="title",
  *         type="string",
@@ -57,6 +57,12 @@ namespace App\Http\Requests;
  *         example="https://gadgetbyte.com/logo.png"
  *     ),
  *     @OA\Property(
+ *         property="expert_rating",
+ *         type="float",
+ *         description="Rating of the product",
+ *         example="3"
+ *     ),
+ *     @OA\Property(
  *         property="is_active",
  *         type="string",
  *         description="Status for Active/Inactive",
@@ -73,6 +79,18 @@ namespace App\Http\Requests;
  *         type="string",
  *         description="The seo description field for fb  of the post review",
  *         example="Apple 14 launched in Nepal."
+ *     ),
+ *     @OA\Property(
+ *         property="seo_title",
+ *         type="string",
+ *         description="The seo title field ",
+ *         example="Apple 14"
+ *     ),
+ *     @OA\Property(
+ *         property="seo_description",
+ *         type="string",
+ *         description="The seo description field",
+ *         example="Apple 14"
  *     ),
  *     @OA\Property(
  *         property="seo_title_twitter",
@@ -168,6 +186,9 @@ class StoreProductRequest extends FormRequest
             "brand_id"=>"required|integer",
             "is_active"=>"required|string",
             "image_url"=>"required|string",
+            "expert_rating"=>"required|string",
+            "seo_title"=>"required|sometimes|string",
+            "seo_description"=>"required|sometimes|string",
             "seo_title_facebook"=>"required|sometimes|string",
             "seo_description_facebook"=>"required|sometimes|string",
             "seo_title_twitter"=>"required|sometimes|string",

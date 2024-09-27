@@ -16,7 +16,7 @@ class BlindCameraTestController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/v1/blindcamera-tests",
+     *     path="/api/v1/blind-camera-tests",
      *     summary="Get a list of BlindCameraTests",
      *     tags={"BlindCameraTests"},
      *     security={{"bearer_token": {}}},
@@ -74,7 +74,7 @@ class BlindCameraTestController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/v1/blindcamera-tests",
+     *     path="/api/v1/blind-camera-tests",
      *     summary="Create a new BlindCameraTest",
      *     tags={"BlindCameraTests"},
      *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
@@ -125,7 +125,7 @@ class BlindCameraTestController extends Controller
 
      /**
      * @OA\Get(
-     *     path="/api/v1/blindcamera-tests/{id}",
+     *     path="/api/v1/blind-camera-tests/{id}",
      *     summary="Get a specific menu",
      *     tags={"BlindCameraTests"},
      *     security={{"bearer_token": {}}},
@@ -170,7 +170,7 @@ class BlindCameraTestController extends Controller
      * Update the specified resource in storage.
      *
      * @OA\Put(
-     *     path="/api/v1/blindcamera-tests/{id}",
+     *     path="/api/v1/blind-camera-tests/{id}",
      *     summary="Update an existing menu",
      *     tags={"BlindCameraTests"},
      *     security={{"bearer_token": {}}, {"X-User-Id": {}}},
@@ -235,7 +235,7 @@ class BlindCameraTestController extends Controller
      * Remove the specified resource from storage.
      *
      * @OA\Delete(
-     *     path="/api/v1/blindcamera-tests/{id}",
+     *     path="/api/v1/blind-camera-tests/{id}",
      *     summary="Delete an menu",
      *     tags={"BlindCameraTests"},
      *     security={{"bearer_token": {}}, {"X-User-Id": {}}},

@@ -9,7 +9,7 @@ namespace App\Http\Requests;
  *     type="object",
  *     title="Product Update Request",
  *     description="Product update request data",
- *     required={"title","slug","description","short_description","brand_id","categories","is_active","image_url","posts","videos"},
+ *     required={"title","slug","description","short_description","brand_id","categories","is_active","image_url","expert_rating","posts","videos"},
  *     @OA\Property(
  *         property="title",
  *         type="string",
@@ -59,10 +59,28 @@ namespace App\Http\Requests;
  *         example="https://gadgetbyte.com/logo.png"
  *     ),
  *     @OA\Property(
+ *         property="expert_rating",
+ *         type="string",
+ *         description="Rating of the Product",
+ *         example="1"
+ *     ),
+ *     @OA\Property(
  *         property="is_active",
  *         type="string",
  *         description="Status for Active/Inactive",
  *         example="Y/N"
+ *     ),
+ *     @OA\Property(
+ *         property="seo_title",
+ *         type="string",
+ *         description="The seo title field ",
+ *         example="Apple 14"
+ *     ),
+ *     @OA\Property(
+ *         property="seo_description",
+ *         type="string",
+ *         description="The seo description field",
+ *         example="Apple 14"
  *     ),
  *     @OA\Property(
  *         property="seo_title_facebook",
@@ -170,6 +188,9 @@ class UpdateProductRequest extends FormRequest
             "brand_id"=>"required|integer",
             "is_active"=>"required|string",
             "image_url"=>"required|string",
+            "expert_rating"=>"required|string",
+            "seo_title"=>"required|sometimes|string",
+            "seo_description"=>"required|sometimes|string",
             "seo_title_facebook"=>"required|sometimes|string",
             "seo_description_facebook"=>"required|sometimes|string",
             "seo_title_twitter"=>"required|sometimes|string",

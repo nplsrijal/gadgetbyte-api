@@ -8,7 +8,7 @@ namespace App\Http\Requests;
  *     type="object",
  *     title="Blind Camera Test Update Request",
  *     description="Blind Camera Test update request data",
- *     required={"product_a_title","product_b_title","cover_image","product_a_images","product_b_images"},
+ *     required={"product_a_title","product_b_title","cover_image","product_a_images","product_b_images","is_highlighted"},
  *     @OA\Property(
  *         property="product_a_title",
  *         type="string",
@@ -39,6 +39,12 @@ namespace App\Http\Requests;
  *         description="The Values in json",
  *         example=""
  *     ),
+ *     @OA\Property(
+ *         property="is_highlighted",
+ *         type="string",
+ *         description="To show in homepage highlight specific (Y/N)",
+ *         example="Y"
+ *     ),
  * )
  */
 class UpdateBlindCameraTestRequest extends FormRequest
@@ -64,6 +70,7 @@ class UpdateBlindCameraTestRequest extends FormRequest
             "cover_image"=>"required|string",
             "product_a_images"=>"required",
             "product_b_images"=>"required",
+            "is_highlighted"=>"required|sometimes|string",
         ];
     }
 }
