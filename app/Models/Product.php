@@ -48,4 +48,9 @@ class Product extends Model implements Auditable
     {
         return $this->hasMany(ProductVideo::class);
     }
+
+    public function bookmarks()
+    {
+        return $this->morphMany(UserBookmark::class, 'commentable');
+    }
 }

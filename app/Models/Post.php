@@ -63,4 +63,9 @@ class Post extends Model implements Auditable
         return $this->morphMany(Comment::class, 'commentable');
     }
 
+    public function bookmarks()
+    {
+        return $this->morphMany(UserBookmark::class, 'commentable');
+    }
+
 }

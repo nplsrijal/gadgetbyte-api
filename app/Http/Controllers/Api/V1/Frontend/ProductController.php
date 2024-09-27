@@ -57,6 +57,13 @@ class ProductController extends Controller
      *         required=false,
      *         @OA\Schema(type="string")
      *     ),
+     *       @OA\Parameter(
+     *         name="multi_slugs",
+     *         in="query",
+     *         description="Search Product by using slugs (multiple) [eg: samsung-galaxy-s22;samsung-galaxy-s22-ultra;samsung-galaxy-s24]",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Parameter(
      *         name="per_page",
      *         in="query",
@@ -118,6 +125,15 @@ class ProductController extends Controller
                     ->whereRaw("pa.attribute_name ILIKE '%".$request->input('cameras')."%'");  // Check if values contain 'amoled' (PostgreSQL-specific)
             }
        }
+
+        // Handle multi_slugs filter
+        if ($request->has('multi_slugs')) {
+            // Split the slugs by `;` and trim whitespace
+            $slugs = array_map('trim', explode(';', $request->input('multi_slugs')));
+
+            // Add whereIn condition for slugs
+            $query->whereIn('products.slug', $slugs);
+        }
       
         $query->orderBy('products.created_at', 'desc');
 

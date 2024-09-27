@@ -11,6 +11,8 @@ use App\Http\Resources\UserBookmarkResource;
 use App\Http\Requests\StoreUserBookmarkRequest;
 
 use App\Models\UserBookmark;
+use App\Models\Product;
+use App\Models\Post;
 
 
 
@@ -40,6 +42,13 @@ class UserBookmarkController extends Controller
      *         required=false,
      *         @OA\Schema(type="integer", default=20)
      *     ),
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="query",
+     *         description="To distinguish for post/product",
+     *         required=false,
+     *         @OA\Schema(type="string", default=all)
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -53,16 +62,36 @@ class UserBookmarkController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage=$request->per_page;
-        $userId = request()->header('X-User-Id');
-        if(empty($perPage)){
-            $perPage=20;
-        }
+        $perPage = $request->per_page ?? 20; // Default to 20 if not provided
+        $userId = $request->header('X-User-Id');
+    
+        // Initialize the query
         $query = UserBookmark::query();
-        $query->where('user_id', '=',$userId );
-
-
+        $query->where('user_id', $userId);
+    
+        // Conditionally join tables based on commentable_type
+        $query->when($request->has('type'), function ($query) use ($request) {
+            $type = $request->input('type');
+    
+            if ($type === 'post') {
+                // Join the posts table if commentable_type is 'post'
+                $query->join('posts', 'user_bookmarks.commentable_id', '=', 'posts.id')
+                      ->where('user_bookmarks.commentable_type', 'App\Models\Post')
+                      ->addSelect('posts.id as reference_id', 'title','slug','featured_image');
+            } elseif ($type === 'product') {
+                // Join the products table if commentable_type is 'product'
+                $query->join('products', 'user_bookmarks.commentable_id', '=', 'products.id')
+                      ->where('user_bookmarks.commentable_type', 'App\Models\Product')
+                      ->addSelect('products.id as reference_id', 'title','slug','image_url as featured_image');
+            }
+        });
+    
+        // Select base fields from the user_bookmarks table
+        $query->addSelect('user_bookmarks.*');
+    
+        // Paginate the results
         $data = $query->paginate($perPage)->withPath($request->getPathInfo());
+    
         return $this->success(new UserBookmarkCollection($data));
     }
 
@@ -115,11 +144,35 @@ class UserBookmarkController extends Controller
     {
         $validated = $request->validated();
         $userId = request()->header('X-User-Id');
-        $validated['created_by'] = $userId;
-        $validated['user_id'] = $userId;
-        
-        $data = UserBookmark::create($validated);
-       
+
+        $store_data=[
+            'created_by' => $userId,
+            'user_id'=>$userId
+        ];
+        $id=$validated['id'];
+
+        $check_data=null;
+        if(isset($validated['type']) && $validated['type']=='product')
+        {
+              // Find the product by ID
+             $check_data = Product::find($id);
+
+        }
+        else if(isset($validated['type']) && $validated['type']=='post')
+        {
+              // Find the post by ID
+             $check_data = Post::find($id);
+
+        }
+
+      
+        // Check if the data was not found
+        if (!$check_data) {
+            return response()->json(['error' => 'Data not found'], Response::HTTP_NOT_FOUND);
+        }
+        $data = $check_data->bookmarks()->create($store_data);
+
+            
         return $this->success(new UserBookmarkResource($data), 'UserBookmark created', Response::HTTP_CREATED);
    
     }

@@ -10,12 +10,18 @@ use Illuminate\Foundation\Http\FormRequest;
  *     type="object",
  *     title="Bookmark  Store Request",
  *     description="Bookmark  store request data",
- *     required={"post_id"},
+ *     required={"type","id"},
  *     @OA\Property(
- *         property="post_id",
+ *         property="type",
+ *         type="string",
+ *         description="To distinguish for post/product",
+ *         example="post"
+ *     ),
+ *     @OA\Property(
+ *         property="id",
  *         type="integer",
- *         description="The id of the post",
- *         example="1"
+ *         description="Id of the post/product",
+ *         example="12"
  *     ),
  * )
  */
@@ -37,7 +43,8 @@ class StoreUserBookmarkRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "post_id"=>"required|integer",
+            "type"=>"required|string",
+            "id"=>"required|integer",
 
         ];
     }

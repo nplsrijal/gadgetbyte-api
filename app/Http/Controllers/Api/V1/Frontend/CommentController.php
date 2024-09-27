@@ -65,6 +65,13 @@ class CommentController extends Controller
      *         required=false,
      *         @OA\Schema(type="integer")
      *     ),
+     *     @OA\Parameter(
+     *         name="filter",
+     *         in="query",
+     *         description="To filter for specific loggedinuser/all (mine/all)",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -78,6 +85,8 @@ class CommentController extends Controller
      */
     public function index(Request $request)
 {
+    $userId = $request->header('X-User-Id');
+
     $perPage = $request->input('per_page', 20); // Default to 20 if not provided
 
     // Initialize the query for parent comments (those with parent_comment_id = 0)
@@ -121,6 +130,9 @@ class CommentController extends Controller
     if ($request->has('id')) {
         $commentableId = $request->input('id');
         $query->where('commentable_id', $commentableId);
+    }
+    if ($request->has('filter') && $request->input('filter')=='mine') {
+        $query->where('comments.created_by', $userId);
     }
 
     // Paginate the results
