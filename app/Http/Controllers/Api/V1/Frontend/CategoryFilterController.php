@@ -49,7 +49,7 @@ class CategoryFilterController extends Controller
 
         $query = Attribute::query();
        
-            $query->where('name',$request->input('q'));
+            $query->where('name',$request->input('q'))->orwhere('slug', 'ilike', '%' . $request->input('q') . '%');
             $data=$query->get();
             foreach ($data as $key => $menu) {
                 $subQuery = AttributeOption::query();
