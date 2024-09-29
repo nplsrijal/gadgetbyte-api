@@ -188,52 +188,48 @@ class ProductController extends Controller
      *     ),
      * )
      */
-    public function show(Request $request,string $slug)
+    public function show(Request $request, string $slug)
     {
-        // for comparison multi slugs wise done 
-        if(strpos($slug, ',') !== false)
-        {
-            $ismulti='Y';
-        }
-        else
-        {
-            $ismulti='N';
-        }
+        // Check if multiple slugs are provided
+        $isMulti = strpos($slug, ',') !== false;
+    
+        // Start building the query with relationships
         $data = Product::with([
             'categories', 
             'categories.category',
-            //'attributes',
             'variations',
             'images',
             'videos',
             'variants',
-            'variants.variantAttributes', 
-            'variants.variantVendors.vendor',
+           // 'variants.variantAttributes', 
+           // 'variants.variantVendors.vendor',
             'product_specifications',
             'product_specifications.specification'
         ])
-        ->join('users','users.id','=','products.created_by')
-        ->select('products.*','users.email','users.facebook_url','users.instagram_url','users.linkedin_url','users.google_url','users.twitter_url','users.youtube_url', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name,users.description as author_description"));
-        if($ismulti=='Y')
-        {
+        ->join('users', 'users.id', '=', 'products.created_by')
+        ->select('products.*', 'users.email', 'users.facebook_url', 'users.instagram_url', 'users.linkedin_url', 'users.google_url', 'users.twitter_url', 'users.youtube_url', 
+            DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name, users.description as author_description"));
+    
+        // If multiple slugs are passed, handle whereIn query
+        if ($isMulti) {
             $slugs = array_map('trim', explode(',', $slug));
-
-            // Add whereIn condition for slugs
-            $data=  $data->whereIn('products.slug', $slugs);
-            $data=  $data->orderBy('products.created_at', 'desc')->get();
-
+            $data = $data->whereIn('products.slug', $slugs);
+        } else {
+            // Single slug query
+            $data = $data->where('products.slug', $slug);
         }
-        else
-        {
-           $data= $data->where('slug',$slug)->get();
-
+    
+        // Fetch the result
+        $data = $data->orderBy('products.created_at', 'desc')->get();
+        // $sql=$data->toSql();
+        //  echo $sql;exit;
+    
+        if ($data->isEmpty()) {
+            return $this->error('Product not found', Response::HTTP_NOT_FOUND);
         }
-
-        
-         if ($data) {
-            foreach($data as $index=> $product)
-            {
-                $attributes = DB::table('product_attributes as pa')
+    
+        foreach ($data as $index => $product) {
+            $attributes = DB::table('product_attributes as pa')
                 ->join('attribute_options as ao', 'pa.attribute_option_id', '=', 'ao.id')
                 ->join('attributes as a', 'a.id', '=', 'ao.attribute_id')
                 ->where('pa.product_id', $product->id)
@@ -241,60 +237,37 @@ class ProductController extends Controller
                 ->distinct()
                 ->get();
     
-                foreach($attributes as $key => $li)
-                {
-                    $attributes[$key]->attributes = DB::table('product_attributes as pa')
+            foreach ($attributes as $key => $li) {
+                $attributes[$key]->attributes = DB::table('product_attributes as pa')
                     ->join('attribute_options as ao', 'pa.attribute_option_id', '=', 'ao.id')
                     ->join('attributes as a', 'a.id', '=', 'ao.attribute_id')
                     ->where('pa.product_id', $product->id)
                     ->where('a.id', $li->id)
-                    ->select('pa.id', 'pa.attribute_name as name','pa.values')
+                    ->select('pa.id', 'pa.attribute_name as name', 'pa.values')
                     ->get();
-                }
-                $data[$index]->attribute_sets=$attributes;
+            }
+            $data[$index]->attribute_sets = $attributes;
     
-                $posts = DB::table('posts as p')
+            $posts = DB::table('posts as p')
                 ->join('product_posts as pp', 'p.id', '=', 'pp.post_id')
                 ->where('pp.product_id', $product->id)
                 ->where('p.status', 'P')
-                ->where('p.archived_by',null)
-                ->select('p.title', 'p.slug','p.created_at','p.featured_image')
+                ->where('p.archived_by', null)
+                ->select('p.title', 'p.slug', 'p.created_at', 'p.featured_image')
                 ->distinct()
                 ->get();
-                $data[$index]->related_posts=$posts;
-
-            }
-
-            if($ismulti=='N')
-            {
-                $data=$data[0];
-            }
-            
-
-            return $this->success(new FrontendProductResource($data));
-           // Get the authenticated user ID from the header
-                // $userId = $request->header('X-User-Id');
-
-                // $likedArray = [];
-                // $dislikedArray = [];
-
-                // if ($userId) {
-                //     $user = User::find($userId);
-
-                //     $likedArray = $user->likedCommentsForProduct($data->id)->pluck('comment_id')->toArray();
-                //     $dislikedArray = $user->dislikedCommentsForProduct($data->id)->pluck('comment_id')->toArray();
-                // }
-
-                // // Add liked_array and disliked_array to the response data
-                // return $this->success([
-                //     'product' => new FrontendProductResource($data),
-                //     'comment_liked_array' => $likedArray,
-                //     'comment_disliked_array' => $dislikedArray
-                // ]);
-        } else {
-            return $this->error('Product not found', Response::HTTP_NOT_FOUND);
+    
+            $data[$index]->related_posts = $posts;
         }
+    
+        // If only a single product was requested, return the first element of the array
+        if (!$isMulti) {
+            $data = $data->first();  // Change this line to return the first element
+        }
+    
+        return $this->success(new FrontendProductResource($data));
     }
+    
 
     /**
      * Show the form for editing the specified resource.

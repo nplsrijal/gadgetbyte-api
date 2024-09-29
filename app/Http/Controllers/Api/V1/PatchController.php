@@ -818,7 +818,7 @@ class PatchController extends Controller
                   ->distinct()
                   ->from('product_variations');
         })
-        ->limit(10)
+        ->limit(300)
         ->get();
         DB::beginTransaction();
 
@@ -999,7 +999,7 @@ class PatchController extends Controller
 
                 if(isset($price['brand']))
                 {
-                    $check_vendor=Vendor::where('name',strtolower($price['brand']))->first();
+                    $check_vendor=Vendor::where('name','ilike', '%' .$price['brand']. '%')->first();
                     if($check_vendor)
                     {
                         $vendor_id=$check_vendor->id;
@@ -1021,7 +1021,7 @@ class PatchController extends Controller
                 {
                     $variant_vendors[]=array(
                         'product_id'=>$data->wp_id,
-                        'vendor_id'=>2,
+                        'vendor_id'=>198,
                         'variant_slug'=>$title,
                         'product_url'=>'https://hukut.com/contact',
                         'discount_price'=>0,
@@ -1032,7 +1032,7 @@ class PatchController extends Controller
                 
            }
 
-           $insert_image[] = [
+           $insert_images[] = [
             'product_id' => $data->wp_id,
             'variation_sku_code' => $insert_variant[0]['sku_code'],
             'image_url' =>json_encode(explode(',', $data->productimagegallery)),
@@ -1043,7 +1043,7 @@ class PatchController extends Controller
         // var_dump($insert_variant);
         // var_dump($variant_attributes);
         // var_dump($variant_vendors);
-        // var_dump($insert_image);
+        // var_dump($insert_images);
         
            ProductVariation::insert($insert_variation);
            ProductVariant::insert($insert_variant);
