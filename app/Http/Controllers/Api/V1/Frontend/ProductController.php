@@ -228,6 +228,17 @@ class ProductController extends Controller
                 ->get();
             }
             $data->attribute_sets=$attributes;
+
+            $posts = DB::table('posts as p')
+            ->join('product_posts as pp', 'p.id', '=', 'pp.post_id')
+            ->where('pp.product_id', $data->id)
+            ->where('p.status', 'P')
+            ->where('p.archived_by',null)
+            ->select('p.title', 'p.slug','p.created_at','p.featured_image')
+            ->distinct()
+            ->get();
+            $data->related_posts=$posts;
+
             return $this->success(new FrontendProductResource($data));
            // Get the authenticated user ID from the header
                 // $userId = $request->header('X-User-Id');
