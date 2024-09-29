@@ -12,6 +12,15 @@ use App\Models\Attribute;
 use App\Models\AttributeOption;
 use App\Models\ProductAttribute;
 use App\Models\ProductPost;
+use App\Models\Product;
+use App\Models\Specification;
+use App\Models\ProductSpecification;
+use App\Models\Vendor;
+use App\Models\ProductVariant;
+use App\Models\ProductVariantAttribute;
+use App\Models\ProductVariantVendor;
+use App\Models\ProductVariation;
+use App\Models\ProductImage;
 
 
 
@@ -201,27 +210,27 @@ class PatchController extends Controller
 
     public function product()
     {
-        $review_data = DB::table('product_wp')->where('wp_id','141384')->orderBy('wp_id', 'asc')->get();
+        $review_data = DB::table('product_wp')->where('wp_id','122068')->orderBy('wp_id', 'asc')->get();
 
         foreach($review_data as $data)
         {
             //var_Dump($data->productattribute);
             // $data_attr = json_decode($data->productattribute, true);
             // var_dump($data_attr);exit;
-            //$a_serializedData = stripslashes($data->productattribute);
+            $a_serializedData = stripslashes($data->productattribute);
 
 
-            //$attributes = unserialize($a_serializedData);
+            $attributes = unserialize($a_serializedData);
            // var_Dump($attributes);exit;
 
             $product=$data->post_name;
-            //$productAttributes = [];
-            // foreach ($attributes as $taxonomy => $attribute) {
-            //     $productAttributes = $this->extracted($taxonomy, $data->wp_id, $attribute, $productAttributes);
-            // }
+            $productAttributes = [];
+            foreach ($attributes as $taxonomy => $attribute) {
+                $productAttributes = $this->extracted($taxonomy, $data->wp_id, $attribute, $productAttributes);
+            }
             //$data->productAttribute = $productAttributes;
-            $data->specs = $this->getSpecsForProduct($data->wp_id);
-            $data->child = $this->getProductVariant($data->wp_id);
+            //$data->specs = $this->getSpecsForProduct($data->wp_id);
+           // $data->child = $this->getProductVariant($data->wp_id);
 
             unset($data->productattribute);
 
@@ -319,7 +328,7 @@ class PatchController extends Controller
         $a_serializedData = stripslashes($brandData->post_content);
        
 
-    // $data_attr = json_decode($a_serializedData, true);
+      // $data_attr = json_decode($a_serializedData, true);
 
         $brandChoices = unserialize($a_serializedData)['choices'];
 
@@ -353,28 +362,45 @@ class PatchController extends Controller
         }
 
         // Convert the grouped results to a more readable format
-        $readableResults = [];
+        $readableResults = [];$test=[];
         foreach ($groupedResults as $groupIndex => $variants) {
             $group = ['group' => $groupIndex, 'variants' => []];
             foreach ($variants as $variantIndex => $attributes) {
+               // if($variantIndex=='')
                 $variant = ['variant' => $variantIndex];
+
                 foreach ($attributes as $attribute => $values) {
                     if ($attribute == 'size' || $attribute == 'size_storage') {
                         // Fetch the actual term value from the 'wp_terms' table
-                        if (!empty($values) && isset($values[0])) {
+                        if (!empty($values) && isset($values[0]) && $values[0]!='') {
                             $termValue = DB::table('terms_wp')
                                 ->where('term_id', $values[0])
                                 ->value('name');
                             $variant[$attribute] = $termValue;
+                            if($attribute=='size')
+                            {
+                                $test['ram'][]=$termValue;
+
+                            }
+                            else
+                            {
+                                $test['storage'][]=$termValue;
+
+                            }
+
                         }
                     }  else {
+                        //if($variantIndex=='')
                         $variant[$attribute] = implode(', ', $values);
                     }
                 }
+
+                if(isset($variant))
                 $group['variants'][] = $variant;
             }
             $readableResults[] = $group;
         }
+        
 
         return $readableResults;
     }
@@ -587,4 +613,461 @@ class PatchController extends Controller
 
 
     }
+
+    function get_spec_name($type)
+    {
+        $filterMobileMapping = [
+            'network' => 'pa_smartphone-network-type',
+            'display' => 'pa_smartphone-display-type',
+            'cameras' => 'pa_smartphone-cameras-filter',
+            'battery' => 'pa_smartphone-battery-filter',
+            'grade' => 'pa_smartphone-grade',
+            'storage' => 'pa_smartphone-storage',
+            'ram' => 'pa_smartphone-ram',
+        ];
+
+        $filterLaptopMapping = [
+            'type' => 'pa_laptop-type',
+            'weight' => 'pa_laptop-weight-range-filter',
+            'cpuBrand' => 'pa_laptop-cpu-brand',
+            'cpuType' => 'pa_laptop-cpu',
+            'gpuBrand' => 'pa_laptop-gpu',
+            'display'=>'pa_laptop-display',
+            'gpuType' => 'pa_laptop-gpu-brand',
+            'displayType' => 'pa_laptop-display-type',
+            'displaySize' => 'pa_laptop-display-range',
+            'ram' => 'pa_laptop-ram',
+            'ssd' => 'pa_laptop-ssd',
+            'hdd' => 'pa_laptop-hdd',
+            'battery' => 'pa_laptop-battery-filter',
+        ];
+
+        $filterSmartwatchMapping = [
+            'marketStatus' => 'pa_watch-market-status',
+            'type' => 'pa_watch-type',
+            'weight' => 'pa_watch-weight',
+            'compatibility' => 'pa_watch-compatibility',
+            'caseSize' => 'pa_watch-case-size',
+            'caseMaterial' => 'pa_watch-case-material',
+            'software' => 'pa_watch-software',
+            'display' => 'pa_watch-display-filter',
+            'phoneCallSupport' => 'pa_watch-phone-call-support',
+            'battery' => 'pa_watch-battery-filter',
+            'buildInGPS' => 'pa_watch-built-in-gps',
+        ];
+
+        $filterEarbudsMapping = [
+            'fit' => 'pa_earbuds-type',
+            'noiseCancellation' => 'pa_earbuds-noise-cancellation',
+            'driver' => 'pa_earbuds-driver',
+            'bluetoothVersion' => 'pa_earbuds-connectivity',
+            'codecs' => 'pa_earbuds-codecs',
+            'protection' => 'pa_earbuds-ingress-protection'
+        ];
+
+        $filterTabletMapping = [
+            'marketStatus' => 'pa_tablet-market-status',
+            'networkType' => 'pa_tablet-network-type',
+            'chipsetBrand' => 'pa_tablet-chipset-brand',
+            'displayType' => 'pa_tablet-display-type',
+            'displaySize' => 'pa_tablet-display-size',
+            'ram' => 'pa_tablet-ram',
+            'camera' => 'pa_tablet-cameras',
+            'storage' => 'pa_tablet-storage',
+            'battery' => 'pa_tablet-battery-filter',
+        ];
+
+        $filterPcBuildMapping = [
+            'cpuSeries' => 'pa_pc-cpu-series',
+            'cpu' => 'pa_pc-cpu',
+            'graphicsCardSeries' => 'pa_pc-gpu-series',
+            'graphicsCardBrand' => 'pa_pc-gpu-brand',
+            'graphicsCard' => 'pa_pc-gpu',
+            'ramType' => 'pa_pc-ram-type',
+            'ram' => 'pa_pc-ram',
+            'ssd' => 'pa_pc-ssd'
+        ];
+
+       $reciprocalMobileMapping = array_flip($filterMobileMapping);
+        $reciprocalLaptopMapping = array_flip($filterLaptopMapping);
+        $reciprocalSmartwatchMapping = array_flip($filterSmartwatchMapping);
+        $reciprocalEarbudsMapping = array_flip($filterEarbudsMapping);
+        $reciprocalTabletMapping = array_flip($filterTabletMapping);
+        $reciprocalPcBuildMapping = array_flip($filterPcBuildMapping);
+
+        if(isset($reciprocalMobileMapping[$type]))
+        {
+            return $reciprocalMobileMapping[$type];
+        }
+        else if(isset($reciprocalLaptopMapping[$type]))
+        {
+            return $reciprocalLaptopMapping[$type];
+        }
+        else if(isset($reciprocalSmartwatchMapping[$type]))
+        {
+            return $reciprocalSmartwatchMapping[$type];
+        }
+        else if(isset($reciprocalEarbudsMapping[$type]))
+        {
+            return $reciprocalEarbudsMapping[$type];
+        }
+        else if(isset($reciprocalTabletMapping[$type]))
+        {
+            return $reciprocalTabletMapping[$type];
+        }
+        else if(isset($reciprocalPcBuildMapping[$type]))
+        {
+            return $reciprocalPcBuildMapping[$type];
+        }
+        else
+        {
+            return $type;
+        }
+
+    }
+
+    function patch_specifications()
+    {
+        ini_set('max_execution_time', 0);
+        $results = DB::table('product_wp')->select('wp_id','productattribute','expertrating')
+        ->whereNotIn('wp_id', function ($query) {
+            $query->select('product_id')
+                  ->distinct()
+                  ->from('product_specifications');
+        })
+        ->limit(100)
+        ->get();
+        DB::beginTransaction();
+
+        foreach($results as $data)
+        {
+            $a_serializedData = stripslashes($data->productattribute);
+
+
+            $attributes = unserialize($a_serializedData);
+
+            $productAttributes = [];
+            if(is_array($attributes))
+            {
+
+            
+                foreach ($attributes as $taxonomy => $attribute) {
+                    if($attribute['is_visible']=='1')
+                    {
+                        $productAttributes = $this->extracted($taxonomy, $data->wp_id, $attribute, $productAttributes);
+
+                    }
+                }
+            }
+
+            foreach($productAttributes as $li)
+            {
+                $spec_name=$this->get_spec_name($li['name']);
+                $check_specification=Specification::where('name',$spec_name)->first();
+
+                if($check_specification)
+                {
+                    $ao_id=$check_specification->id;
+                }
+                else
+                {
+                    $option_data=array('name'=>$spec_name,'image'=>'');
+                    $insert_specs = Specification::create($option_data);
+                    $ao_id=$insert_specs->id;
+                }
+
+                $ins=array(
+                    'specification_id'=>$ao_id,
+                    'values'=>json_encode($li['value']),
+                    'product_id'=>$data->wp_id,
+                );
+
+                ProductSpecification::create($ins);
+            }
+
+
+            //echo 'Productid > '.$data.' _ '.$save.'<br/>';
+
+            $product=Product::find($data->wp_id);
+            $product->update(['expert_rating'=>$data->expertrating]);
+
+
+        }
+        $transactionStatus = DB::transactionLevel();
+
+        if ($transactionStatus > 0) {
+            // Database transaction success
+            DB::commit();
+            echo 'Success';
+           } else {
+            // Throw error
+            DB::rollBack();
+            echo 'Failed';
+        }
+        
+
+    }
+
+    function patch_variation_vendor()
+    {
+        ini_set('max_execution_time', 0);
+        $results = DB::table('product_wp')->select('wp_id','productimagegallery')
+        // ->where('wp_id','159115')
+        ->whereNotIn('wp_id', function ($query) {
+            $query->select('product_id')
+                  ->distinct()
+                  ->from('product_variations');
+        })
+        ->limit(10)
+        ->get();
+        DB::beginTransaction();
+
+        foreach($results as $data)
+        {
+           
+            $variant = $this->getProductVariant($data->wp_id);
+            $final_data=[];
+            $ram_data=[];
+            $storage_data=[];
+            $size_data=[];
+            $i=0;
+           foreach($variant as $li)
+           {
+               $variation=$li['variants'];
+
+               foreach($variation as $variation_child)
+               {
+                    if($variation_child['variant']=='')
+                    {
+                        if(isset($variation_child['size']) && isset($variation_child['size_storage']))
+                        {
+                            $finaldata[$i]['ram']=$variation_child['size'];
+                            $ram_data[]=$variation_child['size'];
+                            $finaldata[$i]['storage']=$variation_child['size_storage'];
+                            $storage_data[]=$variation_child['size_storage'];
+
+                            //echo $i.'>Ram is '.$variation_child['size'].'& Storage is '.$variation_child['size_storage'];
+                        }
+                        else if(isset($variation_child['size']) && empty($variation_child['size_storage']))
+                        {
+                            $finaldata[$i]['size']=$variation_child['size'];
+                            $size_data[]=$variation_child['size'];
+
+
+                            //echo $i.'>Size is '.$variation_child['size'];
+                        }
+                        else if(empty($variation_child['size']) && isset($variation_child['size_storage']))
+                        {
+                            $finaldata[$i]['storage']=$variation_child['size_storage'];
+                            $storage_data[]=$variation_child['size_storage'];
+
+                           // echo $i.'>Storage is '.$variation_child['size_storage'];
+                        }
+
+                    }
+                    else if(strpos($variation_child['price'], 'NPR') !== false || (strpos($variation_child['price'], 'INR') !== false && strtolower($variation_child['brand'])=='hukut'))
+                    {
+                            $finaldata[$i]['brand']=$variation_child['brand'];
+                            $finaldata[$i]['price']=$variation_child['price'];
+                            $finaldata[$i]['url']=$variation_child['buy_link'];
+                        //echo $i.'> brand is '.$variation_child['brand'].' & Price is '.$variation_child['price'];
+
+                    }
+                   
+               }
+               $i++;
+           }
+        //    var_dump($finaldata);exit;
+
+           if(count($ram_data) > 0)
+           {
+             $insert_variation[0] = [
+                'product_id' => $data->wp_id,
+                'variation_name' => 'Ram',
+                'values' => json_encode($ram_data) 
+            ];
+
+           }
+           if(count($storage_data) > 0)
+           {
+             $insert_variation[1] = [
+                'product_id' => $data->wp_id,
+                'variation_name' => 'Storage',
+                'values' => json_encode($storage_data) 
+            ];
+
+           }
+           if(count($size_data) > 0)
+           {
+             $insert_variation[2] = [
+                'product_id' => $data->wp_id,
+                'variation_name' => 'Size',
+                'values' => json_encode($size_data) 
+            ];
+
+           }
+           if(count($ram_data) < 1 && count($storage_data) < 1 && count($size_data) < 1)
+           {
+              $insert_variation[0] = [
+                'product_id' => $data->wp_id,
+                'variation_name' => 'Default',
+                'values' => json_encode(['default'])
+            ];
+
+           }
+
+
+           foreach($finaldata as $key=> $price)
+           {
+
+                if(isset($price['ram']))
+                {
+                    $title=$price['ram'].'+'.$price['storage'];
+
+                    $variant_attributes[]=array(
+                        'product_id'=>$data->wp_id,
+                        'variant_slug'=>$title,
+                        'attribute_name'=>'Ram',
+                        'values'=>$price['ram'],
+                    );
+
+                    $variant_attributes[]=array(
+                        'product_id'=>$data->wp_id,
+                        'variant_slug'=>$title,
+                        'attribute_name'=>'Storage',
+                        'values'=>$price['storage'],
+                    );
+                }
+                else if(isset($price['size']))
+                {
+                    $title=$price['size'];
+
+                    $variant_attributes[]=array(
+                        'product_id'=>$data->wp_id,
+                        'variant_slug'=>$title,
+                        'attribute_name'=>'Size',
+                        'values'=>$price['size'],
+                    );
+                }
+                else if(isset($price['storage']))
+                {
+                    $title=$price['storage'];
+
+                    $variant_attributes[]=array(
+                        'product_id'=>$data->wp_id,
+                        'variant_slug'=>$title,
+                        'attribute_name'=>'Storage',
+                        'values'=>$price['storage'],
+                    );
+                }
+                else
+                {
+                    $title='Default';
+
+                    $variant_attributes[]=array(
+                        'product_id'=>$data->wp_id,
+                        'variant_slug'=>$title,
+                        'attribute_name'=>'Default',
+                        'values'=>'default',
+                    );
+                }
+
+                if(isset($price['price']))
+                {
+                    $price_explode=explode(' ',$price['price']);
+                    $priceWithoutComma = str_replace(',', '', $price_explode[1]);
+                    $price['price'] = number_format((float)$priceWithoutComma, 2, '.', '');
+
+                }
+                else
+                {
+                    $price['price']=0;
+                }
+                $insert_variant[] = [
+                    'product_id' => $data->wp_id,
+                    'title' => $title,
+                    'slug' => $title,
+                    'sku_code' => $title,
+                    'price' => $price['price'],
+                    'qty' => '1',
+                    'is_default' => 'Y',
+                    'discount_price' =>  0,
+                    'discount_price_in' =>  null,
+                    'discount_price_start_date' => null,
+                    'discount_price_end_date' => null
+                ];
+
+                if(isset($price['brand']))
+                {
+                    $check_vendor=Vendor::where('name',strtolower($price['brand']))->first();
+                    if($check_vendor)
+                    {
+                        $vendor_id=$check_vendor->id;
+                    }
+                    else
+                    {
+                        $vendor_ins=['name'=>$price['brand'],'slug'=>$this->createSlug($price['brand']),'image'=>'','website_url'=>'','order_by'=>'1'];
+                        $vendor_id=Vendor::create($vendor_ins)->id;
+                    }
+                    $variant_vendors[]=array(
+                        'product_id'=>$data->wp_id,
+                        'vendor_id'=>$vendor_id,
+                        'variant_slug'=>$title,
+                        'product_url'=>$price['url'],
+                        'discount_price'=>0,
+                    );
+                }
+                else
+                {
+                    $variant_vendors[]=array(
+                        'product_id'=>$data->wp_id,
+                        'vendor_id'=>2,
+                        'variant_slug'=>$title,
+                        'product_url'=>'https://hukut.com/contact',
+                        'discount_price'=>0,
+                    );
+                }
+               
+
+                
+           }
+
+           $insert_image[] = [
+            'product_id' => $data->wp_id,
+            'variation_sku_code' => $insert_variant[0]['sku_code'],
+            'image_url' =>json_encode(explode(',', $data->productimagegallery)),
+         ];
+
+           
+        // var_dump($insert_variation);
+        // var_dump($insert_variant);
+        // var_dump($variant_attributes);
+        // var_dump($variant_vendors);
+        // var_dump($insert_image);
+        
+           ProductVariation::insert($insert_variation);
+           ProductVariant::insert($insert_variant);
+           ProductVariantAttribute::insert($variant_attributes);
+           ProductVariantVendor::insert($variant_vendors);
+           ProductImage::insert($insert_images);
+
+
+
+        }
+        $transactionStatus = DB::transactionLevel();
+
+        if ($transactionStatus > 0) {
+            // Database transaction success
+            DB::commit();
+            echo 'Success';
+           } else {
+            // Throw error
+            DB::rollBack();
+            echo 'Failed';
+        }
+        
+
+    }
+
+    
 }

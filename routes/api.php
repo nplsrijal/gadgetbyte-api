@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\V1\VariationController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\BlindCameraTestController;
 use App\Http\Controllers\Api\V1\CategoryShowcaseController;
+use App\Http\Controllers\Api\V1\SpecificationController;
 use App\Http\Controllers\Api\V1\Frontend\PostController as FPostController;
 use App\Http\Controllers\Api\V1\Frontend\ProductController as FProductController;
 use App\Http\Controllers\Api\V1\Frontend\CustomerController;
@@ -83,6 +84,7 @@ Route::prefix('v1')->middleware(['apiMiddleware','verify_header'])->group(functi
     Route::apiResource('products', ProductController::class);
     Route::apiResource('blind-camera-tests', BlindCameraTestController::class);
     Route::apiResource('category-showcases', CategoryShowcaseController::class);
+    Route::apiResource('specifications', SpecificationController::class);
 
    
 
@@ -107,6 +109,8 @@ Route::prefix('v1/frontend')->group(function () {
     Route::get('patch', [PatchController::class, 'index']);
     Route::get('product_test', [PatchController::class, 'product']);
     Route::get('attribute_patch', [PatchController::class, 'patch_attributes']);
+    Route::get('specification_patch', [PatchController::class, 'patch_specifications']);
+    Route::get('variation_patch', [PatchController::class, 'patch_variation_vendor']);
     Route::get('product-post-patch', [PatchController::class, 'patch_product_post']);
 
     Route::get('comments', [CommentController::class, 'index']);

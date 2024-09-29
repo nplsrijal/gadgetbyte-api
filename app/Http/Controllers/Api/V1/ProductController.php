@@ -12,6 +12,7 @@ use App\Models\ProductVariation;
 use App\Models\ProductImage;
 use App\Models\ProductPost;
 use App\Models\ProductVideo;
+use App\Models\ProductSpecification;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -148,6 +149,9 @@ class ProductController extends Controller
 
         $posts = $validated['posts'] ?? [];
         unset($validated['posts']);
+
+        $specifications = $validated['specifications'] ?? [];
+        unset($validated['specifications']);
     
         // Begin database transaction
         DB::beginTransaction();
@@ -261,6 +265,14 @@ class ProductController extends Controller
                 ProductVariantAttribute::insert($variant_attributes);
                 ProductVariantVendor::insert($variant_vendors);
             }
+
+            if (count($specifications) > 0) {
+                $insert_spec = [];
+                foreach ($specifications as $spec) {
+                    $insert_spec[] = ['product_id' => $data->id, 'specification_id' => $spec['id'],'values'=>$spec['values']];
+                }
+                ProductSpecification::insert($insert_spec);
+            }
     
             DB::commit();
     
@@ -307,7 +319,9 @@ class ProductController extends Controller
             'videos',
             'variants',
             'variants.variantAttributes', 
-            'variants.variantVendors.vendor'     
+            'variants.variantVendors.vendor',
+            'product_specifications',
+            'product_specifications.specification'
         ])
         ->join('users','users.id','=','products.created_by')
         ->select('products.*', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name"))
@@ -406,6 +420,9 @@ class ProductController extends Controller
 
         $posts = $validated['posts'] ?? [];
         unset($validated['posts']);
+
+        $specifications = $validated['specifications'] ?? [];
+        unset($validated['specifications']);
 
         $validatedData['updated_by'] = $userId;
          // Begin database transaction
@@ -549,6 +566,18 @@ class ProductController extends Controller
             ProductVariant::insert($insert_variant);
             ProductVariantAttribute::insert($variant_attributes);
             ProductVariantVendor::insert($variant_vendors);
+        }
+
+        
+        if (count($specifications) > 0) {
+            $insert_spec = [];
+            $postspec_data=ProductSpecification::where('product_id', $data->id);
+            $postspec_data->update(['archived_by' => $userId]);
+            $postspec_data->delete();
+            foreach ($specifications as $spec) {
+                $insert_spec[] = ['product_id' => $data->id, 'specification_id' => $spec['id'],'values'=>$spec['values']];
+            }
+            ProductSpecification::insert($insert_spec);
         }
     
 

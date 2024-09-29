@@ -199,7 +199,9 @@ class ProductController extends Controller
             'videos',
             'variants',
             'variants.variantAttributes', 
-            'variants.variantVendors.vendor'     
+            'variants.variantVendors.vendor',
+            'product_specifications',
+            'product_specifications.specification'
         ])
         ->join('users','users.id','=','products.created_by')
         ->select('products.*','users.email','users.facebook_url','users.instagram_url','users.linkedin_url','users.google_url','users.twitter_url','users.youtube_url', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name,users.description as author_description"))

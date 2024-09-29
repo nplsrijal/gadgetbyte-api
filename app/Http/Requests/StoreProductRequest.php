@@ -135,6 +135,29 @@ namespace App\Http\Requests;
  *         description="Array of post attributes details",
  *     ),
  *     @OA\Property(
+ *         property="specifications",
+ *         type="array",
+ *         @OA\Items(
+ *             type="object",
+ *             title="Product specifications",
+ *             description="Product specifications details",
+ *             required={"specification_id", "values"},
+ *             @OA\Property(
+ *                 property="specification_id",
+ *                 type="integer",
+ *                 description="The id of the specification option",
+ *                 example="1"
+ *             ),
+ *             @OA\Property(
+ *                 property="values",
+ *                 type="string",
+ *                 description="The values of specification option",
+ *                 example="2gb"
+ *             ),
+ *         ),
+ *         description="Array of post specifications details",
+ *     ),
+ *     @OA\Property(
  *         property="variations",
  *         type="array",
  *         @OA\Items(
@@ -204,6 +227,7 @@ class StoreProductRequest extends FormRequest
            "variations.*.name"=>"required|sometimes",
            "variations.*.values"=>"required|sometimes",
            "variants.*"=>"required|sometimes",
+           "specifications.*"=>"required|sometimes",
            "images.*"=>"required|sometimes",
         ];
     }
