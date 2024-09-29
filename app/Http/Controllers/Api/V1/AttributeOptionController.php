@@ -369,9 +369,19 @@ class AttributeOptionController extends Controller
           // Begin database transaction
           DB::beginTransaction();
 
-        $data = Attribute::create($attribute);
+          $check_attribute=Attribute::where('slug',$attribute['slug'])->first();
+            if($check_attribute)
+            {
+                $attribute_id=$check_attribute->id;
+            }
+            else
+            {
+                $data = Attribute::create($attribute);
+                $attribute_id=$data->id;
+
+            }
         unset($validated['slug']);
-        $validated['attribute_id']=$data->id;
+        $validated['attribute_id']=$attribute_id;
         $data = AttributeOption::create($validated);
 
         // Check database transaction

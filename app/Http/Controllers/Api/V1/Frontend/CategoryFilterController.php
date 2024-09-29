@@ -47,21 +47,11 @@ class CategoryFilterController extends Controller
     {
         
 
-        $query = Attribute::query();
-       
-            $query->where('name',$request->input('q'))->orwhere('slug', 'ilike', '%' . $request->input('q') . '%');
-            $data=$query->get();
-            foreach ($data as $key => $menu) {
-                $subQuery = AttributeOption::query();
-            
-                $subQuery->where('attribute_id', $menu->id)
-                    ->orderBy('id');
-            
-                $submenus = $subQuery->get();
-                
-                // Assigning submenus to the current menu item
-                $data[$key]->children = $submenus;
-            }
+         $query = AttributeOption::select('attributes.name','attributes.slug','attribute_options.id','attribute_options.name as option_name','attribute_options.values as option_values');
+         $query->join('attributes','attributes.id','=','attribute_options.attribute_id')
+         ->where('attributes.slug', $request->input('q'))
+          ->orderBy('attribute_options.id');
+        $data = $query->get();
         return $this->success(new AttributeCollection($data));
 
     }
