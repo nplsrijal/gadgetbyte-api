@@ -14,6 +14,11 @@ class ProductVariant extends Model implements Auditable
     const DELETED_AT = 'archived_at';
     protected $guarded=[];
 
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+    
     public function variantAttributes()
     {
         return $this->hasMany(ProductVariantAttribute::class, 'variant_slug', 'slug');

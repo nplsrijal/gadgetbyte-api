@@ -811,178 +811,144 @@ class PatchController extends Controller
     function patch_variation_vendor()
     {
         ini_set('max_execution_time', 0);
-        $results = DB::table('product_wp')->select('wp_id','productimagegallery')
-        // ->where('wp_id','159115')
-        ->whereNotIn('wp_id', function ($query) {
-            $query->select('product_id')
-                  ->distinct()
-                  ->from('product_variations');
-        })
-        ->limit(300)
-        ->get();
+        $results = DB::table('product_wp')->select('wp_id', 'productimagegallery')
+            ->whereNotIn('wp_id', function ($query) {
+                $query->select('product_id')
+                    ->distinct()
+                    ->from('product_variations');
+            })
+            ->limit(100)
+            ->orderBy('wp_id', 'asc')
+            ->get();
+        
         DB::beginTransaction();
 
-        foreach($results as $data)
-        {
-           
+        foreach ($results as $data) {
+            // Initialize these arrays at the start of each product iteration
+            $insert_variation = [];
+            $insert_variant = [];
+            $variant_attributes = [];
+            $variant_vendors = [];
+            $insert_images = [];
+
             $variant = $this->getProductVariant($data->wp_id);
-            $final_data=[];
-            $ram_data=[];
-            $storage_data=[];
-            $size_data=[];
-            $i=0;
-           foreach($variant as $li)
-           {
-               $variation=$li['variants'];
+            $finaldata = [];
+            $ram_data = [];
+            $storage_data = [];
+            $size_data = [];
+            $i = 0;
 
-               foreach($variation as $variation_child)
-               {
-                    if($variation_child['variant']=='')
-                    {
-                        if(isset($variation_child['size']) && isset($variation_child['size_storage']))
-                        {
-                            $finaldata[$i]['ram']=$variation_child['size'];
-                            $ram_data[]=$variation_child['size'];
-                            $finaldata[$i]['storage']=$variation_child['size_storage'];
-                            $storage_data[]=$variation_child['size_storage'];
+            foreach ($variant as $li) {
+                $variation = $li['variants'];
 
-                            //echo $i.'>Ram is '.$variation_child['size'].'& Storage is '.$variation_child['size_storage'];
+                foreach ($variation as $variation_child) {
+                    if ($variation_child['variant'] == '') {
+                        if (isset($variation_child['size']) && isset($variation_child['size_storage'])) {
+                            $finaldata[$i]['ram'] = $variation_child['size'];
+                            $ram_data[] = $variation_child['size'];
+                            $finaldata[$i]['storage'] = $variation_child['size_storage'];
+                            $storage_data[] = $variation_child['size_storage'];
+                        } else if (isset($variation_child['size']) && empty($variation_child['size_storage'])) {
+                            $finaldata[$i]['size'] = $variation_child['size'];
+                            $size_data[] = $variation_child['size'];
+                        } else if (empty($variation_child['size']) && isset($variation_child['size_storage'])) {
+                            $finaldata[$i]['storage'] = $variation_child['size_storage'];
+                            $storage_data[] = $variation_child['size_storage'];
                         }
-                        else if(isset($variation_child['size']) && empty($variation_child['size_storage']))
-                        {
-                            $finaldata[$i]['size']=$variation_child['size'];
-                            $size_data[]=$variation_child['size'];
-
-
-                            //echo $i.'>Size is '.$variation_child['size'];
-                        }
-                        else if(empty($variation_child['size']) && isset($variation_child['size_storage']))
-                        {
-                            $finaldata[$i]['storage']=$variation_child['size_storage'];
-                            $storage_data[]=$variation_child['size_storage'];
-
-                           // echo $i.'>Storage is '.$variation_child['size_storage'];
-                        }
-
+                    } else if (strpos($variation_child['price'], 'NPR') !== false || (strpos($variation_child['price'], 'INR') !== false && strtolower($variation_child['brand']) == 'hukut')) {
+                        $finaldata[$i]['brand'] = $variation_child['brand'];
+                        $finaldata[$i]['price'] = $variation_child['price'];
+                        $finaldata[$i]['url'] = $variation_child['buy_link'];
                     }
-                    else if(strpos($variation_child['price'], 'NPR') !== false || (strpos($variation_child['price'], 'INR') !== false && strtolower($variation_child['brand'])=='hukut'))
-                    {
-                            $finaldata[$i]['brand']=$variation_child['brand'];
-                            $finaldata[$i]['price']=$variation_child['price'];
-                            $finaldata[$i]['url']=$variation_child['buy_link'];
-                        //echo $i.'> brand is '.$variation_child['brand'].' & Price is '.$variation_child['price'];
-
-                    }
-                   
-               }
-               $i++;
-           }
-        //    var_dump($finaldata);exit;
-
-           if(count($ram_data) > 0)
-           {
-             $insert_variation[0] = [
-                'product_id' => $data->wp_id,
-                'variation_name' => 'Ram',
-                'values' => json_encode($ram_data) 
-            ];
-
-           }
-           if(count($storage_data) > 0)
-           {
-             $insert_variation[1] = [
-                'product_id' => $data->wp_id,
-                'variation_name' => 'Storage',
-                'values' => json_encode($storage_data) 
-            ];
-
-           }
-           if(count($size_data) > 0)
-           {
-             $insert_variation[2] = [
-                'product_id' => $data->wp_id,
-                'variation_name' => 'Size',
-                'values' => json_encode($size_data) 
-            ];
-
-           }
-           if(count($ram_data) < 1 && count($storage_data) < 1 && count($size_data) < 1)
-           {
-              $insert_variation[0] = [
-                'product_id' => $data->wp_id,
-                'variation_name' => 'Default',
-                'values' => json_encode(['default'])
-            ];
-
-           }
-
-
-           foreach($finaldata as $key=> $price)
-           {
-
-                if(isset($price['ram']))
-                {
-                    $title=$price['ram'].'+'.$price['storage'];
-
-                    $variant_attributes[]=array(
-                        'product_id'=>$data->wp_id,
-                        'variant_slug'=>$title,
-                        'attribute_name'=>'Ram',
-                        'values'=>$price['ram'],
-                    );
-
-                    $variant_attributes[]=array(
-                        'product_id'=>$data->wp_id,
-                        'variant_slug'=>$title,
-                        'attribute_name'=>'Storage',
-                        'values'=>$price['storage'],
-                    );
                 }
-                else if(isset($price['size']))
-                {
-                    $title=$price['size'];
+                $i++;
+            }
 
-                    $variant_attributes[]=array(
-                        'product_id'=>$data->wp_id,
-                        'variant_slug'=>$title,
-                        'attribute_name'=>'Size',
-                        'values'=>$price['size'],
-                    );
-                }
-                else if(isset($price['storage']))
-                {
-                    $title=$price['storage'];
+            // Prepare insert data for variations
+            if (count($ram_data) > 0) {
+                $insert_variation[] = [
+                    'product_id' => $data->wp_id,
+                    'variation_name' => 'Ram',
+                    'values' => json_encode($ram_data)
+                ];
+            }
+            if (count($storage_data) > 0) {
+                $insert_variation[] = [
+                    'product_id' => $data->wp_id,
+                    'variation_name' => 'Storage',
+                    'values' => json_encode($storage_data)
+                ];
+            }
+            if (count($size_data) > 0) {
+                $insert_variation[] = [
+                    'product_id' => $data->wp_id,
+                    'variation_name' => 'Size',
+                    'values' => json_encode($size_data)
+                ];
+            }
+            if (count($ram_data) < 1 && count($storage_data) < 1 && count($size_data) < 1) {
+                $insert_variation[] = [
+                    'product_id' => $data->wp_id,
+                    'variation_name' => 'Default',
+                    'values' => json_encode(['default'])
+                ];
+            }
 
-                    $variant_attributes[]=array(
-                        'product_id'=>$data->wp_id,
-                        'variant_slug'=>$title,
-                        'attribute_name'=>'Storage',
-                        'values'=>$price['storage'],
-                    );
-                }
-                else
-                {
-                    $title='Default';
+            // Prepare insert data for variants and attributes
+            foreach ($finaldata as $key => $price) {
+                if (isset($price['ram']) && isset($price['storage'])) {
+                    $title = $price['ram'] . '+' . $price['storage'];
 
-                    $variant_attributes[]=array(
-                        'product_id'=>$data->wp_id,
-                        'variant_slug'=>$title,
-                        'attribute_name'=>'Default',
-                        'values'=>'default',
-                    );
+                    $variant_attributes[] = [
+                        'product_id' => $data->wp_id,
+                        'variant_slug' => $title,
+                        'attribute_name' => 'Ram',
+                        'values' => $price['ram'],
+                    ];
+
+                    $variant_attributes[] = [
+                        'product_id' => $data->wp_id,
+                        'variant_slug' => $title,
+                        'attribute_name' => 'Storage',
+                        'values' => $price['storage'],
+                    ];
+                } else if (isset($price['size'])) {
+                    $title = $price['size'];
+
+                    $variant_attributes[] = [
+                        'product_id' => $data->wp_id,
+                        'variant_slug' => $title,
+                        'attribute_name' => 'Size',
+                        'values' => $price['size'],
+                    ];
+                } else if (isset($price['storage']) && empty($price['ram'])) {
+                    $title = $price['storage'];
+
+                    $variant_attributes[] = [
+                        'product_id' => $data->wp_id,
+                        'variant_slug' => $title,
+                        'attribute_name' => 'Storage',
+                        'values' => $price['storage'],
+                    ];
+                } else {
+                    $title = 'Default';
+
+                    $variant_attributes[] = [
+                        'product_id' => $data->wp_id,
+                        'variant_slug' => $title,
+                        'attribute_name' => 'Default',
+                        'values' => 'default',
+                    ];
                 }
 
-                if(isset($price['price']))
-                {
-                    $price_explode=explode(' ',$price['price']);
+                if (isset($price['price'])) {
+                    $price_explode = explode(' ', $price['price']);
                     $priceWithoutComma = str_replace(',', '', $price_explode[1]);
                     $price['price'] = number_format((float)$priceWithoutComma, 2, '.', '');
+                } else {
+                    $price['price'] = 0;
+                }
 
-                }
-                else
-                {
-                    $price['price']=0;
-                }
                 $insert_variant[] = [
                     'product_id' => $data->wp_id,
                     'title' => $title,
@@ -991,83 +957,78 @@ class PatchController extends Controller
                     'price' => $price['price'],
                     'qty' => '1',
                     'is_default' => 'Y',
-                    'discount_price' =>  0,
-                    'discount_price_in' =>  null,
+                    'discount_price' => 0,
+                    'discount_price_in' => null,
                     'discount_price_start_date' => null,
                     'discount_price_end_date' => null
                 ];
 
-                if(isset($price['brand']))
-                {
-                    $check_vendor=Vendor::where('name','ilike', '%' .$price['brand']. '%')->first();
-                    if($check_vendor)
-                    {
-                        $vendor_id=$check_vendor->id;
+                if (isset($price['brand'])) {
+                    $check_vendor = Vendor::where('name', 'ilike', '%' . $price['brand'] . '%')->first();
+                    if ($check_vendor) {
+                        $vendor_id = $check_vendor->id;
+                    } else {
+                        $vendor_ins = [
+                            'name' => $price['brand'],
+                            'slug' => $this->createSlug($price['brand']),
+                            'image' => '',
+                            'website_url' => '',
+                            'order_by' => '1'
+                        ];
+                        $vendor_id = Vendor::create($vendor_ins)->id;
                     }
-                    else
-                    {
-                        $vendor_ins=['name'=>$price['brand'],'slug'=>$this->createSlug($price['brand']),'image'=>'','website_url'=>'','order_by'=>'1'];
-                        $vendor_id=Vendor::create($vendor_ins)->id;
-                    }
-                    $variant_vendors[]=array(
-                        'product_id'=>$data->wp_id,
-                        'vendor_id'=>$vendor_id,
-                        'variant_slug'=>$title,
-                        'product_url'=>$price['url'],
-                        'discount_price'=>0,
-                    );
+                    $variant_vendors[] = [
+                        'product_id' => $data->wp_id,
+                        'vendor_id' => $vendor_id,
+                        'variant_slug' => $title,
+                        'product_url' => $price['url'],
+                        'discount_price' => 0,
+                    ];
+                } else {
+                    $variant_vendors[] = [
+                        'product_id' => $data->wp_id,
+                        'vendor_id' => 198,
+                        'variant_slug' => $title,
+                        'product_url' => 'https://hukut.com/contact',
+                        'discount_price' => 0,
+                    ];
                 }
-                else
-                {
-                    $variant_vendors[]=array(
-                        'product_id'=>$data->wp_id,
-                        'vendor_id'=>198,
-                        'variant_slug'=>$title,
-                        'product_url'=>'https://hukut.com/contact',
-                        'discount_price'=>0,
-                    );
-                }
-               
+            }
 
-                
-           }
+            if(count($finaldata) > 0)
+            {
+                $insert_images[] = [
+                    'product_id' => $data->wp_id,
+                    'variation_sku_code' => $insert_variant[0]['sku_code'],
+                    'image_url' => json_encode(explode(',', $data->productimagegallery)),
+                ];
+    
+                ProductVariation::insert($insert_variation);
+                ProductVariant::insert($insert_variant);
+                ProductVariantAttribute::insert($variant_attributes);
+                ProductVariantVendor::insert($variant_vendors);
 
-           $insert_images[] = [
-            'product_id' => $data->wp_id,
-            'variation_sku_code' => $insert_variant[0]['sku_code'],
-            'image_url' =>json_encode(explode(',', $data->productimagegallery)),
-         ];
+            }
+            if(count($insert_images) > 0)
+            {
+                ProductImage::insert($insert_images);
 
-           
-        // var_dump($insert_variation);
-        // var_dump($insert_variant);
-        // var_dump($variant_attributes);
-        // var_dump($variant_vendors);
-        // var_dump($insert_images);
-        
-           ProductVariation::insert($insert_variation);
-           ProductVariant::insert($insert_variant);
-           ProductVariantAttribute::insert($variant_attributes);
-           ProductVariantVendor::insert($variant_vendors);
-           ProductImage::insert($insert_images);
-
-
-
+            }
         }
+
         $transactionStatus = DB::transactionLevel();
 
         if ($transactionStatus > 0) {
             // Database transaction success
             DB::commit();
             echo 'Success';
-           } else {
+        } else {
             // Throw error
             DB::rollBack();
             echo 'Failed';
         }
-        
-
     }
+
 
     
 }

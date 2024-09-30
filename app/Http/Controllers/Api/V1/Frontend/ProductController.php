@@ -9,7 +9,13 @@ use Illuminate\Http\Response;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\FrontendProductResource;
 use App\Models\Product;
+use App\Models\ProductSpecification;
 use App\Models\ProductWithCategory;
+use App\Models\ProductVariant;
+use App\Models\ProductVariantVendor;
+use App\Models\ProductImage;
+use App\Models\ProductVideo;
+use App\Models\ProductPost;
 use App\Models\User;
 
 use DB;
@@ -188,23 +194,26 @@ class ProductController extends Controller
      *     ),
      * )
      */
-    public function show(Request $request, string $slug)
+    
+    public function show__(Request $request, string $slug)
     {
+        // as all data with table join became slow so api is breakdown and created next function
+
         // Check if multiple slugs are provided
         $isMulti = strpos($slug, ',') !== false;
     
         // Start building the query with relationships
         $data = Product::with([
             'categories', 
-            'categories.category',
-            'variations',
+            //'categories.category',
+          //  'variations',
             'images',
             'videos',
-            'variants',
+           // 'variants',
            // 'variants.variantAttributes', 
            // 'variants.variantVendors.vendor',
-            'product_specifications',
-            'product_specifications.specification'
+           // 'product_specifications',
+           // 'product_specifications.specification'
         ])
         ->join('users', 'users.id', '=', 'products.created_by')
         ->select('products.*', 'users.email', 'users.facebook_url', 'users.instagram_url', 'users.linkedin_url', 'users.google_url', 'users.twitter_url', 'users.youtube_url', 
@@ -267,7 +276,204 @@ class ProductController extends Controller
     
         return $this->success(new FrontendProductResource($data));
     }
+    public function show(Request $request, string $slug)
+    {
+
+        if($request->input('type')=='product')
+        {
+            $data=$this->getProductInformation($slug);
+        }
+        else if($request->input('type')=='specification')
+        {
+            $data=$this->getProductSpecification($slug);
+        }
+        else if($request->input('type')=='variants')
+        {
+            $data=$this->getProductVariants($slug);
+        }
+        else if($request->input('type')=='related_information')
+        {
+            $data=$this->getProductRelatedInformation($slug);
+        }
+        else
+        {
+            $data=collect(); 
+
+        }
+
+
+        if ($data->isEmpty()) {
+            return $this->error('Product not found', Response::HTTP_NOT_FOUND);
+        }
+        else
+        {
+            return $this->success(new FrontendProductResource($data));
+
+
+        }
+    }
+    function getProductInformation($slug)
+    {
+        // Check if multiple slugs are provided
+        $isMulti = strpos($slug, ',') !== false;
     
+        // Start building the query with relationships
+        $data = Product::with([
+            'categories.category:id,name',
+            'images',
+            'videos',
+            'product_specifications',
+            'product_specifications.specification'
+            
+        ])
+        ->join('users', 'users.id', '=', 'products.created_by')
+        ->select('products.*', 'users.email', 'users.facebook_url', 'users.instagram_url', 'users.linkedin_url', 'users.google_url', 'users.twitter_url', 'users.youtube_url', 
+            DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name, users.description as author_description"));
+    
+        // If multiple slugs are passed, handle whereIn query
+        if ($isMulti) {
+            $slugs = array_map('trim', explode(',', $slug));
+            $data = $data->whereIn('products.slug', $slugs);
+        } else {
+            // Single slug query
+            $data = $data->where('products.slug', $slug);
+        }
+    
+        // Fetch the result
+        $data = $data->orderBy('products.created_at', 'desc')->get();
+        return $data;
+       
+
+    }
+    function getProductSpecification($slug)
+    {
+        $isMulti = strpos($slug, ',') !== false;
+
+        if ($isMulti) {
+            $slugs = array_map('trim', explode(',', $slug));
+            $productIds = Product::whereIn('products.slug', $slugs)->pluck('id');
+        } else {
+            // Single slug query
+            $productIds = Product::where('products.slug', $slug)->pluck('id');
+        }
+
+        $specifications = collect(); // Initialize a collection
+
+        foreach ($productIds as $productId) {
+            $attributes = DB::table('product_attributes as pa')
+                ->join('attribute_options as ao', 'pa.attribute_option_id', '=', 'ao.id')
+                ->join('attributes as a', 'a.id', '=', 'ao.attribute_id')
+                ->where('pa.product_id', $productId)
+                ->select('a.id', 'a.name')
+                ->distinct()
+                ->get();
+
+            foreach ($attributes as $key => $li) {
+                $li->attributes = DB::table('product_attributes as pa')
+                    ->join('attribute_options as ao', 'pa.attribute_option_id', '=', 'ao.id')
+                    ->join('attributes as a', 'a.id', '=', 'ao.attribute_id')
+                    ->where('pa.product_id', $productId)
+                    ->where('a.id', $li->id)
+                    ->select('pa.id', 'pa.attribute_name as name', 'pa.values')
+                    ->get();
+            }
+
+            // $highlighted_specs=ProductSpecification::select('name','image','values')
+            //                    ->join('specifications as s','s.id','=','product_specifications.specification_id')
+            //                    ->where('product_id',$productId)->get();
+
+
+            // Wrap the result in an object instead of an array
+            $specifications->push((object) [
+                'product_id' => $productId,
+                'specifications' => $attributes,
+               // 'highlighted_specifications'=>$highlighted_specs
+            ]);
+        }
+
+        return $specifications; 
+    }
+    function getProductVariants($slug)
+    {
+        $isMulti = strpos($slug, ',') !== false;
+
+        if ($isMulti) {
+            $slugs = array_map('trim', explode(',', $slug));
+            $productIds = Product::whereIn('products.slug', $slugs)->pluck('id');
+        } else {
+            // Single slug query
+            $productIds = Product::where('products.slug', $slug)->pluck('id');
+        }
+
+        $specifications = collect(); // Initialize a collection
+
+        foreach ($productIds as $productId) {
+            $attributes = ProductVariant::where('product_id', $productId)
+                ->get();
+
+            foreach ($attributes as $key => $li) {
+                $li->vendors =  ProductVariantVendor::join('vendors as  v','v.id','=','product_variant_vendors.vendor_id')
+                ->where('variant_slug', $li->slug)
+                ->where('product_id', $productId)
+                ->select('product_url', 'name')
+                ->get();
+               
+            }
+
+            //$images = ProductImage::where('product_id', $productId)->get();
+
+           
+
+            // Wrap the result in an object instead of an array
+            $specifications->push((object) [
+                'product_id' => $productId,
+                'variants' => $attributes,
+               // 'images' => $images,
+            ]);
+        }
+
+        return $specifications; 
+
+    }
+
+    function getProductRelatedInformation($slug)
+    {
+        $isMulti = strpos($slug, ',') !== false;
+
+        if ($isMulti) {
+            $slugs = array_map('trim', explode(',', $slug));
+            $productIds = Product::whereIn('products.slug', $slugs)->pluck('id');
+        } else {
+            // Single slug query
+            $productIds = Product::where('products.slug', $slug)->pluck('id');
+        }
+
+        $specifications = collect(); // Initialize a collection
+
+        foreach ($productIds as $productId) {
+            // $videos = ProductVideo::where('product_id', $productId)
+            //     ->get();
+
+             $posts=ProductPost::join('posts as p','p.id','=','product_posts.post_id')
+                ->where('product_id',$productId)
+                ->where('p.status', 'P')
+                ->where('p.archived_by', null)
+                ->select('p.title', 'p.slug', 'p.created_at', 'p.featured_image')
+                ->get();
+
+           
+
+            // Wrap the result in an object instead of an array
+            $specifications->push((object) [
+                'product_id' => $productId,
+                //'videos' => $videos,
+                'posts' => $posts,
+            ]);
+        }
+
+        return $specifications; 
+    }
+
 
     /**
      * Show the form for editing the specified resource.

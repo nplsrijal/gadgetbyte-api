@@ -58,4 +58,9 @@ class Product extends Model implements Auditable
     {
         return $this->hasMany(ProductSpecification::class);
     }
+
+    public function vendors()
+    {
+        return $this->hasMany(ProductVariantVendor::class, 'variant_slug', 'slug');
+    }
 }
