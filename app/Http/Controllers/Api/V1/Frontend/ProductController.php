@@ -117,18 +117,42 @@ class ProductController extends Controller
             $query->where('users.email','=',$request->input('author'));
         }
         if($request->has('type')  && $request->input('type') == 'filter'){
+
+
             $query->join('product_attributes as pa', 'pa.product_id', '=', 'products.id')
                 ->join('attribute_options as ao', 'ao.id', '=', 'pa.attribute_option_id')
                 ->join('attributes as a', 'a.id', '=', 'ao.attribute_id');
         
         
             if($request->has('display')) {
-                $query->whereRaw("LOWER(a.slug) = 'display'")  // Check if attribute slug is 'display'
-                    ->whereRaw("pa.values::text ILIKE '%".$request->input('display')."%'");  // Check if values contain 'amoled' (PostgreSQL-specific)
+                $isMulti = strpos($request->input('display'), ',') !== false;
+
+                $query->whereRaw("LOWER(a.slug) = 'display'");  // Check if attribute slug is 'display'
+                if($isMulti)
+                {
+                    $query->whereIn("pa.values::text",$isMulti); 
+
+                }  
+                else
+                {
+                    $query->whereRaw("pa.values::text ILIKE '%".$request->input('display')."%'");  
+
+                }
             }
             if($request->has('cameras')) {
-                $query->whereRaw("LOWER(a.slug) like '%camera%'")  // Check if attribute slug is 'display'
-                    ->whereRaw("pa.attribute_name ILIKE '%".$request->input('cameras')."%'");  // Check if values contain 'amoled' (PostgreSQL-specific)
+                $isMulti = strpos($request->input('cameras'), ',') !== false;
+
+                $query->whereRaw("LOWER(a.slug) like '%camera%'") ;
+                if($isMulti)
+                {
+                    $query->whereIn("pa.attribute_name",$isMulti); 
+
+                }  
+                else
+                {
+                    $query->whereRaw("pa.attribute_name ILIKE '%".$request->input('display')."%'");  
+
+                }
             }
        }
 
@@ -319,7 +343,7 @@ class ProductController extends Controller
     
         // Start building the query with relationships
         $data = Product::with([
-            'categories.category:id,name',
+            'categories.category:id,name,slug',
             'images',
             'videos',
             'product_specifications',
