@@ -17,6 +17,7 @@ use App\Models\ProductImage;
 use App\Models\ProductVideo;
 use App\Models\ProductPost;
 use App\Models\User;
+use App\Models\ProductCategory;
 
 use DB;
 
@@ -91,10 +92,19 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->per_page ?? 20;
+        $cat_Desc='';
+        $cat_longdesc='';
+        if($request->has('category_slug'))
+        {
+            $category=ProductCategory::select('description','long_description')->where('slug',$request->input('category_slug'))->first();
+            $cat_Desc=$category->description;
+            $cat_longdesc=$category->long_description;
+        }
 
-        $query = Product::with(['categories', 'categories.category']);
-         $query->join('users','users.id','=','products.created_by')
+        $query = Product::join('users','users.id','=','products.created_by')
          ->select('products.*', DB::raw("CONCAT(users.firstname, ' ', users.lastname) as author_name"));
+         $query->addSelect(DB::raw("'" . str_replace("'", "''", $cat_Desc) . "' as category_description"));
+         $query->addSelect(DB::raw("'" . str_replace("'", "''", $cat_longdesc) . "' as category_long_description"));
 
         if ($request->has('q')) {
             $searchTerm = strtoupper($request->input('q'));
@@ -164,7 +174,7 @@ class ProductController extends Controller
         }
       
         $query->orderBy('products.created_at', 'desc');
-        
+
         // DB::enableQueryLog();
         // $data = $query->get();
         // $lastQuery = DB::getQueryLog();
