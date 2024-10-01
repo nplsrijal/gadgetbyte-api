@@ -124,35 +124,46 @@ class ProductController extends Controller
                 ->join('attributes as a', 'a.id', '=', 'ao.attribute_id');
         
         
-            if($request->has('display')) {
-                $isMulti = strpos($request->input('display'), ',') !== false;
-
-                $query->whereRaw("LOWER(a.slug) = 'display'");  // Check if attribute slug is 'display'
-                if($isMulti)
-                {
-                    $query->whereIn("pa.values::text",$isMulti); 
-
-                }  
-                else
-                {
-                    $query->whereRaw("pa.values::text ILIKE '%".$request->input('display')."%'");  
-
+            if ($request->has('display')) {
+                // Split the 'display' parameter into an array of values
+                $displayValues = array_map('trim', explode(',', $request->input('display')));
+            
+                // Ensure the query checks if the attribute slug is 'display'
+                $query->whereRaw("LOWER(a.slug) = 'display'");
+            
+                // Check if there is more than one value
+                if (count($displayValues) > 1) {
+                    // Loop through each value and add it to the query with ILIKE
+                    $query->where(function ($q) use ($displayValues) {
+                        foreach ($displayValues as $value) {
+                            $q->orWhereRaw("pa.values::text ILIKE ?", ['%' . strtolower($value) . '%']);
+                        }
+                    });
+                } else {
+                    // Single value, apply simple ILIKE
+                    $query->whereRaw("pa.values::text ILIKE ?", ['%' . strtolower($displayValues[0]) . '%']);
                 }
             }
+                
             if($request->has('cameras')) {
-                $isMulti = strpos($request->input('cameras'), ',') !== false;
+                $Values = array_map('trim', explode(',', $request->input('cameras')));
 
                 $query->whereRaw("LOWER(a.slug) like '%camera%'") ;
-                if($isMulti)
-                {
-                    $query->whereIn("pa.attribute_name",$isMulti); 
+                
 
-                }  
-                else
-                {
-                    $query->whereRaw("pa.attribute_name ILIKE '%".$request->input('display')."%'");  
-
+                // Check if there is more than one value
+                if (count($Values) > 1) {
+                    // Loop through each value and add it to the query with ILIKE
+                    $query->where(function ($q) use ($Values) {
+                        foreach ($Values as $value) {
+                            $q->orWhereRaw("pa.attribute_name ILIKE ?", ['%' . strtolower($value) . '%']);
+                        }
+                    });
+                } else {
+                    // Single value, apply simple ILIKE
+                    $query->whereRaw("pa.attribute_name ILIKE ?", ['%' . strtolower($Values[0]) . '%']);
                 }
+                
             }
        }
 
