@@ -122,49 +122,36 @@ class ProductController extends Controller
             $query->join('product_attributes as pa', 'pa.product_id', '=', 'products.id')
                 ->join('attribute_options as ao', 'ao.id', '=', 'pa.attribute_option_id')
                 ->join('attributes as a', 'a.id', '=', 'ao.attribute_id');
-        
-        
-            if ($request->has('display')) {
-                // Split the 'display' parameter into an array of values
-                $displayValues = array_map('trim', explode(',', $request->input('display')));
-            
-                // Ensure the query checks if the attribute slug is 'display'
-                $query->whereRaw("LOWER(a.slug) = 'display'");
-            
-                // Check if there is more than one value
-                if (count($displayValues) > 1) {
-                    // Loop through each value and add it to the query with ILIKE
-                    $query->where(function ($q) use ($displayValues) {
-                        foreach ($displayValues as $value) {
-                            $q->orWhereRaw("pa.values::text ILIKE ?", ['%' . strtolower($value) . '%']);
-                        }
-                    });
-                } else {
-                    // Single value, apply simple ILIKE
-                    $query->whereRaw("pa.values::text ILIKE ?", ['%' . strtolower($displayValues[0]) . '%']);
-                }
-            }
-                
-            if($request->has('cameras')) {
-                $Values = array_map('trim', explode(',', $request->input('cameras')));
 
-                $query->whereRaw("LOWER(a.slug) like '%camera%'") ;
+                $default_field='pa.values';
+                $filterMappings = [
+                    'display' => ['slug' => 'display', 'field' => $default_field],        // For 'display', search in 'pa.values'
+                    'cameras' => ['slug' => 'camera', 'field' => 'pa.attribute_name'], // For 'cameras', search in 'pa.attribute_name'
+                ];
+                foreach ($filterMappings as $param => $filter) {
+                    // Check if the parameter is present in the request
+                    if ($request->has($param)) {
+                        // Get the values from the request and split by commas (if multiple values)
+                        $values = array_map('trim', explode(',', $request->input($param)));
                 
-
-                // Check if there is more than one value
-                if (count($Values) > 1) {
-                    // Loop through each value and add it to the query with ILIKE
-                    $query->where(function ($q) use ($Values) {
-                        foreach ($Values as $value) {
-                            $q->orWhereRaw("pa.attribute_name ILIKE ?", ['%' . strtolower($value) . '%']);
+                        // Ensure the query checks the appropriate slug (or other field)
+                        $query->whereRaw("LOWER(a.slug) ILIKE ?", ['%' . strtolower($filter['slug']) . '%']);
+                
+                        // Apply the filter logic for multiple values
+                        if (count($values) > 1) {
+                            $query->where(function ($q) use ($values, $filter) {
+                                foreach ($values as $value) {
+                                    $q->orWhereRaw("{$filter['field']}::text ILIKE ?", ['%' . strtolower($value) . '%']);
+                                }
+                            });
+                        } else {
+                            // Single value, apply simple ILIKE
+                            $query->whereRaw("{$filter['field']}::text ILIKE ?", ['%' . strtolower($values[0]) . '%']);
                         }
-                    });
-                } else {
-                    // Single value, apply simple ILIKE
-                    $query->whereRaw("pa.attribute_name ILIKE ?", ['%' . strtolower($Values[0]) . '%']);
+                    }
                 }
-                
-            }
+        
+            
        }
 
         // Handle multi_slugs filter
@@ -177,6 +164,14 @@ class ProductController extends Controller
         }
       
         $query->orderBy('products.created_at', 'desc');
+        
+        // DB::enableQueryLog();
+        // $data = $query->get();
+        // $lastQuery = DB::getQueryLog();
+        // $sql = end($lastQuery);
+        // echo $sql['query']; // SQL query
+        // echo json_encode($sql['bindings']); // Parameters
+        // exit;
 
         // $sql=$query->toSql();
         // echo $sql;exit;
