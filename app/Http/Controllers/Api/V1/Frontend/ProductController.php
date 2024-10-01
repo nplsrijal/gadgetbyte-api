@@ -172,7 +172,7 @@ class ProductController extends Controller
             // Add whereIn condition for slugs
             $query->whereIn('products.slug', $slugs);
         }
-        $query->groupBy('products.id', 'users.firstname', 'users.lastname');
+        $query->groupBy('products.id', 'products.title','products.slug','users.firstname', 'users.lastname');
 
         $query->orderBy('products.created_at', 'desc');
 
